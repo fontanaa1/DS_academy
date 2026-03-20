@@ -4,949 +4,1213 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ds Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.cdnfonts.com/css/brasika-display" rel="stylesheet"/>
 <style>
-/* ═══════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+/* ═══════════════════════════
+   TOKENS
+═══════════════════════════ */
 :root{
-  --red:#C0392B;
-  --red-dark:#9B2D23;
-  --red-light:#D4503F;
-  --cream:#F5EFE0;
-  --cream-dark:#EDE5CE;
-  --orange:#E8845A;
-  --gold:#D4A843;
-  --gold-light:#F0C060;
-  --text-dark:#2C1810;
-  --text-mid:#6B4C3B;
-  --text-light:#9A7B6A;
-  --white:#FFFFFF;
-  --green:#2ECC71;
-  --green-dark:#27AE60;
-  --yellow:#F39C12;
-  --shadow:0 4px 20px rgba(44,24,16,.12);
-  --shadow-lg:0 8px 40px rgba(44,24,16,.18);
+  --red:#C0392B; --red-d:#9B2D23; --red-l:#D4503F;
+  --cream:#F5EFE0; --cream-d:#EDE5CE; --cream-dd:#E4D9C4;
+  --orange:#E8845A; --gold:#D4A843;
+  --ink:#2C1810; --ink-m:#6B4C3B; --ink-l:#9A7B6A;
+  --green:#27AE60; --amber:#E67E22;
+  --sh-s:0 2px 8px rgba(44,24,16,.1);
+  --sh:0 4px 20px rgba(44,24,16,.12);
+  --sh-l:0 8px 40px rgba(44,24,16,.18);
+  --r:10px; --r-l:16px;
+  --nav-h:58px;
+  --font-title:'Brasika Display','Georgia',serif;
+  --font-body:'Lora',serif;
 }
-html,body{height:100%;width:100%;font-family:'Lora',serif;background:var(--cream);color:var(--text-dark);}
-button{cursor:pointer;font-family:'Lora',serif;}
-input,textarea{font-family:'Lora',serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;width:100%;font-family:var(--font-body);background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;}
+button,input,textarea,select{font-family:var(--font-body);font-size:inherit;}
 a{text-decoration:none;color:inherit;}
 img{max-width:100%;display:block;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(192,57,43,.25);border-radius:3px;}
 
-/* ═══════════════════════════════════════
-   SCREEN SYSTEM
-═══════════════════════════════════════ */
+/* ═══════════════════════════
+   SCREEN ROUTER
+═══════════════════════════ */
 .screen{
-  display:none;
-  position:fixed;inset:0;
-  width:100%;height:100%;
-  overflow-y:auto;
-  animation:screenIn .45s ease both;
+  display:none;position:fixed;inset:0;
+  width:100%;height:100%;overflow-y:auto;
+  animation:fadeUp .4s ease both;
 }
 .screen.active{display:block;}
-.screen.no-scroll{overflow:hidden;}
-@keyframes screenIn{
-  from{opacity:0;transform:translateY(18px);}
-  to{opacity:1;transform:translateY(0);}
-}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-/* ═══════════════════════════════════════
-   NAVBAR
-═══════════════════════════════════════ */
-.navbar{
-  position:sticky;top:0;z-index:100;
-  background:#fff;
-  display:flex;align-items:center;
-  padding:0 24px;
-  height:58px;
-  border-bottom:1px solid rgba(192,57,43,.08);
-  box-shadow:0 2px 12px rgba(44,24,16,.06);
-}
-.navbar-logo{
-  width:38px;height:38px;
-  object-fit:contain;
-  cursor:pointer;
-  flex-shrink:0;
-}
-/* ↑ coloque logo_1.png na mesma pasta */
-.navbar-logo-placeholder{
-  width:38px;height:38px;flex-shrink:0;cursor:pointer;
-  background:var(--red);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:700;font-size:.7rem;letter-spacing:-.5px;
-}
-.navbar-links{
-  display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);
-  margin:0 auto;
-}
-.navbar-links a{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(.8rem,1.3vw,1rem);
-  color:var(--red);
-  font-weight:700;
-  transition:opacity .2s;
-  white-space:nowrap;
-}
-.navbar-links a:hover{opacity:.65;}
-.navbar-links a.active-link{border-bottom:2px solid var(--red);}
-.navbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
-.navbar-icon{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--red);border:none;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s;
-}
-.navbar-icon:hover{background:var(--red-dark);}
-.navbar-icon svg{width:18px;height:18px;fill:#fff;}
-
-/* ═══════════════════════════════════════
-   HERO BANNER (shared)
-═══════════════════════════════════════ */
-.hero-banner{
-  background:var(--red);
-  display:flex;align-items:center;
-  padding:clamp(24px,4vw,40px) clamp(24px,5vw,60px);
-  gap:20px;
-  position:relative;
-  overflow:hidden;
-  min-height:clamp(140px,22vw,200px);
-}
-.hero-banner::before{
-  content:'';position:absolute;
-  top:-60px;right:-40px;
-  width:200px;height:200px;
-  background:rgba(255,255,255,.04);
-  border-radius:50%;
-}
-.hero-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(2rem,5vw,3.8rem);
-  color:var(--orange);
-  line-height:1;
-}
-.hero-title span{
-  font-family:'Caveat',cursive;
-  color:#fff;
-  font-size:clamp(1.6rem,4vw,3rem);
-  font-style:normal;
-}
-.hero-sparks{
-  display:flex;flex-direction:column;gap:4px;
-  margin-right:4px;
-}
+/* ═══════════════════════════
+   SPARKS (decoração dourada)
+═══════════════════════════ */
 .spark{
-  width:clamp(10px,1.4vw,15px);height:clamp(10px,1.4vw,15px);
+  display:inline-block;
+  width:14px;height:14px;
   background:var(--gold);
   clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
 }
-.spark.sm{width:clamp(7px,1vw,10px);height:clamp(7px,1vw,10px);}
-.spark-row{display:flex;gap:5px;}
-.hero-img{
-  /* ↑ Troque src para a imagem de livros desejada */
-  width:clamp(80px,14vw,160px);
-  height:auto;object-fit:contain;
-  margin-left:auto;flex-shrink:0;
-}
-.back-btn{
-  width:38px;height:38px;border-radius:50%;
-  background:rgba(0,0,0,.55);border:none;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:1.1rem;cursor:pointer;
-  flex-shrink:0;
-  transition:background .2s;
-}
-.back-btn:hover{background:rgba(0,0,0,.75);}
+.spark.sm{width:9px;height:9px;}
+.spark-group{display:flex;flex-direction:column;gap:4px;}
+.spark-row{display:flex;gap:5px;align-items:center;}
 
-/* ═══════════════════════════════════════
-   BLOBS
-═══════════════════════════════════════ */
-.blob-tl{
-  position:fixed;top:-80px;left:-80px;
-  width:clamp(200px,30vw,340px);
-  aspect-ratio:1.3;
-  background:var(--cream);
-  border-radius:0 0 60% 0/0 0 55% 0;
-  z-index:0;pointer-events:none;
-}
-.blob-br{
-  position:fixed;bottom:-80px;right:-80px;
-  width:clamp(200px,30vw,340px);
-  aspect-ratio:1.3;
-  background:var(--cream);
-  border-radius:60% 0 0 0/55% 0 0 0;
-  z-index:0;pointer-events:none;
-}
-
-/* ═══════════════════════════════════════
-   UTILITY
-═══════════════════════════════════════ */
-.content-wrap{
-  background:var(--cream-dark);
-  border-radius:16px 16px 0 0;
-  margin-top:8px;
-  padding:clamp(16px,3vw,28px) clamp(16px,4vw,40px);
-  min-height:calc(100vh - 260px);
-}
-.section-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(1rem,2vw,1.3rem);
-  color:var(--red);
-  margin-bottom:14px;
-}
-.card{
+/* ═══════════════════════════
+   NAVBAR
+═══════════════════════════ */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  height:var(--nav-h);
   background:#fff;
-  border-radius:12px;
-  padding:clamp(14px,2vw,20px);
-  box-shadow:var(--shadow);
-  border:1px solid rgba(192,57,43,.08);
+  display:flex;align-items:center;
+  padding:0 clamp(16px,3vw,32px);
+  gap:16px;
+  border-bottom:1px solid rgba(192,57,43,.07);
+  box-shadow:0 1px 0 rgba(192,57,43,.06),var(--sh-s);
+}
+.navbar-logo{width:36px;height:36px;object-fit:contain;cursor:pointer;flex-shrink:0;transition:opacity .2s;}
+.navbar-logo:hover{opacity:.8;}
+.navbar-logo-fb{
+  width:36px;height:36px;background:var(--red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:.72rem;cursor:pointer;flex-shrink:0;
+}
+.navbar-links{
+  display:flex;align-items:center;gap:clamp(10px,2vw,32px);
+  margin:0 auto;
+}
+.navbar-links a{
+  font-family:var(--font-title);
+  font-size:clamp(.78rem,1.2vw,.95rem);
+  color:var(--red);font-weight:700;
+  position:relative;padding-bottom:2px;
+  transition:opacity .18s;
+  white-space:nowrap;
+}
+.navbar-links a::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:2px;background:var(--red);border-radius:1px;
+  transform:scaleX(0);transition:transform .2s;
+}
+.navbar-links a:hover{opacity:.7;}
+.navbar-links a.active::after{transform:scaleX(1);}
+.navbar-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.icon-btn{
+  width:34px;height:34px;border-radius:50%;border:none;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s,transform .15s;
+}
+.icon-btn:hover{background:var(--red-d);transform:scale(1.05);}
+.icon-btn svg{width:16px;height:16px;fill:#fff;}
+
+/* hamburger */
+.hamburger{
+  display:none;flex-direction:column;justify-content:center;align-items:center;
+  gap:5px;width:36px;height:36px;background:none;border:none;
+  cursor:pointer;padding:4px;flex-shrink:0;margin-left:auto;
+}
+.hamburger span{
+  display:block;width:20px;height:2px;background:var(--red);border-radius:2px;
+  transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s,width .25s;
+  transform-origin:center;
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;width:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* drawer */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(20,10,5,.5);z-index:149;
+  backdrop-filter:blur(3px);
+}
+.overlay.open{display:block;animation:fadeOverlay .25s ease both;}
+@keyframes fadeOverlay{from{opacity:0;}to{opacity:1;}}
+.drawer{
+  position:fixed;top:0;right:-290px;width:275px;height:100%;
+  background:#fff;z-index:150;
+  display:flex;flex-direction:column;
+  box-shadow:-6px 0 32px rgba(44,24,16,.18);
+  transition:right .32s cubic-bezier(.4,0,.2,1);
+}
+.drawer.open{right:0;}
+.drawer-head{
+  background:var(--red);padding:20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer-head-title{font-family:var(--font-title);font-size:1.2rem;color:var(--cream);font-weight:700;}
+.drawer-x{background:none;border:none;color:rgba(255,255,255,.75);font-size:1.3rem;cursor:pointer;line-height:1;padding:2px 6px;border-radius:4px;transition:background .2s;}
+.drawer-x:hover{background:rgba(0,0,0,.15);color:#fff;}
+.drawer-nav{display:flex;flex-direction:column;flex:1;overflow-y:auto;padding:8px 0;}
+.drawer-nav a{
+  font-family:var(--font-body);font-size:.9rem;font-weight:600;
+  color:var(--ink);
+  padding:13px 22px;
+  border-bottom:1px solid rgba(192,57,43,.06);
+  display:flex;align-items:center;gap:12px;
+  transition:background .16s,color .16s,padding-left .16s;
+}
+.drawer-nav a em{font-style:normal;font-size:.88rem;opacity:.65;min-width:18px;text-align:center;}
+.drawer-nav a:hover{background:rgba(192,57,43,.06);color:var(--red);padding-left:28px;}
+.drawer-nav a.active{color:var(--red);background:rgba(192,57,43,.05);}
+.drawer-foot{
+  padding:14px 20px;border-top:1px solid rgba(192,57,43,.08);
+  display:flex;gap:8px;
 }
 
-/* ═══════════════════════════════════════
-   SCREEN 1 — SPLASH
-═══════════════════════════════════════ */
-#splash{
+@media(max-width:640px){
+  .navbar-links{display:none;}
+  .navbar-right .icon-btn.hide-sm{display:none;}
+  .hamburger{display:flex;}
+}
+@media(max-width:700px){
+  .navbar-links{gap:10px;}
+  .navbar-links a{font-size:.74rem;}
+}
+
+/* ═══════════════════════════
+   HERO BANNER (shared)
+═══════════════════════════ */
+.hero-banner{
   background:var(--red);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 8%;
-  overflow:hidden;
+  display:flex;align-items:center;
+  padding:clamp(22px,4vw,40px) clamp(20px,5vw,56px);
+  gap:16px;min-height:clamp(130px,20vw,190px);
+  position:relative;overflow:hidden;
 }
-.splash-blob-tl{
-  position:absolute;top:-80px;left:-80px;
-  width:clamp(220px,34vw,380px);aspect-ratio:1.3;
-  background:var(--cream);
-  border-radius:0 0 60% 0/0 0 55% 0;
+.hero-banner::after{
+  content:'';position:absolute;
+  top:-80px;right:-60px;
+  width:240px;height:240px;
+  background:rgba(255,255,255,.035);border-radius:50%;
 }
-.splash-blob-br{
-  position:absolute;bottom:-80px;right:-80px;
-  width:clamp(220px,34vw,380px);aspect-ratio:1.3;
-  background:var(--cream);
-  border-radius:60% 0 0 0/55% 0 0 0;
+.hero-title{
+  font-family:var(--font-title);
+  font-size:clamp(1.9rem,5vw,3.6rem);
+  color:var(--orange);line-height:1;flex:1;
 }
-.splash-sparks{
-  position:absolute;
-  top:clamp(16%,22%,28%);right:clamp(28%,33%,38%);
-  z-index:1;
+.hero-title span{
+  font-family:'Caveat',cursive;
+  color:#fff;font-size:.85em;
 }
-.splash-left{
-  position:relative;z-index:1;
-  display:flex;flex-direction:column;
-  gap:clamp(10px,2vw,20px);
-  max-width:55%;
-}
-.splash-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(2.4rem,7.5vw,5.5rem);
-  color:var(--cream);
-  line-height:1;
-  animation:fadeUp .8s ease both;
-}
-.splash-sub{
-  font-size:clamp(.78rem,1.5vw,1.05rem);
-  color:var(--orange);font-weight:500;
-  animation:fadeUp .8s .15s ease both;
-}
-.splash-sub strong{color:var(--cream);font-weight:700;}
-.btn-entrar{
-  display:inline-block;
-  padding:clamp(10px,1.4vw,14px) clamp(24px,3vw,42px);
-  background:rgba(232,132,90,.18);
-  border:2px solid var(--orange);
-  border-radius:10px;
-  color:var(--orange);
-  font-weight:600;font-size:clamp(.82rem,1.2vw,1rem);
-  transition:background .25s,color .25s,transform .18s;
-  animation:fadeUp .8s .28s ease both;
-  width:fit-content;white-space:nowrap;
-}
-.btn-entrar:hover{background:var(--orange);color:var(--red);transform:scale(1.04);}
-.splash-right{
-  position:relative;z-index:1;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  animation:fadeUp .9s .18s ease both;
-}
-.splash-books{
-  width:clamp(160px,30vw,360px);height:auto;
-  object-fit:contain;
-  filter:drop-shadow(4px 8px 16px rgba(0,0,0,.28));
+.hero-img{
+  width:clamp(70px,13vw,150px);height:auto;
+  object-fit:contain;flex-shrink:0;margin-left:auto;
+  filter:drop-shadow(2px 4px 10px rgba(0,0,0,.25));
 }
 /*
-  ╔═══════════════════════════════════╗
-  ║ SPLASH: imagem dos livros        ║
-  ║ → src="splash_books.png"         ║
-  ║ (ou books.png, como preferir)    ║
-  ╚═══════════════════════════════════╝
+  ╔════════════════════════════════════╗
+  ║  Hero image: books_illustration.png ║
+  ╚════════════════════════════════════╝
 */
-@media(max-width:600px){
-  #splash{flex-direction:column;justify-content:center;align-items:center;gap:28px;padding:60px 7% 80px;}
-  .splash-left{max-width:100%;align-items:center;text-align:center;}
-  .splash-sparks{top:10%;right:6%;}
+.back-btn{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:rgba(0,0,0,.45);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1rem;cursor:pointer;
+  transition:background .2s;
+}
+.back-btn:hover{background:rgba(0,0,0,.65);}
+
+/* ═══════════════════════════
+   SCREEN 1 — SPLASH
+═══════════════════════════ */
+#splash{
+  background:var(--red);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  padding:clamp(36px,7vw,72px) clamp(24px,6vw,56px);
+  min-height:100vh;
+  gap:0;
+}
+.sp-blob-tl{
+  position:absolute;top:-72px;left:-72px;
+  width:clamp(200px,32vw,340px);
+  background:var(--cream);aspect-ratio:1.25;
+  border-radius:0 0 62% 0/0 0 58% 0;
+}
+.sp-blob-br{
+  position:absolute;bottom:-72px;right:-72px;
+  width:clamp(200px,32vw,340px);
+  background:var(--cream);aspect-ratio:1.25;
+  border-radius:62% 0 0 0/58% 0 0 0;
+}
+.sp-sparks{
+  position:absolute;top:clamp(9%,14%,20%);right:clamp(5%,10%,16%);
+  z-index:1;
+}
+.sp-logo{
+  position:relative;z-index:1;
+  margin-bottom:clamp(14px,3vw,28px);
+  animation:fadeUp .65s ease both;
+}
+.sp-logo img{
+  /*
+    ╔════════════════════════════════╗
+    ║  Central logo: logo.png       ║
+    ║  (escudo DS Academy)          ║
+    ╚════════════════════════════════╝
+  */
+  width:clamp(80px,18vw,150px);height:auto;
+  filter:brightness(2) drop-shadow(0 6px 22px rgba(0,0,0,.3));
+}
+.sp-center{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:clamp(6px,1.4vw,12px);
+}
+.sp-title{
+  font-family:var(--font-title);
+  font-size:clamp(3rem,10vw,7rem);
+  color:var(--orange);line-height:1;
+  letter-spacing:-1.5px;
+  animation:fadeUp .75s .04s ease both;
+}
+.sp-sub{
+  font-size:clamp(.8rem,1.7vw,1rem);
+  color:rgba(245,239,224,.72);
+  font-style:italic;font-weight:500;
+  animation:fadeUp .75s .13s ease both;
+}
+.sp-sub strong{color:var(--cream);font-style:normal;font-weight:700;}
+.sp-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-top:clamp(10px,2vw,20px);
+  padding:clamp(12px,1.8vw,15px) clamp(40px,8vw,72px);
+  background:transparent;
+  border:2px solid var(--orange);
+  border-radius:50px;
+  color:var(--orange);
+  font-family:var(--font-body);
+  font-weight:700;font-size:clamp(.85rem,1.4vw,.98rem);
+  letter-spacing:.6px;
+  transition:background .22s,color .22s,transform .16s,box-shadow .2s;
+  animation:fadeUp .75s .24s ease both;
+  cursor:pointer;
+}
+.sp-btn:hover{background:var(--orange);color:var(--red);transform:scale(1.03);box-shadow:0 6px 24px rgba(232,132,90,.38);}
+.sp-btn:active{transform:scale(.97);}
+.sp-books{
+  position:relative;z-index:1;
+  margin-top:clamp(18px,3.5vw,34px);
+  animation:fadeUp .85s .34s ease both;
+}
+.sp-books img{
+  /*
+    ╔════════════════════════════════╗
+    ║  Books illustration: splash_books.png ║
+    ╚════════════════════════════════╝
+  */
+  width:clamp(130px,26vw,250px);height:auto;
+  filter:drop-shadow(4px 8px 16px rgba(0,0,0,.28));
 }
 
-/* ═══════════════════════════════════════
+/* ═══════════════════════════
    SCREEN 2 — LOGIN
-═══════════════════════════════════════ */
+═══════════════════════════ */
 #login{
   background:var(--cream);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  min-height:100vh;
+  min-height:100vh;overflow:hidden;
 }
-.login-topbar{
+.login-top-bar{
   position:absolute;top:0;left:0;right:0;
-  height:22px;background:var(--red);
+  height:clamp(16px,2.5vw,24px);background:var(--red);
 }
-.login-blob-bl{
-  position:fixed;bottom:-40px;left:-40px;
-  width:clamp(100px,14vw,170px);aspect-ratio:1;
-  background:var(--red);border-radius:0 70% 0 0;
+.login-bl{
+  position:absolute;bottom:-24px;left:-24px;
+  width:clamp(120px,17vw,200px);height:clamp(120px,17vw,200px);
+  background:var(--red);border-radius:0 58% 0 0/0 54% 0 0;
 }
-.login-blob-br{
-  position:fixed;bottom:-40px;right:-40px;
-  width:clamp(100px,14vw,170px);aspect-ratio:1;
-  background:var(--red);border-radius:70% 0 0 0;
+.login-br{
+  position:absolute;bottom:-24px;right:-24px;
+  width:clamp(120px,17vw,200px);height:clamp(120px,17vw,200px);
+  background:var(--red);border-radius:58% 0 0 0/54% 0 0 0;
 }
-.login-watermark{
+.login-wm{
   position:absolute;inset:0;
-  /*
-    ╔══════════════════════════════════════╗
-    ║ LOGIN BG: imagem de fundo (marca)   ║
-    ║ → background-image: url('logo.png') ║
-    ╚══════════════════════════════════════╝
-  */
   background-image:url('logo.png');
-  background-size:contain;
-  background-repeat:no-repeat;
-  background-position:center;
-  opacity:.06;pointer-events:none;z-index:0;
+  background-size:42%;background-repeat:no-repeat;background-position:center;
+  opacity:.055;pointer-events:none;
 }
-.login-logo-corner{
-  position:absolute;top:34px;right:24px;z-index:2;
-  width:44px;height:44px;object-fit:contain;
-  /*
-    ╔══════════════════════════════════════╗
-    ║ Logo canto superior: logo_1.png     ║
-    ╚══════════════════════════════════════╝
-  */
+/*  ╔═══════════════════════╗
+    ║ Watermark: logo.png   ║
+    ╚═══════════════════════╝ */
+.login-corner-logo{
+  position:absolute;top:clamp(26px,5vw,46px);right:clamp(16px,3vw,28px);
+  width:clamp(36px,5.5vw,50px);height:auto;opacity:.8;
 }
-.login-card{
+/*  ╔════════════════════════════╗
+    ║ Corner logo: logo_1.png   ║
+    ╚════════════════════════════╝ */
+.auth-card{
   position:relative;z-index:2;
-  width:min(430px,90vw);
+  width:min(430px,88vw);
   display:flex;flex-direction:column;align-items:center;
-  gap:clamp(10px,1.8vw,15px);
-  padding:0 4px;
-  animation:fadeUp .6s ease both;
+  gap:clamp(10px,1.6vw,14px);
+  animation:fadeUp .5s ease both;
 }
-.login-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.5rem,3.5vw,2rem);
-  color:var(--text-dark);text-align:center;
+.auth-title{
+  font-family:var(--font-title);
+  font-size:clamp(1.6rem,4vw,2rem);
+  color:var(--ink);text-align:center;font-weight:700;
 }
-.login-sub{font-size:.88rem;color:var(--text-light);text-align:center;margin-top:-4px;}
-.input-wrap{width:100%;position:relative;}
-.input-wrap input{
-  width:100%;
-  padding:13px 44px 13px 16px;
-  border:1.5px solid #D4C8B8;border-radius:7px;
-  font-size:.88rem;background:#fff;
-  color:var(--text-dark);outline:none;
-  transition:border .2s,box-shadow .2s;
+.auth-sub{
+  font-size:.88rem;color:var(--ink-l);
+  text-align:center;margin-top:-4px;
 }
-.input-wrap input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
-.input-clear{
-  position:absolute;right:13px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;
-  color:#aaa;font-size:.95rem;line-height:1;
-  transition:color .2s;
+/* field */
+.field{width:100%;display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-m);}
+.field-wrap{position:relative;}
+.field-wrap input{
+  width:100%;padding:13px 44px 13px 16px;
+  border:1.5px solid #C8B8A8;border-radius:var(--r);
+  font-size:.9rem;background:#fff;color:var(--ink);outline:none;
+  transition:border .18s,box-shadow .18s;
 }
-.input-clear:hover{color:var(--red);}
-.btn-continuar{
+.field-wrap input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
+.field-wrap input.error{border-color:#e74c3c;}
+.field-icon{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:700;
+  transition:background .18s;
+}
+.field-icon.clear{background:#999;color:#fff;}
+.field-icon.clear:hover{background:var(--red);}
+.field-icon.toggle{background:transparent;color:var(--ink-l);font-size:.85rem;}
+.field-icon.toggle:hover{color:var(--ink);}
+.hint{font-size:.74rem;color:var(--ink-l);display:flex;align-items:center;gap:5px;}
+.hint::before{content:'·';color:var(--ink-l);}
+.hint.pass{color:var(--green);}
+.hint.pass::before{content:'✓';color:var(--green);}
+/* buttons */
+.btn-primary{
   width:100%;padding:14px;
-  background:var(--red);color:#fff;border:none;border-radius:7px;
-  font-weight:700;font-size:.9rem;letter-spacing:1px;
-  transition:background .2s,transform .15s;
+  background:var(--red);color:#fff;border:none;border-radius:var(--r);
+  font-weight:700;font-size:.88rem;letter-spacing:1px;
+  transition:background .18s,transform .14s;cursor:pointer;
 }
-.btn-continuar:hover{background:var(--red-dark);transform:scale(1.02);}
-.login-create{font-size:.82rem;color:var(--text-light);text-align:center;}
-.login-create a{color:var(--red);font-weight:700;}
+.btn-primary:hover{background:var(--red-d);}
+.btn-primary:active{transform:scale(.98);}
+.btn-dark{
+  width:100%;padding:14px;
+  background:var(--ink);color:#fff;border:none;border-radius:var(--r);
+  font-weight:700;font-size:.88rem;letter-spacing:1px;
+  transition:background .18s,transform .14s;cursor:pointer;
+}
+.btn-dark:hover{background:#1a0c06;}
+.btn-dark:active{transform:scale(.98);}
+.auth-link-row{font-size:.82rem;color:var(--ink-l);text-align:center;}
+.auth-link-row a{color:var(--red);font-weight:700;}
 .divider{
   width:100%;display:flex;align-items:center;gap:10px;
-  color:#C8B8A8;font-size:.78rem;
+  font-size:.76rem;color:#C0B0A0;
 }
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:#DDD5C5;}
 .btn-social{
   width:100%;padding:12px 16px;
-  background:#fff;border:1.5px solid #DDD;border-radius:7px;
-  font-size:.88rem;color:var(--text-dark);
+  background:#F2EBE0;border:1.5px solid #E0D4C4;border-radius:var(--r);
+  font-size:.88rem;color:var(--ink);
   display:flex;align-items:center;gap:12px;
-  transition:border .2s,transform .15s,box-shadow .2s;
+  transition:border .18s,box-shadow .18s;cursor:pointer;
 }
-.btn-social:hover{border-color:var(--red);transform:scale(1.01);box-shadow:var(--shadow);}
-.social-icon{
-  width:26px;height:26px;border-radius:50%;
+.btn-social:hover{border-color:var(--red);box-shadow:var(--sh-s);}
+.si{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:.85rem;color:#fff;flex-shrink:0;
+  font-weight:700;color:#fff;font-size:.8rem;
 }
-.social-icon.g{background:#fff;border:1px solid #ddd;}
-.social-icon.fb{background:#1877F2;}
-.country-sel{
+.si.g{background:#fff;border:1.5px solid #DDD;}
+.si.fb{background:#1877F2;}
+.country-btn{
   display:flex;align-items:center;gap:6px;
-  font-size:.78rem;color:var(--text-light);cursor:pointer;
+  font-size:.78rem;color:var(--ink-l);cursor:pointer;
+  border:1px solid #D4C8B8;border-radius:20px;padding:5px 14px;
+  background:transparent;transition:border .18s;
 }
+.country-btn:hover{border-color:var(--red);}
 
-/* ═══════════════════════════════════════
+/* ═══════════════════════════
    SCREEN 3 — CRIAR CONTA
-═══════════════════════════════════════ */
+═══════════════════════════ */
 #criar-conta{
   background:var(--cream);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  min-height:100vh;
+  min-height:100vh;overflow:hidden;
 }
-.criar-topbar{position:absolute;top:0;left:0;right:0;height:22px;background:var(--red);}
-.criar-sparks{
-  position:absolute;
-  top:clamp(14%,20%,26%);left:clamp(12%,18%,24%);
-  display:flex;flex-direction:column;gap:3px;
-  z-index:1;
-}
-.criar-card{
-  position:relative;z-index:2;
-  width:min(400px,88vw);
-  display:flex;flex-direction:column;align-items:flex-start;
-  gap:14px;
-  animation:fadeUp .6s ease both;
-}
-.criar-title{
-  font-family:'Playfair Display',serif;
-  font-weight:700;font-size:clamp(1.4rem,3vw,1.9rem);
-  color:var(--text-dark);
-}
-.criar-sub{font-size:.85rem;color:var(--text-light);margin-top:-6px;}
-.input-label{font-size:.72rem;font-weight:700;letter-spacing:1px;color:var(--text-mid);text-transform:uppercase;}
-.input-group{width:100%;display:flex;flex-direction:column;gap:5px;}
-.input-hint{font-size:.74rem;color:var(--text-light);}
-.input-hint.ok{color:var(--green);}
-.criar-watermark{
+.cc-top{position:absolute;top:0;left:0;right:0;height:clamp(16px,2.5vw,24px);background:var(--red);}
+.cc-wm{
   position:absolute;inset:0;
   background-image:url('logo.png');
-  background-size:contain;background-repeat:no-repeat;background-position:center;
-  opacity:.05;pointer-events:none;z-index:0;
+  background-size:42%;background-repeat:no-repeat;background-position:center;
+  opacity:.05;pointer-events:none;
 }
-.btn-cadastrar{
-  width:100%;padding:14px;
-  background:var(--text-dark);color:#fff;border:none;border-radius:7px;
-  font-weight:700;font-size:.9rem;letter-spacing:1.5px;
-  transition:background .2s,transform .15s;
+.cc-sparks{
+  position:absolute;
+  top:clamp(12%,18%,26%);left:clamp(10%,16%,22%);
 }
-.btn-cadastrar:hover{background:#1a0c06;transform:scale(1.02);}
 
-/* ═══════════════════════════════════════
-   SCREEN 4 — PÁGINA INICIAL (DASHBOARD)
-═══════════════════════════════════════ */
+/* ═══════════════════════════
+   SCREEN 4 — HOME
+═══════════════════════════ */
 #home{background:var(--cream);}
 .home-hero{
   background:var(--red);
   padding:clamp(20px,3.5vw,36px) clamp(20px,4vw,48px);
   position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.home-hero-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(2rem,5vw,3.5rem);
-  color:var(--orange);line-height:1.05;
+.home-hero::after{
+  content:'';position:absolute;bottom:-40px;right:20%;
+  width:180px;height:180px;
+  background:rgba(255,255,255,.03);border-radius:50%;
 }
-.home-hero-sub{
-  font-size:clamp(.9rem,1.5vw,1.2rem);
-  font-style:italic;font-weight:700;
+.home-hero-text h1{
+  font-family:var(--font-title);
+  font-size:clamp(1.8rem,5vw,3.2rem);
+  color:var(--orange);line-height:1;
+}
+.home-hero-text p{
+  font-size:clamp(.88rem,1.4vw,1.05rem);
+  font-style:italic;font-weight:600;
   color:var(--cream);margin-top:6px;
 }
-.home-hero-books{
-  position:absolute;right:clamp(60px,8vw,120px);
-  top:50%;transform:translateY(-50%);
-  width:clamp(60px,10vw,120px);height:auto;
-  opacity:.9;
+.home-hero img{
+  width:clamp(55px,9vw,110px);height:auto;
+  flex-shrink:0;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.22));
 }
-/*
-  ╔══════════════════════════════════════╗
-  ║ Home hero: books_illustration.png   ║
-  ╚══════════════════════════════════════╝
-*/
+/*  ╔═════════════════════════════════════╗
+    ║  Hero image: books_illustration.png ║
+    ╚═════════════════════════════════════╝ */
 .home-body{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0;
-  min-height:calc(100vh - 220px);
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:calc(100vh - 200px);
 }
-@media(max-width:700px){.home-body{grid-template-columns:1fr;}}
+@media(max-width:680px){.home-body{grid-template-columns:1fr;}}
 .home-left{
-  background:var(--cream);
-  padding:clamp(16px,3vw,28px);
+  background:var(--cream);padding:clamp(16px,3vw,28px);
   position:relative;
 }
-.home-watermark{
+.home-wm{
   position:absolute;inset:0;
   background-image:url('logo.png');
   background-size:55%;background-repeat:no-repeat;background-position:center;
-  opacity:.04;pointer-events:none;
+  opacity:.038;pointer-events:none;
 }
-.ctx-card{
-  background:rgba(192,57,43,.15);
-  border-radius:12px;padding:16px 18px;
-  margin-bottom:20px;
+/* context card */
+.ctx-wrap{
+  background:rgba(192,57,43,.12);
+  border-radius:var(--r-l);padding:16px 18px;
+  margin-bottom:22px;
 }
-.ctx-card-title{
-  font-family:'Caveat',cursive;
-  font-size:1.1rem;color:var(--cream-dark);margin-bottom:10px;
+.ctx-label{
+  font-family:'Caveat',cursive;font-size:1.1rem;
+  color:rgba(44,24,16,.6);margin-bottom:10px;font-weight:700;
 }
 .ctx-row{
-  background:#fff;border-radius:8px;
+  background:#fff;border-radius:var(--r);
   padding:12px 16px;
   display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--sh-s);
 }
-.ctx-row-info{font-size:.82rem;}
-.ctx-row-info strong{display:block;font-weight:600;color:var(--text-dark);}
-.ctx-row-info span{color:var(--text-light);}
-.ctx-swap{background:none;border:none;color:var(--text-mid);font-size:1rem;cursor:pointer;}
-.shortcut-grid{
+.ctx-info strong{display:block;font-size:.82rem;font-weight:700;color:var(--ink);}
+.ctx-info span{font-size:.75rem;color:var(--ink-l);}
+.ctx-swap{background:none;border:none;color:var(--ink-m);font-size:1rem;cursor:pointer;padding:2px 4px;border-radius:4px;transition:background .15s;}
+.ctx-swap:hover{background:rgba(192,57,43,.08);}
+/* shortcuts */
+.shortcuts{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:12px;margin-bottom:20px;
+  gap:10px;margin-bottom:22px;
 }
-.shortcut-item{
+.shortcut{
   display:flex;align-items:center;gap:10px;
-  cursor:pointer;padding:4px;
-  transition:opacity .2s;
+  cursor:pointer;padding:8px 10px;border-radius:var(--r);
+  transition:background .16s;
 }
-.shortcut-item:hover{opacity:.7;}
-.shortcut-icon{
+.shortcut:hover{background:rgba(192,57,43,.06);}
+.shortcut-ic{
   width:36px;height:36px;border-radius:50%;
-  background:#fff;border:2px solid var(--text-dark);
+  border:2px solid var(--ink);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+  background:#fff;box-shadow:var(--sh-s);
+  transition:border-color .16s;
 }
-.shortcut-icon svg{width:16px;height:16px;}
-.shortcut-label{font-size:.82rem;font-weight:600;color:var(--text-dark);}
-.progress-card{
-  background:rgba(192,57,43,.85);
-  border-radius:14px;padding:18px 20px;
+.shortcut:hover .shortcut-ic{border-color:var(--red);}
+.shortcut-ic svg{width:15px;height:15px;}
+.shortcut span{font-size:.8rem;font-weight:600;color:var(--ink);line-height:1.2;}
+/* progress */
+.prog-card{
+  background:var(--red);
+  border-radius:var(--r-l);padding:18px 20px;
 }
-.progress-title{
-  font-family:'Caveat',cursive;
-  font-size:1.3rem;color:#fff;margin-bottom:14px;
+.prog-title{font-family:'Caveat',cursive;font-size:1.3rem;color:#fff;margin-bottom:14px;font-weight:700;}
+.prog-item{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.prog-ring{position:relative;width:42px;height:42px;flex-shrink:0;}
+.prog-ring svg{width:42px;height:42px;transform:rotate(-90deg);}
+.prog-ring circle{fill:none;stroke-width:4;}
+.prog-ring .bg{stroke:rgba(255,255,255,.2);}
+.prog-ring .fg{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset .6s ease;}
+.prog-ring span{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:.52rem;font-weight:700;color:#fff;
 }
-.progress-item{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.progress-circle{
-  width:38px;height:38px;border-radius:50%;
-  border:3px solid rgba(255,255,255,.3);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;position:relative;overflow:hidden;
-}
-.progress-fill{
-  position:absolute;bottom:0;left:0;right:0;
-  background:rgba(255,255,255,.5);
-}
-.progress-info{flex:1;}
-.progress-info strong{display:block;font-size:.82rem;color:#fff;font-weight:600;}
-.progress-info span{font-size:.76rem;color:rgba(255,255,255,.7);}
+.prog-info strong{display:block;font-size:.82rem;color:#fff;font-weight:600;}
+.prog-info em{font-size:.74rem;color:rgba(255,255,255,.65);font-style:normal;}
+/* metas */
 .home-right{
   background:var(--orange);
   padding:clamp(16px,3vw,28px);
+  display:flex;flex-direction:column;
 }
 .metas-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(1.6rem,3vw,2.4rem);
-  color:var(--text-dark);margin-bottom:16px;text-align:center;
+  font-family:var(--font-title);
+  font-size:clamp(1.5rem,3vw,2.2rem);
+  color:var(--ink);margin-bottom:16px;text-align:center;
 }
-.meta-card{
-  background:rgba(192,57,43,.6);
-  border-radius:12px;
-  aspect-ratio:16/5;
+.meta-add{
+  flex:1;min-height:80px;max-height:140px;
+  background:rgba(192,57,43,.45);border-radius:var(--r-l);
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:14px;cursor:pointer;
-  transition:background .2s,transform .15s;
+  cursor:pointer;margin-bottom:12px;
+  transition:background .2s,transform .14s;border:2px dashed transparent;
 }
-.meta-card:nth-child(2){background:rgba(212,168,67,.6);}
-.meta-card:hover{transform:scale(1.02);}
-.meta-plus{
+.meta-add:nth-child(3){background:rgba(212,168,67,.45);}
+.meta-add:nth-child(4){background:rgba(192,57,43,.35);}
+.meta-add:hover{transform:scale(1.015);border-color:rgba(255,255,255,.3);}
+.meta-add-ic{
   width:44px;height:44px;border-radius:50%;
   border:2.5px solid rgba(255,255,255,.5);
   display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.6);font-size:1.5rem;
+  color:rgba(255,255,255,.6);font-size:1.4rem;font-weight:300;
+  transition:border-color .2s,color .2s;
 }
+.meta-add:hover .meta-add-ic{border-color:rgba(255,255,255,.9);color:rgba(255,255,255,.9);}
+/* meta filled */
+.meta-filled{
+  flex:1;min-height:80px;max-height:140px;
+  background:rgba(255,255,255,.15);border-radius:var(--r-l);
+  padding:14px 16px;cursor:pointer;margin-bottom:12px;
+  transition:background .2s;display:flex;flex-direction:column;justify-content:center;
+}
+.meta-filled:hover{background:rgba(255,255,255,.22);}
+.meta-filled p{font-size:.85rem;font-weight:600;color:#fff;}
+.meta-filled small{font-size:.75rem;color:rgba(255,255,255,.7);}
 
-/* ═══════════════════════════════════════
-   SCREEN 5 — CRONOGRAMA
-═══════════════════════════════════════ */
-#cronograma{background:var(--cream);}
-.crono-content{padding:clamp(16px,3vw,30px) clamp(12px,3vw,30px);}
-.crono-table-wrap{overflow-x:auto;border-radius:12px;box-shadow:var(--shadow);}
-.crono-table{
-  width:100%;border-collapse:collapse;
+/* ═══════════════════════════
+   SCREEN 5 — CRONOGRAMA (Google Calendar style)
+═══════════════════════════ */
+#cronograma{background:#fff;}
+
+/* ── top toolbar ── */
+.cal-toolbar{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;
+  border-bottom:1px solid #e8e0d4;
   background:#fff;
+  position:sticky;top:0;z-index:10;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.cal-today-btn{
+  padding:8px 18px;border-radius:20px;
+  border:1px solid #D4C8B8;background:#fff;
+  font-size:.82rem;font-weight:600;color:var(--ink);
+  cursor:pointer;transition:background .15s,border-color .15s;
+  white-space:nowrap;
+}
+.cal-today-btn:hover{background:var(--cream);border-color:var(--red);}
+.cal-nav{display:flex;align-items:center;gap:4px;}
+.cal-nav-btn{
+  width:32px;height:32px;border-radius:50%;border:none;
+  background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;color:var(--ink-m);
+  transition:background .14s;
+}
+.cal-nav-btn:hover{background:rgba(192,57,43,.08);color:var(--red);}
+.cal-week-label{
+  font-size:.9rem;font-weight:700;color:var(--ink);
+  min-width:180px;text-align:center;
+}
+.cal-view-tabs{
+  display:flex;margin-left:auto;
+  border:1px solid #D4C8B8;border-radius:8px;overflow:hidden;
+}
+.cal-view-tab{
+  padding:6px 14px;border:none;background:#fff;
+  font-size:.76rem;font-weight:600;color:var(--ink-m);
+  cursor:pointer;transition:background .14s,color .14s;
+  border-right:1px solid #D4C8B8;
+}
+.cal-view-tab:last-child{border-right:none;}
+.cal-view-tab.active{background:var(--red);color:#fff;}
+
+/* ── calendar grid ── */
+.cal-grid-wrap{
+  overflow-x:auto;
+  min-height:calc(100vh - 210px);
+}
+.cal-grid{
+  display:grid;
+  grid-template-columns:64px repeat(5,1fr);
   min-width:600px;
 }
-.crono-table th{
-  background:var(--red);color:#fff;
-  padding:13px 10px;
-  font-family:'Lora',serif;font-weight:700;
-  font-size:clamp(.7rem,1.1vw,.85rem);
-  letter-spacing:.5px;text-transform:uppercase;
+/* header row: days */
+.cal-day-header{
+  background:#fff;
+  border-bottom:2px solid #e8e0d4;
+  padding:10px 6px 8px;
   text-align:center;
+  position:sticky;top:0;z-index:5;
 }
-.crono-table th:first-child{
-  background:var(--red-dark);
-  width:110px;
+.cal-day-header:first-child{background:#fff;border-right:1px solid #e8e0d4;}
+.cal-day-name{
+  font-size:.7rem;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;
+  color:var(--ink-l);
 }
-.crono-table td{
-  padding:12px 10px;
-  border:1px solid rgba(192,57,43,.1);
-  font-size:clamp(.72rem,1vw,.85rem);
-  text-align:center;vertical-align:top;
-  line-height:1.4;
-}
-.crono-table tr td:first-child{
-  background:var(--red);
-  color:var(--gold);
-  font-family:'Playfair Display',serif;
-  font-style:italic;font-weight:700;
-  font-size:clamp(.78rem,1.1vw,.9rem);
-}
-.crono-table tr:nth-child(even) td{background:rgba(245,239,224,.4);}
-.crono-table td:not(:first-child):hover{
-  background:rgba(192,57,43,.06);cursor:pointer;
-}
-
-/* ═══════════════════════════════════════
-   SCREEN 6 — CONTEÚDOS VIDEOAULA
-═══════════════════════════════════════ */
-#conteudos{background:var(--cream);}
-.conteudos-body{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  min-height:calc(100vh - 200px);
-}
-@media(max-width:800px){.conteudos-body{grid-template-columns:1fr;}}
-.conteudos-left{
-  background:var(--cream);
-  padding:clamp(14px,2.5vw,24px);
-  border-right:1px solid rgba(192,57,43,.1);
-  overflow-y:auto;max-height:calc(100vh - 200px);
-}
-.conteudos-right{
-  padding:clamp(14px,2.5vw,24px);
-  overflow-y:auto;max-height:calc(100vh - 200px);
-}
-.video-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px;border-radius:10px;
+.cal-day-num{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:700;color:var(--ink);
+  margin:4px auto 0;
+  transition:background .14s;
   cursor:pointer;
-  transition:background .2s;
-  border:1px solid transparent;
-  margin-bottom:8px;
 }
-.video-item:hover,.video-item.selected{
-  background:#fff;border-color:rgba(192,57,43,.15);
-  box-shadow:var(--shadow);
-}
-.video-thumb{
-  width:clamp(70px,12vw,100px);
-  aspect-ratio:16/9;object-fit:cover;
-  border-radius:6px;flex-shrink:0;
-  background:var(--red-dark);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:.65rem;text-align:center;
-}
-.video-info{flex:1;min-width:0;}
-.video-info strong{
-  display:block;font-size:clamp(.78rem,1.1vw,.88rem);
-  font-weight:600;color:var(--text-dark);
-  line-height:1.3;margin-bottom:3px;
-}
-.video-info span{font-size:.72rem;color:var(--text-light);}
-.video-menu{background:none;border:none;color:var(--text-light);font-size:1.1rem;cursor:pointer;}
-.note-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(1.3rem,2.5vw,2rem);
-  color:var(--cream);margin-bottom:12px;
-}
-.note-area{
-  width:100%;flex:1;
-  border:1px solid #E0D8C8;border-radius:10px;
-  padding:14px;background:#fff;
-  font-family:'Lora',serif;font-size:.88rem;
-  color:var(--text-dark);resize:vertical;
-  min-height:200px;outline:none;
-  transition:border .2s,box-shadow .2s;
-}
-.note-area:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
-.conteudos-right-inner{
-  background:var(--orange);
-  border-radius:12px;padding:18px;
-  height:100%;display:flex;flex-direction:column;
-}
-/* Notes panel text */
-.notes-panel{display:flex;flex-direction:column;gap:12px;height:100%;}
-
-/* ═══════════════════════════════════════
-   SCREEN 7 — VÍDEO AULA
-═══════════════════════════════════════ */
-#videoaula{background:var(--cream);}
-.video-page-wrap{
-  display:grid;
-  grid-template-columns:1fr 320px;
-  min-height:calc(100vh - 58px);
-}
-@media(max-width:900px){.video-page-wrap{grid-template-columns:1fr;}}
-.video-main{
-  background:var(--red);
-  padding:clamp(12px,2vw,20px);
-  display:flex;flex-direction:column;
-  gap:14px;
-}
-.video-player{
-  background:#fff;border-radius:10px;
-  overflow:hidden;position:relative;
-  aspect-ratio:16/9;width:100%;
-}
-.video-frame-placeholder{
-  width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  background:#F0E8D8;
-  font-size:.85rem;color:var(--text-light);text-align:center;
-  padding:20px;
-}
-.video-controls{
-  background:rgba(0,0,0,.85);
-  padding:10px 14px;
-  display:flex;align-items:center;gap:10px;
-}
-.ctrl-btn{
-  background:none;border:none;color:#ccc;
-  cursor:pointer;font-size:.9rem;
-  transition:color .15s;
-}
-.ctrl-btn:hover{color:#fff;}
-.progress-bar-wrap{
-  flex:1;height:4px;background:rgba(255,255,255,.2);
-  border-radius:2px;cursor:pointer;
-}
-.progress-bar-fill{height:100%;background:var(--red);width:1%;border-radius:2px;}
-.time-label{font-size:.72rem;color:#ccc;white-space:nowrap;}
-.chapter-tag{
-  background:rgba(255,255,255,.15);border:none;
-  padding:4px 10px;border-radius:20px;
-  font-size:.72rem;color:#fff;cursor:pointer;
-  display:flex;align-items:center;gap:4px;
-}
-.video-channel{
-  display:flex;align-items:center;gap:12px;
-  padding:0 4px;
-}
-.channel-logo{
-  width:44px;height:44px;border-radius:50%;
-  object-fit:cover;flex-shrink:0;
-  background:var(--text-dark);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:.65rem;font-weight:700;
-}
-.channel-info strong{display:block;font-size:.88rem;color:#fff;}
-.channel-info span{font-size:.75rem;color:rgba(255,255,255,.65);}
-.btn-subscribe{
-  margin-left:auto;
-  background:var(--text-dark);color:#fff;border:none;
-  padding:8px 18px;border-radius:20px;
-  font-size:.8rem;font-weight:600;
-  cursor:pointer;transition:background .2s;
-}
-.btn-subscribe:hover{background:#1a0c06;}
-.video-back-btn{
-  position:absolute;top:12px;left:12px;z-index:5;
-}
-.video-notes-toggle{
-  position:absolute;top:12px;right:12px;z-index:5;
-  width:38px;height:38px;border-radius:50%;
-  background:rgba(180,180,180,.7);border:none;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:#fff;font-size:.9rem;
-}
-.video-sidebar{
-  background:var(--orange);
-  padding:clamp(14px,2vw,22px);
-  display:flex;flex-direction:column;
-}
-.video-sidebar-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(1.3rem,2vw,1.8rem);
-  color:var(--cream);margin-bottom:12px;
-}
-
-/* ═══════════════════════════════════════
-   SCREEN 8 — EXERCÍCIOS
-═══════════════════════════════════════ */
-#exercicios{background:var(--cream);}
-.ex-content{padding:clamp(14px,3vw,28px) clamp(12px,3vw,28px);}
-.ex-section-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:clamp(.95rem,1.8vw,1.25rem);
-  color:var(--red);margin-bottom:12px;margin-top:8px;
-}
-.ex-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:14px;margin-bottom:6px;
-}
-@media(max-width:640px){.ex-grid{grid-template-columns:1fr;}}
-.ex-card{
-  background:#fff;border-radius:12px;
-  border:1px solid rgba(192,57,43,.1);
-  padding:16px;box-shadow:var(--shadow);
+.cal-day-num:hover{background:rgba(192,57,43,.08);}
+.cal-day-num.today{background:var(--red);color:#fff;}
+/* time column */
+.cal-time-cell{
+  border-right:1px solid #e8e0d4;
+  padding:0 8px;
+  text-align:right;
   position:relative;
 }
-.ex-card-header{
+.cal-time-label{
+  font-size:.68rem;color:var(--ink-l);
+  position:absolute;top:-8px;right:8px;
+  white-space:nowrap;
+}
+/* day column */
+.cal-col{
+  border-right:1px solid #ede5d4;
+  position:relative;
+}
+.cal-col:last-child{border-right:none;}
+/* hour slot */
+.cal-slot{
+  height:56px;
+  border-bottom:1px solid #f0e8d8;
+  position:relative;
+  transition:background .12s;
+}
+.cal-slot:hover{background:rgba(192,57,43,.03);}
+.cal-slot.half{border-bottom:1px dashed #f5efe0;}
+/* event block */
+.cal-event{
+  position:absolute;
+  left:3px;right:3px;
+  border-radius:6px;
+  padding:4px 7px;
+  cursor:pointer;
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(44,24,16,.12);
+  transition:filter .14s,transform .12s,box-shadow .14s;
+  z-index:3;
+  border-left:3px solid rgba(0,0,0,.18);
+}
+.cal-event:hover{filter:brightness(.93);transform:translateX(1px);box-shadow:0 3px 10px rgba(44,24,16,.18);}
+.cal-event-title{
+  font-size:.72rem;font-weight:700;
+  line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.cal-event-time{font-size:.64rem;opacity:.78;margin-top:1px;}
+/* event colors per subject */
+.ev-logica{background:#FDE8D8;color:#8B3A1A;border-left-color:#C0392B;}
+.ev-web{background:#D6EAF8;color:#1A4A7A;border-left-color:#2980B9;}
+.ev-banco{background:#D5F5E3;color:#1A5C38;border-left-color:#27AE60;}
+.ev-so{background:#F9EBEA;color:#7B2D2D;border-left-color:#E74C3C;}
+.ev-revisao{background:#FEF9E7;color:#7D6608;border-left-color:#D4A843;}
+/* current time indicator */
+.cal-now-line{
+  position:absolute;left:0;right:0;height:2px;
+  background:var(--red);z-index:4;
+  pointer-events:none;
+}
+.cal-now-line::before{
+  content:'';position:absolute;left:-5px;top:-4px;
+  width:10px;height:10px;border-radius:50%;background:var(--red);
+}
+/* legend */
+.cal-legend{
+  display:flex;align-items:center;flex-wrap:wrap;gap:12px;
+  padding:10px 20px;
+  border-top:1px solid #e8e0d4;
+  background:#fff;
+}
+.cal-legend-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:.72rem;color:var(--ink-m);
+}
+.cal-legend-dot{
+  width:10px;height:10px;border-radius:3px;flex-shrink:0;
+}
+/* event modal */
+.ev-modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(20,10,5,.35);z-index:200;
+  backdrop-filter:blur(2px);
+  animation:fadeOverlay .2s ease both;
+}
+.ev-modal-overlay.open{display:flex;align-items:center;justify-content:center;}
+.ev-modal{
+  background:#fff;border-radius:var(--r-l);
+  width:min(380px,90vw);
+  box-shadow:var(--sh-l);
+  overflow:hidden;
+  animation:fadeUp .25s ease both;
+}
+.ev-modal-head{
+  padding:16px 18px 12px;
   display:flex;align-items:flex-start;justify-content:space-between;
-  margin-bottom:8px;
+  border-bottom:1px solid #e8e0d4;
 }
-.ex-level{
-  font-size:.78rem;font-weight:700;color:var(--red);
-  display:flex;align-items:center;gap:4px;
+.ev-modal-color{
+  width:12px;height:12px;border-radius:3px;
+  flex-shrink:0;margin-top:4px;margin-right:10px;
 }
-.ex-card-actions{display:flex;gap:6px;}
-.ex-action-btn{
-  width:30px;height:30px;border-radius:50%;
-  background:var(--text-dark);border:none;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:#fff;font-size:.75rem;
-  transition:background .2s;
+.ev-modal-title{
+  font-family:var(--font-title);font-size:1.05rem;
+  color:var(--ink);flex:1;
 }
-.ex-action-btn:hover{background:var(--red);}
-.ex-card-body{font-size:.82rem;color:var(--text-mid);line-height:1.5;}
-.ex-card-body ul{margin-left:16px;margin-top:4px;}
-.ex-card-body li{margin-bottom:2px;}
-.ex-card-foot{
-  display:flex;align-items:center;justify-content:flex-end;
-  margin-top:12px;gap:4px;flex-direction:column;align-items:flex-end;
+.ev-modal-close{
+  background:none;border:none;cursor:pointer;
+  color:var(--ink-l);font-size:1.2rem;padding:2px 6px;
+  border-radius:4px;transition:background .14s;
 }
-.badge-entregue{
-  font-size:.75rem;font-weight:700;color:var(--green);
+.ev-modal-close:hover{background:rgba(192,57,43,.08);color:var(--red);}
+.ev-modal-body{padding:14px 18px;}
+.ev-modal-row{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:.84rem;color:var(--ink-m);
+  margin-bottom:10px;
 }
-.badge-pendente{font-size:.75rem;font-weight:700;color:var(--text-light);}
-.badge-atraso{font-size:.75rem;font-weight:700;color:var(--yellow);}
-.ex-date{font-size:.72rem;color:var(--text-light);}
-/* Single exercise view */
-.ex-single-card{
-  background:#fff;border-radius:14px;
-  border:1px solid rgba(192,57,43,.1);
-  padding:clamp(20px,3vw,32px);
-  box-shadow:var(--shadow);
-  min-height:400px;position:relative;
+.ev-modal-row em{font-style:normal;font-size:1rem;flex-shrink:0;}
+.ev-modal-actions{
+  padding:10px 18px 14px;
+  display:flex;gap:8px;
 }
-.ex-single-title{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  color:var(--red);font-size:1rem;
+.ev-modal-btn{
+  flex:1;padding:9px;border-radius:var(--r);border:none;
+  font-size:.8rem;font-weight:700;cursor:pointer;transition:background .15s;
+}
+.ev-modal-btn.primary{background:var(--red);color:#fff;}
+.ev-modal-btn.primary:hover{background:var(--red-d);}
+.ev-modal-btn.sec{background:var(--cream-d);color:var(--ink);}
+.ev-modal-btn.sec:hover{background:var(--cream-dd);}
+
+/* add event mini-form */
+.cal-add-row{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;
+  border-bottom:1px solid #e8e0d4;
+  background:var(--cream);
+}
+.cal-add-row input{
+  flex:1;padding:8px 12px;
+  border:1.5px solid #D4C8B8;border-radius:var(--r);
+  font-size:.84rem;outline:none;background:#fff;
+  transition:border .18s;
+}
+.cal-add-row input:focus{border-color:var(--red);}
+.cal-add-row select{
+  padding:8px 10px;border:1.5px solid #D4C8B8;
+  border-radius:var(--r);font-size:.8rem;outline:none;
+  background:#fff;color:var(--ink);cursor:pointer;
+}
+.cal-add-row button{
+  padding:8px 16px;border-radius:var(--r);border:none;
+  background:var(--red);color:#fff;font-size:.8rem;font-weight:700;
+  cursor:pointer;transition:background .15s;white-space:nowrap;
+}
+.cal-add-row button:hover{background:var(--red-d);}
+
+@media(max-width:600px){
+  .cal-event-title{font-size:.65rem;}
+  .cal-day-num{width:28px;height:28px;font-size:.9rem;}
+  .cal-view-tabs{display:none;}
+  .cal-week-label{font-size:.8rem;min-width:120px;}
+}
+
+/* ═══════════════════════════
+   SCREEN 6 — CONTEÚDOS
+═══════════════════════════ */
+#conteudos{background:var(--cream);}
+.cont-body{
+  display:grid;grid-template-columns:1fr 1fr;
+  height:calc(100vh - var(--nav-h));
+}
+@media(max-width:800px){.cont-body{grid-template-columns:1fr;height:auto;}}
+.cont-left{
+  padding:clamp(14px,2.5vw,22px);
+  overflow-y:auto;
+  border-right:1px solid rgba(192,57,43,.1);
+}
+.cont-right{
+  padding:clamp(14px,2.5vw,22px);
+  overflow-y:auto;background:var(--orange);
+  display:flex;flex-direction:column;
+}
+.cont-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:18px;
+}
+.cont-header-text h2{
+  font-family:var(--font-title);
+  font-size:clamp(1.4rem,3vw,2rem);color:var(--orange);
+}
+.cont-header-text p{
+  font-family:'Caveat',cursive;font-size:clamp(.95rem,1.8vw,1.35rem);
+  color:var(--red);font-weight:700;
+}
+.sect-lbl{
+  font-family:var(--font-title);
+  font-size:clamp(.88rem,1.5vw,1.05rem);
+  color:var(--red);margin:14px 0 8px;
+  display:flex;align-items:center;gap:6px;
+}
+.sect-lbl::after{content:'';flex:1;height:1px;background:rgba(192,57,43,.15);}
+.vid-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px;border-radius:var(--r);
+  cursor:pointer;border:1.5px solid transparent;
+  transition:background .16s,border-color .16s,box-shadow .16s;
   margin-bottom:6px;
 }
+.vid-item:hover{background:#fff;border-color:rgba(192,57,43,.12);box-shadow:var(--sh-s);}
+.vid-item.sel{background:#fff;border-color:var(--red);box-shadow:var(--sh-s);}
+.vid-thumb{
+  width:clamp(68px,11vw,96px);aspect-ratio:16/9;
+  border-radius:6px;flex-shrink:0;overflow:hidden;
+  background:var(--red-d);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.6rem;font-weight:700;text-align:center;padding:4px;
+  font-family:var(--font-body);
+}
+.vid-info{flex:1;min-width:0;}
+.vid-info strong{
+  display:block;font-size:clamp(.76rem,1vw,.86rem);
+  font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:2px;
+}
+.vid-info span{font-size:.7rem;color:var(--ink-l);}
+.vid-more{background:none;border:none;color:var(--ink-l);font-size:1.1rem;cursor:pointer;padding:2px 6px;border-radius:4px;transition:background .15s;}
+.vid-more:hover{background:rgba(0,0,0,.06);}
+/* notes panel */
+.notes-panel{display:flex;flex-direction:column;gap:12px;flex:1;}
+.notes-label{
+  font-family:var(--font-title);
+  font-size:clamp(1.2rem,2.5vw,1.8rem);
+  color:var(--cream);
+}
+.note-area{
+  width:100%;flex:1;min-height:160px;
+  border:1.5px solid rgba(255,255,255,.3);border-radius:var(--r);
+  padding:14px;background:rgba(255,255,255,.92);
+  font-family:var(--font-body);font-size:.88rem;
+  color:var(--ink);resize:vertical;outline:none;
+  transition:border .18s,box-shadow .18s;
+}
+.note-area:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(44,24,16,.08);}
+.note-save-btn{
+  background:rgba(0,0,0,.25);border:none;border-radius:var(--r);
+  color:#fff;padding:10px;font-size:.8rem;font-weight:600;
+  cursor:pointer;transition:background .18s;letter-spacing:.4px;
+}
+.note-save-btn:hover{background:rgba(0,0,0,.38);}
 
-/* ═══════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════ */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(18px);}
-  to{opacity:1;transform:translateY(0);}
+/* ═══════════════════════════
+   SCREEN 7 — VÍDEO AULA
+═══════════════════════════ */
+#videoaula{background:var(--ink);}
+.va-wrap{
+  display:grid;grid-template-columns:1fr 300px;
+  height:calc(100vh - var(--nav-h));
+}
+@media(max-width:860px){.va-wrap{grid-template-columns:1fr;height:auto;}}
+.va-main{
+  background:var(--red);
+  padding:clamp(10px,1.8vw,18px);
+  display:flex;flex-direction:column;gap:12px;
+  overflow-y:auto;
+}
+.va-player{
+  position:relative;background:#111;border-radius:var(--r);
+  overflow:hidden;aspect-ratio:16/9;width:100%;
+  box-shadow:var(--sh-l);
+}
+.va-iframe-wrap{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:#1a1a1a;flex-direction:column;gap:8px;
+  color:rgba(255,255,255,.5);font-size:.82rem;text-align:center;padding:20px;
+}
+/*
+  ╔════════════════════════════════════════════════╗
+  ║  Aqui vai o <iframe> do vídeo:                ║
+  ║  <iframe src="https://youtube.com/embed/ID"   ║
+  ║    width="100%" height="100%"                 ║
+  ║    allow="autoplay; fullscreen"               ║
+  ║    allowfullscreen frameborder="0">           ║
+  ║  </iframe>                                    ║
+  ╚════════════════════════════════════════════════╝
+*/
+.va-back{position:absolute;top:12px;left:12px;z-index:5;}
+.va-note-toggle{
+  position:absolute;top:12px;right:12px;z-index:5;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(160,160,160,.6);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:.85rem;
+  transition:background .18s;
+}
+.va-note-toggle:hover{background:rgba(160,160,160,.85);}
+.va-controls{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.88));
+  padding:28px 14px 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.ctrl-btn{background:none;border:none;color:rgba(255,255,255,.75);cursor:pointer;font-size:.9rem;transition:color .14s;padding:2px;}
+.ctrl-btn:hover{color:#fff;}
+.va-progress{flex:1;height:4px;background:rgba(255,255,255,.2);border-radius:2px;cursor:pointer;position:relative;}
+.va-progress-fill{height:100%;background:var(--red);border-radius:2px;width:1%;pointer-events:none;}
+.va-time{font-size:.7rem;color:rgba(255,255,255,.65);white-space:nowrap;}
+.va-chap{
+  background:rgba(255,255,255,.15);border:none;
+  padding:4px 10px;border-radius:20px;
+  font-size:.7rem;color:#fff;cursor:pointer;
+  display:flex;align-items:center;gap:3px;transition:background .15s;
+}
+.va-chap:hover{background:rgba(255,255,255,.25);}
+.va-channel{
+  display:flex;align-items:center;gap:12px;padding:0 4px;
+}
+.va-ch-logo{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--ink);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.6rem;font-weight:700;
+  overflow:hidden;
+}
+.va-ch-info strong{display:block;font-size:.86rem;color:#fff;font-weight:600;}
+.va-ch-info span{font-size:.72rem;color:rgba(255,255,255,.55);}
+.va-sub-btn{
+  margin-left:auto;background:var(--ink);color:#fff;border:none;
+  padding:8px 18px;border-radius:20px;
+  font-size:.78rem;font-weight:700;cursor:pointer;transition:background .18s;
+}
+.va-sub-btn:hover{background:#0d0604;}
+.va-sidebar{
+  background:var(--orange);
+  padding:clamp(12px,2vw,20px);
+  display:flex;flex-direction:column;gap:12px;
+  overflow-y:auto;
 }
 
-/* ═══════════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════════ */
-::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(192,57,43,.3);border-radius:3px;}
+/* ═══════════════════════════
+   SCREEN 8 — EXERCÍCIOS
+═══════════════════════════ */
+#exercicios{background:var(--cream);}
+.ex-wrap{padding:clamp(14px,3vw,26px) clamp(12px,3vw,26px);}
+.ex-sect{
+  font-family:var(--font-title);
+  font-size:clamp(.9rem,1.7vw,1.15rem);
+  color:var(--red);
+  margin:16px 0 10px;
+  display:flex;align-items:center;gap:8px;
+}
+.ex-sect::after{content:'';flex:1;height:1px;background:rgba(192,57,43,.15);}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:4px;}
+.ex-card{
+  background:#fff;border-radius:var(--r-l);
+  border:1.5px solid rgba(192,57,43,.08);
+  padding:16px;box-shadow:var(--sh-s);
+  cursor:pointer;transition:box-shadow .18s,border-color .18s,transform .14s;
+  display:flex;flex-direction:column;
+}
+.ex-card:hover{box-shadow:var(--sh);border-color:rgba(192,57,43,.22);transform:translateY(-2px);}
+.ex-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.ex-level-badge{
+  font-size:.72rem;font-weight:700;
+  display:flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:20px;
+  background:rgba(192,57,43,.1);color:var(--red);
+}
+.ex-level-badge.adv{background:rgba(212,168,67,.15);color:#9B7A10;}
+.ex-actions{display:flex;gap:5px;}
+.ex-btn{
+  width:28px;height:28px;border-radius:50%;border:none;
+  background:var(--ink);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;cursor:pointer;transition:background .16s;
+}
+.ex-btn:hover{background:var(--red);}
+.ex-body{font-size:.82rem;color:var(--ink-m);line-height:1.55;flex:1;}
+.ex-body ul{margin-left:16px;margin-top:4px;}
+.ex-body li{margin-bottom:2px;}
+.ex-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:12px;flex-wrap:wrap;gap:4px;
+}
+.badge{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;}
+.badge.ok{background:rgba(39,174,96,.12);color:var(--green);}
+.badge.pend{background:rgba(44,24,16,.07);color:var(--ink-l);}
+.badge.late{background:rgba(230,126,34,.12);color:var(--amber);}
+.ex-date-lbl{font-size:.7rem;color:var(--ink-l);}
 
-/* ═══════════════════════════════════════
-   MOBILE NAV OVERFLOW
-═══════════════════════════════════════ */
-@media(max-width:700px){
-  .navbar-links{gap:10px;}
-  .navbar-links a{font-size:.72rem;}
+/* single exercise */
+.ex-single{
+  background:#fff;border-radius:var(--r-l);
+  border:1.5px solid rgba(192,57,43,.1);
+  padding:clamp(18px,3vw,30px);
+  box-shadow:var(--sh);min-height:440px;
 }
-@media(max-width:500px){
-  .navbar-links{display:none;}
+.ex-single-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.ex-back-btn{
+  background:none;border:none;cursor:pointer;
+  font-size:.85rem;color:var(--ink-l);
+  display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;
+  transition:background .15s,color .15s;
 }
+.ex-back-btn:hover{background:rgba(192,57,43,.06);color:var(--red);}
+.ex-single-title{
+  font-family:var(--font-title);
+  color:var(--red);font-size:1.05rem;margin-bottom:8px;
+}
+.ex-single-foot{text-align:right;margin-top:16px;}
+
+/* upload answer area */
+.answer-area{
+  margin-top:18px;border-top:1px solid rgba(192,57,43,.1);padding-top:16px;
+}
+.answer-area label{font-size:.78rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-m);display:block;margin-bottom:8px;}
+.answer-area textarea{
+  width:100%;min-height:110px;border:1.5px solid #C8B8A8;border-radius:var(--r);
+  padding:12px;font-size:.88rem;resize:vertical;outline:none;
+  transition:border .18s,box-shadow .18s;color:var(--ink);
+}
+.answer-area textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
+.answer-actions{display:flex;gap:8px;margin-top:8px;}
+.btn-attach,.btn-submit{
+  display:flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:var(--r);border:none;
+  font-size:.8rem;font-weight:700;cursor:pointer;transition:background .18s;
+}
+.btn-attach{background:var(--cream-d);color:var(--ink);}
+.btn-attach:hover{background:var(--cream-dd);}
+.btn-submit{background:var(--red);color:#fff;margin-left:auto;}
+.btn-submit:hover{background:var(--red-d);}
+
+/* ═══════════════════════════
+   TOAST NOTIFICATION
+═══════════════════════════ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;
+  padding:12px 22px;border-radius:var(--r);
+  font-size:.85rem;font-weight:600;
+  box-shadow:var(--sh-l);z-index:999;
+  transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;
+  opacity:0;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+/* ═══════════════════════════
+   MISC UTILS
+═══════════════════════════ */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════
-     SCREEN 1 — SPLASH
-════════════════════════════════════════ -->
-<div class="screen active no-scroll" id="splash">
-  <div class="splash-blob-tl"></div>
-  <div class="splash-blob-br"></div>
-
-  <div class="splash-sparks">
-    <div class="spark-row"><div class="spark"></div></div>
-    <div class="spark-row" style="margin-left:12px"><div class="spark sm"></div><div class="spark"></div></div>
+<!-- ══════════════════════════════════════════
+     SCREEN 1 · SPLASH
+══════════════════════════════════════════ -->
+<div class="screen active" id="splash" style="overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--red);">
+  <div class="sp-blob-tl"></div>
+  <div class="sp-blob-br"></div>
+  <div class="sp-sparks">
+    <div class="spark-group">
+      <div class="spark-row"><div class="spark"></div></div>
+      <div class="spark-row" style="margin-left:13px"><div class="spark sm"></div><div class="spark"></div></div>
+    </div>
   </div>
 
-  <div class="splash-left">
-    <h1 class="splash-title">Ds Academy</h1>
-    <p class="splash-sub">Os estudos em <strong>PRIMEIRO</strong> lugar!</p>
-    <button class="btn-entrar" onclick="goTo('login')">Entrar</button>
+  <!-- logo central -->
+  <div class="sp-logo">
+    <img src="logo.png" alt="DS Academy"
+      onerror="this.parentElement.innerHTML='<div style=\'width:90px;height:90px;background:rgba(255,255,255,.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-size:1.6rem;color:var(--orange);\'>DS</div>'"/>
   </div>
 
-  <div class="splash-right">
-    <!--
-      ╔═══════════════════════════════════╗
-      ║ Imagem dos livros (capa)         ║
-      ║ → coloque: splash_books.png      ║
-      ╚═══════════════════════════════════╝
-    -->
-    <img class="splash-books" src="./imgs/splash_books.png" alt="Livros" onerror="this.style.display='none'"/>
+  <!-- título + cta -->
+  <div class="sp-center">
+    <h1 class="sp-title">Ds Academy</h1>
+    <p class="sp-sub">Os estudos em <strong>PRIMEIRO</strong> lugar!</p>
+    <button class="sp-btn" onclick="goTo('login')">Entrar</button>
+  </div>
+
+  <!-- ilustração livros -->
+  <div class="sp-books">
+    <img src="splash_books.png" alt=""
+      onerror="this.parentElement.style.display='none'"/>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 2 — LOGIN
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 2 · LOGIN
+══════════════════════════════════════════ -->
 <div class="screen" id="login">
-  <div class="login-topbar"></div>
-  <div class="login-blob-bl"></div>
-  <div class="login-blob-br"></div>
-  <div class="login-watermark"></div>
+  <div class="login-top-bar"></div>
+  <div class="login-bl"></div>
+  <div class="login-br"></div>
+  <div class="login-wm"></div>
 
-  <!--
-    ╔═══════════════════════════════════╗
-    ║ Logo canto: logo_1.png           ║
-    ╚═══════════════════════════════════╝
-  -->
-  <img class="login-logo-corner" src="./imgs/logo_1.webp" alt="Logo" onerror="this.style.display='none'"/>
+  <img class="login-corner-logo" src="logo_1.png" alt=""
+    onerror="this.style.display='none'"/>
 
-  <div class="login-card">
-    <h2 class="login-title">Entre na sua conta</h2>
-    <p class="login-sub">Número de celular ou E-mail</p>
+  <div class="auth-card">
+    <h1 class="auth-title">Entre na sua conta</h1>
+    <p class="auth-sub">Número de celular ou E-mail</p>
 
-    <div class="input-wrap">
-      <input type="email" id="loginEmail" placeholder="nomecompleto@gmail.com"/>
-      <button class="input-clear" onclick="document.getElementById('loginEmail').value=''">✕</button>
+    <div class="field-wrap" style="width:100%">
+      <input type="email" id="loginEmail" placeholder="nomecompleto@gmail.com"
+        oninput="validateLoginEmail()"
+        onkeydown="if(event.key==='Enter')tryLogin()"/>
+      <button class="field-icon clear" onclick="clearField('loginEmail')" aria-label="Limpar">✕</button>
     </div>
+    <p id="loginEmailErr" style="font-size:.74rem;color:#e74c3c;display:none;align-self:flex-start;">Insira um e-mail válido.</p>
 
-    <button class="btn-continuar" onclick="goTo('home')">CONTINUAR</button>
+    <button class="btn-primary" onclick="tryLogin()">CONTINUAR</button>
 
-    <p class="login-create">Não tem uma conta? <a href="#" onclick="goTo('criar-conta');return false;">Crie Agora!</a></p>
+    <p class="auth-link-row">Não tem uma conta?
+      <a href="#" onclick="goTo('criar-conta');return false;">Crie Agora!</a>
+    </p>
 
     <div class="divider">Ou junte-se a</div>
 
     <button class="btn-social">
-      <span class="social-icon g">
+      <span class="si g">
         <svg width="18" height="18" viewBox="0 0 24 24">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -956,727 +1220,1163 @@ img{max-width:100%;display:block;}
       </span>
       Prosseguir com Google
     </button>
-
     <button class="btn-social">
-      <span class="social-icon fb">f</span>
+      <span class="si fb">f</span>
       Prosseguir com Facebook
     </button>
 
-    <div class="country-sel">🇧🇷 Brazil ▾</div>
+    <button class="country-btn">🇧🇷 Brazil ▾</button>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 3 — CRIAR CONTA
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 3 · CRIAR CONTA
+══════════════════════════════════════════ -->
 <div class="screen" id="criar-conta">
-  <div class="criar-topbar"></div>
-  <div class="criar-watermark"></div>
-
-  <div class="criar-sparks">
-    <div class="spark-row"><div class="spark" style="background:var(--orange)"></div></div>
-    <div class="spark-row" style="margin-left:10px"><div class="spark sm" style="background:var(--orange)"></div><div class="spark sm" style="background:var(--orange)"></div></div>
+  <div class="cc-top"></div>
+  <div class="cc-wm"></div>
+  <div class="cc-sparks">
+    <div class="spark-group">
+      <div class="spark-row"><div class="spark" style="background:var(--orange)"></div></div>
+      <div class="spark-row" style="margin-left:11px"><div class="spark sm" style="background:var(--orange)"></div><div class="spark sm" style="background:var(--orange)"></div></div>
+    </div>
   </div>
 
-  <!--
-    ╔═══════════════════════════════════╗
-    ║ Logo canto: logo_1.png           ║
-    ╚═══════════════════════════════════╝
-  -->
-  <img class="login-logo-corner" src="./imgs/logo_1.png" alt="Logo" onerror="this.style.display:'none'"/>
+  <img class="login-corner-logo" src="logo_1.png" alt="" onerror="this.style.display='none'"/>
 
-  <div class="criar-card">
-    <h2 class="criar-title">Criar sua conta Academy</h2>
-    <p class="criar-sub">É rápido e fácil</p>
+  <div class="auth-card">
+    <h1 class="auth-title" style="text-align:left">Criar sua conta Academy</h1>
+    <p class="auth-sub" style="text-align:left;align-self:flex-start;">É rápido e fácil</p>
 
-    <div class="input-group">
-      <label class="input-label">E-mail</label>
-      <div class="input-wrap">
-        <input type="email" id="criarEmail" placeholder="nomecompleto@gmail.com"/>
-        <button class="input-clear" style="font-size:.8rem">✏️</button>
+    <div class="field" style="width:100%">
+      <label for="ccEmail">E-mail</label>
+      <div class="field-wrap">
+        <input type="email" id="ccEmail" placeholder="nomecompleto@gmail.com"
+          oninput="validateCcEmail()"/>
+        <button class="field-icon clear" onclick="clearField('ccEmail')" aria-label="Limpar">✕</button>
       </div>
+      <p id="ccEmailErr" style="font-size:.73rem;color:#e74c3c;display:none;">Insira um e-mail válido.</p>
     </div>
 
-    <div class="input-group">
-      <label class="input-label">Senha</label>
-      <div class="input-wrap">
-        <input type="password" id="criarSenha" placeholder=""/>
-        <button class="input-clear" onclick="togglePwd()" style="font-size:.8rem">👁</button>
+    <div class="field" style="width:100%">
+      <label for="ccPwd">Senha</label>
+      <div class="field-wrap">
+        <input type="password" id="ccPwd" placeholder="••••••••"
+          oninput="validatePwd()"/>
+        <button class="field-icon toggle" onclick="togglePwd('ccPwd',this)" aria-label="Mostrar senha">👁</button>
       </div>
-      <span class="input-hint" id="hint1">Mínimo de 8 caracteres</span>
-      <span class="input-hint" id="hint2">Pelo menos uma letra</span>
-      <span class="input-hint" id="hint3">Pelo menos um número</span>
+      <p class="hint" id="h1">Mínimo de 8 caracteres</p>
+      <p class="hint" id="h2">Pelo menos uma letra</p>
+      <p class="hint" id="h3">Pelo menos um número</p>
     </div>
 
-    <button class="btn-cadastrar" onclick="goTo('home')">CADASTRE-SE</button>
+    <button class="btn-dark" onclick="tryRegister()">CADASTRE-SE</button>
 
-    <p style="font-size:.78rem;color:var(--text-light);text-align:center;">
-      Já tem conta? <a href="#" onclick="goTo('login');return false;" style="color:var(--red);font-weight:700;">Entrar</a>
+    <p class="auth-link-row">Já tem conta?
+      <a href="#" onclick="goTo('login');return false;">Entrar</a>
     </p>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 4 — HOME / DASHBOARD
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 4 · HOME / DASHBOARD
+══════════════════════════════════════════ -->
 <div class="screen" id="home">
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <!--
-      ╔═══════════════════════════════════╗
-      ║ Navbar logo: logo_1.png          ║
-      ╚═══════════════════════════════════╝
-    -->
-    <img class="navbar-logo" src="./imgs/logo_1.png" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+  <nav class="navbar" id="nav-home">
+    <img class="navbar-logo" src="logo_1.png" alt="DS Academy" onclick="goTo('home')"
+      onerror="this.outerHTML='<div class=\'navbar-logo-fb\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
     <div class="navbar-links">
-      <a href="#" onclick="goTo('home');return false;" class="active-link">Início</a>
-      <a href="#" onclick="goTo('cronograma');return false;">Cronograma</a>
-      <a href="#" onclick="goTo('conteudos');return false;">Conteúdos</a>
-      <a href="#" onclick="goTo('exercicios');return false;">Exercícios</a>
-      <a href="#">Docentes</a>
-      <a href="#">Redação Semanal</a>
+      <a href="#" onclick="nav('home');return false;" class="active">Início</a>
+      <a href="#" onclick="nav('cronograma');return false;">Cronograma</a>
+      <a href="#" onclick="nav('conteudos');return false;">Conteúdos</a>
+      <a href="#" onclick="nav('exercicios');return false;">Exercícios</a>
+      <a href="#" onclick="showToast('Em breve: Docentes');return false;">Docentes</a>
+      <a href="#" onclick="showToast('Em breve: Redação Semanal');return false;">Redação Semanal</a>
     </div>
     <div class="navbar-right">
-      <button class="navbar-icon" title="Configurações">
-        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-width="0"/></svg>
+      <button class="icon-btn hide-sm" title="Configurações" onclick="showToast('Configurações em breve')">
+        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       </button>
-      <button class="navbar-icon">
+      <button class="icon-btn hide-sm" title="Perfil">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
       </button>
     </div>
+    <button class="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <!-- HERO -->
+  <!-- hero -->
   <div class="home-hero">
-    <div>
-      <h1 class="home-hero-title">Ds Academy</h1>
-      <p class="home-hero-sub">Olá, Seu Nome!</p>
+    <div class="home-hero-text">
+      <h1>Ds Academy</h1>
+      <p>Olá, <span id="userName">Estudante</span>!</p>
     </div>
-    <!--
-      ╔══════════════════════════════════════╗
-      ║ Hero books: books_illustration.png  ║
-      ╚══════════════════════════════════════╝
-    -->
-    <img class="home-hero-books" src="./imgs/logo_1.webp" alt="" onerror="this.style.display='none'"/>
+    <img src="books_illustration.png" alt="" onerror="this.style.display='none'"/>
   </div>
 
-  <!-- BODY -->
+  <!-- body -->
   <div class="home-body">
-    <!-- LEFT -->
+    <!-- left -->
     <div class="home-left">
-      <div class="home-watermark"></div>
+      <div class="home-wm"></div>
 
-      <div class="ctx-card">
-        <div class="ctx-card-title">Contexto Educacional</div>
+      <div class="ctx-wrap">
+        <div class="ctx-label">Contexto Educacional</div>
         <div class="ctx-row">
-          <div class="ctx-row-info">
-            <strong>2026 | Curso Técnico de Desenvolvimento de Sistemas</strong>
+          <div class="ctx-info">
+            <strong>2026 | Técnico em Desenvolvimento de Sistemas</strong>
             <span>Situação: Em andamento</span>
           </div>
-          <button class="ctx-swap">⇅</button>
+          <button class="ctx-swap" title="Trocar contexto" onclick="showToast('Troca de contexto em breve')">⇅</button>
         </div>
       </div>
 
-      <div class="shortcut-grid">
-        <div class="shortcut-item" onclick="goTo('conteudos')">
-          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-          <span class="shortcut-label">Lógica de Programação</span>
-        </div>
-        <div class="shortcut-item" onclick="goTo('conteudos')">
-          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-          <span class="shortcut-label">Desenvolvimento Web</span>
-        </div>
-        <div class="shortcut-item" onclick="goTo('conteudos')">
-          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M9 9h6M9 13h6"/></svg></div>
-          <span class="shortcut-label">Banco de Dados</span>
-        </div>
-        <div class="shortcut-item" onclick="goTo('conteudos')">
-          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-          <span class="shortcut-label">Banco de Dados</span>
-        </div>
-        <div class="shortcut-item">
-          <div class="shortcut-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="currentColor"/></svg></div>
-          <span class="shortcut-label">Laboratório de Código</span>
-        </div>
-        <div class="shortcut-item">
-          <div class="shortcut-icon" style="border-radius:6px;">
-            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" fill="currentColor"/></svg>
+      <div class="shortcuts">
+        <div class="shortcut" onclick="nav('conteudos')">
+          <div class="shortcut-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
-          <span class="shortcut-label">Repositório Git</span>
+          <span>Lógica de Programação</span>
+        </div>
+        <div class="shortcut" onclick="nav('conteudos')">
+          <div class="shortcut-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <span>Desenvolvimento Web</span>
+        </div>
+        <div class="shortcut" onclick="nav('conteudos')">
+          <div class="shortcut-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <span>Banco de Dados</span>
+        </div>
+        <div class="shortcut" onclick="nav('conteudos')">
+          <div class="shortcut-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>
+          </div>
+          <span>Sistemas Operacionais</span>
+        </div>
+        <div class="shortcut" onclick="showToast('Laboratório em breve')">
+          <div class="shortcut-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <span>Lab. de Código</span>
+        </div>
+        <div class="shortcut" onclick="showToast('GitHub em breve')">
+          <div class="shortcut-ic" style="border-radius:8px">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+          </div>
+          <span>Repositório Git</span>
         </div>
       </div>
 
-      <div class="progress-card">
-        <div class="progress-title">Progresso do Curso</div>
-        <div class="progress-item">
-          <div class="progress-circle">
-            <div class="progress-fill" style="height:80%"></div>
-            <span style="position:relative;font-size:.6rem;color:#fff;font-weight:700">80%</span>
-          </div>
-          <div class="progress-info">
-            <strong>Lógica de Programação</strong>
+      <div class="prog-card">
+        <div class="prog-title">Progresso do Curso</div>
+        <div class="prog-item">
+          <div class="prog-ring">
+            <svg viewBox="0 0 42 42">
+              <circle class="bg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/>
+              <circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="21.36" data-pct="80"/>
+            </svg>
             <span>80%</span>
           </div>
+          <div class="prog-info"><strong>Lógica de Programação</strong><em>80% concluído</em></div>
         </div>
-        <div class="progress-item">
-          <div class="progress-circle">
-            <div class="progress-fill" style="height:65%"></div>
-            <span style="position:relative;font-size:.6rem;color:#fff;font-weight:700">65%</span>
-          </div>
-          <div class="progress-info">
-            <strong>Desenvolvimento Web</strong>
+        <div class="prog-item">
+          <div class="prog-ring">
+            <svg viewBox="0 0 42 42">
+              <circle class="bg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/>
+              <circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="37.38" data-pct="65"/>
+            </svg>
             <span>65%</span>
           </div>
+          <div class="prog-info"><strong>Desenvolvimento Web</strong><em>65% concluído</em></div>
         </div>
-        <div class="progress-item">
-          <div class="progress-circle">
-            <div class="progress-fill" style="height:40%"></div>
-            <span style="position:relative;font-size:.6rem;color:#fff;font-weight:700">40%</span>
-          </div>
-          <div class="progress-info">
-            <strong>Banco de Dados</strong>
+        <div class="prog-item">
+          <div class="prog-ring">
+            <svg viewBox="0 0 42 42">
+              <circle class="bg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/>
+              <circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="64.09" data-pct="40"/>
+            </svg>
             <span>40%</span>
           </div>
+          <div class="prog-info"><strong>Banco de Dados</strong><em>40% concluído</em></div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT — METAS -->
+    <!-- right: metas -->
     <div class="home-right">
       <h2 class="metas-title">Metas da Semana</h2>
-      <div class="meta-card"><div class="meta-plus">+</div></div>
-      <div class="meta-card"><div class="meta-plus">+</div></div>
-      <div class="meta-card"><div class="meta-plus">+</div></div>
+      <div class="meta-add" onclick="addMeta(this)"><div class="meta-add-ic">+</div></div>
+      <div class="meta-add" onclick="addMeta(this)"><div class="meta-add-ic">+</div></div>
+      <div class="meta-add" onclick="addMeta(this)"><div class="meta-add-ic">+</div></div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 5 — CRONOGRAMA
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 5 · CRONOGRAMA (Google Calendar)
+══════════════════════════════════════════ -->
 <div class="screen" id="cronograma">
   <nav class="navbar">
-    <img class="navbar-logo" src="/imgs/logo_1.webp" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <img class="navbar-logo" src="logo_1.png" alt="" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-fb\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
     <div class="navbar-links">
-      <a href="#" onclick="goTo('home');return false;">Início</a>
-      <a href="#" onclick="goTo('conteudos');return false;">Conteúdos</a>
-      <a href="#" onclick="goTo('exercicios');return false;">Exercícios</a>
-      <a href="#">Docentes</a>
-      <a href="#">Redação Semanal</a>
+      <a href="#" onclick="nav('home');return false;">Início</a>
+      <a href="#" class="active">Cronograma</a>
+      <a href="#" onclick="nav('conteudos');return false;">Conteúdos</a>
+      <a href="#" onclick="nav('exercicios');return false;">Exercícios</a>
     </div>
     <div class="navbar-right">
-      <button class="navbar-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+      <button class="icon-btn hide-sm"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
     </div>
+    <button class="hamburger" onclick="toggleDrawer()" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
 
-  <div class="hero-banner">
-    <button class="back-btn" onclick="goTo('home')" style="margin-right:12px">‹</button>
-    <div class="hero-sparks">
-      <div class="spark-row"><div class="spark"></div></div>
+  <!-- toolbar -->
+  <div class="cal-toolbar">
+    <button class="cal-today-btn" onclick="calToday()">Hoje</button>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calPrev()" title="Semana anterior">‹</button>
+      <button class="cal-nav-btn" onclick="calNext()" title="Próxima semana">›</button>
     </div>
-    <h1 class="hero-title">Cronograma <span>de Estudos da Semana</span></h1>
-    <!--
-      ╔══════════════════════════════════════╗
-      ║ Banner books: books_illustration.png ║
-      ╚══════════════════════════════════════╝
-    -->
-    <img class="hero-img" src="./imgs/logo_1.webp" alt="" onerror="this.style.display='none'"/>
+    <span class="cal-week-label" id="calWeekLabel"></span>
+    <div class="cal-view-tabs">
+      <button class="cal-view-tab active" id="vtWeek">Semana</button>
+      <button class="cal-view-tab" id="vtDay" onclick="showToast('Visão por dia em breve')">Dia</button>
+      <button class="cal-view-tab" id="vtMonth" onclick="showToast('Visão por mês em breve')">Mês</button>
+    </div>
   </div>
 
-  <div class="crono-content">
-    <div class="crono-table-wrap">
-      <table class="crono-table">
-        <thead>
-          <tr>
-            <th>Matérias</th>
-            <th>Segunda</th>
-            <th>Terça</th>
-            <th>Quarta</th>
-            <th>Quinta</th>
-            <th>Sexta</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Lógica de Programação</td>
-            <td>Videoaula: Variáveis, tipos de dados e operadores</td>
-            <td>Exercícios práticos de lógica - JavaScript</td>
-            <td>Videoaula: Estruturas condicionais (if / else)</td>
-            <td>Lista de exercícios de lógica</td>
-            <td>Aula de revisão</td>
-          </tr>
-          <tr>
-            <td>Desenvolvimento Web</td>
-            <td>Videoaula: HTML básico</td>
-            <td>Prática: Criar uma página simples</td>
-            <td>Videoaula: CSS básico</td>
-            <td>Prática: estilizar a página criada</td>
-            <td>Revisão + mini projeto</td>
-          </tr>
-          <tr>
-            <td>Banco de Dados</td>
-            <td>Videoaula: Introdução a banco de dados</td>
-            <td>Modelagem simples de banco</td>
-            <td>Videoaula: SQL básico</td>
-            <td>Exercícios de consultas SQL</td>
-            <td>Revisão + prática no banco</td>
-          </tr>
-          <tr>
-            <td>Sistemas Operacionais</td>
-            <td>Videoaula: Conceitos de sistemas operacionais</td>
-            <td>Estudo: gerenciamento de processos</td>
-            <td>Videoaula: Sistemas de arquivos</td>
-            <td>Prática: comandos básicos do terminal</td>
-            <td>Revisão + resumo da semana</td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- quick-add event -->
+  <div class="cal-add-row">
+    <input type="text" id="calAddTitle" placeholder="+ Adicionar evento ou tarefa..."/>
+    <select id="calAddSubject">
+      <option value="logica">Lógica</option>
+      <option value="web">Dev. Web</option>
+      <option value="banco">Banco de Dados</option>
+      <option value="so">Sist. Op.</option>
+      <option value="revisao">Revisão</option>
+    </select>
+    <button onclick="calAddEvent()">Adicionar</button>
+  </div>
+
+  <!-- calendar grid (rendered by JS) -->
+  <div class="cal-grid-wrap">
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- legend -->
+  <div class="cal-legend">
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#C0392B"></div>Lógica de Programação</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#2980B9"></div>Desenvolvimento Web</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#27AE60"></div>Banco de Dados</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#E74C3C"></div>Sistemas Operacionais</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#D4A843"></div>Revisão</div>
+  </div>
+</div>
+
+<!-- event detail modal -->
+<div class="ev-modal-overlay" id="evModalOverlay" onclick="closeEvModal(event)">
+  <div class="ev-modal" onclick="event.stopPropagation()">
+    <div class="ev-modal-head">
+      <div class="ev-modal-color" id="evModalColor"></div>
+      <div>
+        <div class="ev-modal-title" id="evModalTitle"></div>
+        <div style="font-size:.76rem;color:var(--ink-l);margin-top:3px" id="evModalSubject"></div>
+      </div>
+      <button class="ev-modal-close" onclick="closeEvModal()">✕</button>
+    </div>
+    <div class="ev-modal-body">
+      <div class="ev-modal-row"><em>🕐</em><span id="evModalTime"></span></div>
+      <div class="ev-modal-row"><em>📅</em><span id="evModalDay"></span></div>
+      <div class="ev-modal-row"><em>📝</em><span id="evModalDesc"></span></div>
+    </div>
+    <div class="ev-modal-actions">
+      <button class="ev-modal-btn sec" onclick="closeEvModal()">Fechar</button>
+      <button class="ev-modal-btn primary" onclick="markEventDone()">✓ Concluído</button>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 6 — CONTEÚDOS VIDEOAULA
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 6 · CONTEÚDOS VIDEOAULA
+══════════════════════════════════════════ -->
 <div class="screen" id="conteudos">
   <nav class="navbar">
-    <img class="navbar-logo" src="./imgs/logo_dridrix.png" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <img class="navbar-logo" src="logo_1.png" alt="" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-fb\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
     <div class="navbar-links">
-      <a href="#" onclick="goTo('home');return false;">Início</a>
-      <a href="#" onclick="goTo('exercicios');return false;">Exercícios</a>
-      <a href="#">Docentes</a>
+      <a href="#" onclick="nav('home');return false;">Início</a>
+      <a href="#" class="active">Conteúdos</a>
+      <a href="#" onclick="nav('exercicios');return false;">Exercícios</a>
+      <a href="#" onclick="showToast('Em breve: Docentes');return false;">Docentes</a>
     </div>
     <div class="navbar-right">
-      <button class="navbar-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+      <button class="icon-btn hide-sm"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
     </div>
+    <button class="hamburger" onclick="toggleDrawer()" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
 
-  <div class="conteudos-body">
-    <!-- LEFT: video list -->
-    <div class="conteudos-left">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-        <button class="back-btn" onclick="goTo('home')" style="background:rgba(0,0,0,.15);color:var(--text-dark)">‹</button>
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.4rem,3vw,2.2rem);color:var(--orange);">Conteúdos</div>
-          <div style="font-family:'Caveat',cursive;font-size:clamp(1rem,2vw,1.5rem);color:var(--red);font-weight:700;">Videoaula</div>
+  <div class="cont-body">
+    <!-- lista de vídeos -->
+    <div class="cont-left">
+      <div class="cont-header">
+        <button class="back-btn" onclick="goTo('home')" style="background:rgba(0,0,0,.1);color:var(--ink)">‹</button>
+        <div class="cont-header-text">
+          <h2>Conteúdos</h2>
+          <p>Videoaula</p>
         </div>
-        <!--
-          ╔══════════════════════════════════════╗
-          ║ Icon books: books_illustration.png   ║
-          ╚══════════════════════════════════════╝
-        -->
-        <img src="books_illustration.png" style="width:50px;margin-left:auto;" onerror="this.style.display='none'" alt=""/>
+        <img src="books_illustration.png" alt="" style="width:46px;margin-left:auto" onerror="this.style.display='none'"/>
       </div>
 
-      <div class="section-title">Lógica de Programação</div>
-
-      <div class="video-item selected" onclick="selectVideo(this,'Lógica de Programação')">
-        <div class="video-thumb" style="background:#111;font-size:.6rem;padding:4px;color:#fff;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;">
-          <!--
-            ╔══════════════════════════════════╗
-            ║ Thumb: imagem do vídeo 1         ║
-            ║ <img src="thumb1.jpg">           ║
-            ╚══════════════════════════════════╝
-          -->
-          LÓGICA DE PROGRAMAÇÃO
-        </div>
-        <div class="video-info">
+      <div class="sect-lbl">Lógica de Programação</div>
+      <div class="vid-item sel" onclick="selVid(this,'Lógica de Programação','DBA PRO','Entenda LÓGICA DE PROGRAMAÇÃO e ALGORITMOS — Sharpax','1 mi · 6 anos atrás')">
+        <div class="vid-thumb">LÓGICA PROG</div>
+        <div class="vid-info">
           <strong>Entenda LÓGICA DE PROGRAMAÇÃO e ALGORITMOS</strong>
           <span>Sharpax · 1 mi de visualizações · há 6 anos</span>
         </div>
-        <button class="video-menu">⋮</button>
+        <button class="vid-more" onclick="event.stopPropagation()">⋮</button>
       </div>
-
-      <div class="video-item" onclick="selectVideo(this,'Desenvolvimento Web')">
-        <div class="video-thumb" style="background:#0a2540;">
-          DEV WEB 03
-        </div>
-        <div class="video-info">
+      <div class="vid-item" onclick="selVid(this,'Desenvolvimento Web','Curso em Vídeo','Comece sua carreira em Desenvolvimento Web','70 mil · 2 anos atrás')">
+        <div class="vid-thumb" style="background:#0a2540">DEV WEB</div>
+        <div class="vid-info">
           <strong>Comece sua carreira em Desenvolvimento Web</strong>
-          <span>Curso em Vídeo · 70 mil visualizações · há 2 anos</span>
+          <span>Curso em Vídeo · 70 mil · há 2 anos</span>
         </div>
-        <button class="video-menu">⋮</button>
+        <button class="vid-more" onclick="event.stopPropagation()">⋮</button>
+      </div>
+      <div class="vid-item" onclick="selVid(this,'Banco de Dados','DBA PRO','O que é BANCO DE DADOS e porque INTERESSA APRENDER isso?','347 mil · 8 anos atrás')">
+        <div class="vid-thumb" style="background:#1a1a2e">BANCO DADOS</div>
+        <div class="vid-info">
+          <strong>O que é BANCO DE DADOS e porque INTERESSA APRENDER?</strong>
+          <span>DBA PRO · 347 mil · há 8 anos</span>
+        </div>
+        <button class="vid-more" onclick="event.stopPropagation()">⋮</button>
       </div>
 
-      <div class="video-item" onclick="selectVideo(this,'Banco de Dados')">
-        <div class="video-thumb" style="background:#1a1a2e;">
-          BANCO DE DADOS
+      <div class="sect-lbl">Sistemas Operacionais</div>
+      <div class="vid-item" onclick="selVid(this,'Sistemas Operacionais','Prof. Marcel Rios','Aula 1 — Introdução aos Sistemas Operacionais','71 mil · 2 anos atrás')">
+        <div class="vid-thumb" style="background:#0d3b1e">SIST. OP.</div>
+        <div class="vid-info">
+          <strong>Aula 1 — Introdução aos Sistemas Operacionais</strong>
+          <span>Prof. Marcel Rios · 71 mil · há 2 anos</span>
         </div>
-        <div class="video-info">
-          <strong>O que é BANCO DE DADOS e porque INTERESSA APRENDER isso?</strong>
-          <span>DBA PRO · 347 mil visualizações · há 8 anos</span>
-        </div>
-        <button class="video-menu">⋮</button>
+        <button class="vid-more" onclick="event.stopPropagation()">⋮</button>
       </div>
 
-      <div class="section-title" style="margin-top:16px">Sistemas Operacionais</div>
-
-      <div class="video-item" onclick="selectVideo(this,'Sistemas Operacionais')">
-        <div class="video-thumb" style="background:#0d3b1e;">
-          SISTEMAS OPERACIONAIS
+      <div class="sect-lbl">Desenvolvimento Web</div>
+      <div class="vid-item" onclick="selVid(this,'HTML + CSS','Rocketseat','HTML e CSS na Prática — do zero ao site completo','200 mil · 1 ano atrás')">
+        <div class="vid-thumb" style="background:#7c3aed">HTML+CSS</div>
+        <div class="vid-info">
+          <strong>HTML e CSS na Prática — do zero ao site completo</strong>
+          <span>Rocketseat · 200 mil · há 1 ano</span>
         </div>
-        <div class="video-info">
-          <strong>Aula 1 - Introdução aos Sistemas Operacionais</strong>
-          <span>Prof. Marcel Rios · 71 mil visualizações · há 2 anos</span>
-        </div>
-        <button class="video-menu">⋮</button>
+        <button class="vid-more" onclick="event.stopPropagation()">⋮</button>
       </div>
     </div>
 
-    <!-- RIGHT: notes + content -->
-    <div class="conteudos-right">
-      <div class="conteudos-right-inner">
-        <div class="notes-panel">
-          <div class="note-title" id="notesTitle">Anotações :</div>
-          <textarea class="note-area" id="notesArea" placeholder="Digite aqui..."></textarea>
-        </div>
+    <!-- notas -->
+    <div class="cont-right">
+      <div class="notes-panel">
+        <p class="notes-label" id="notesLabel">Anotações :</p>
+        <textarea class="note-area" id="noteArea" placeholder="Digite suas anotações aqui..."></textarea>
+        <button class="note-save-btn" onclick="saveNote()">💾 Salvar anotação</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 7 — VÍDEO AULA
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 7 · VÍDEO AULA
+══════════════════════════════════════════ -->
 <div class="screen" id="videoaula">
-  <nav class="navbar" style="position:relative;z-index:10;">
-    <img class="navbar-logo" src="logo_1.png" alt="Logo" onclick="goTo('home')" onerror="this.style.display='none'"/>
+  <nav class="navbar" style="background:var(--ink);border-color:rgba(255,255,255,.06);">
+    <img class="navbar-logo" src="logo_1.png" alt="" onclick="goTo('home')"
+      style="filter:brightness(10)" onerror="this.style.display='none'"/>
+    <div style="margin-left:auto;margin-right:auto;font-family:var(--font-title);font-size:.9rem;color:rgba(255,255,255,.6)" id="vaTitle">Videoaula</div>
+    <button class="icon-btn" onclick="goTo('conteudos')" style="background:rgba(255,255,255,.15)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+    </button>
   </nav>
 
-  <div class="video-page-wrap">
-    <!-- VIDEO MAIN -->
-    <div class="video-main">
-      <div class="video-player">
-        <button class="video-back-btn back-btn" onclick="goTo('conteudos')">‹</button>
-        <button class="video-notes-toggle" onclick="toggleVideoLayout()" title="Anotações">✏️</button>
-        <div class="video-frame-placeholder">
-          <!--
-            ╔══════════════════════════════════════════╗
-            ║ Aqui vai o iframe do vídeo ou thumbnail  ║
-            ║ Exemplo:                                 ║
-            ║ <iframe src="https://youtube.com/embed/X"║
-            ║   allow="autoplay" allowfullscreen>      ║
-            ║ </iframe>                                ║
-            ╚══════════════════════════════════════════╝
-          -->
-          <div>
-            <div style="font-size:2rem;margin-bottom:8px;">▶</div>
-            <p>Coloque o iframe do vídeo aqui<br><small>url: youtube.com/embed/ID</small></p>
-          </div>
+  <div class="va-wrap">
+    <div class="va-main">
+      <div class="va-player">
+        <button class="va-back back-btn" onclick="goTo('conteudos')">‹</button>
+        <button class="va-note-toggle" onclick="toggleVaSidebar()" title="Anotações">✏️</button>
+
+        <div class="va-iframe-wrap" id="vaFrame">
+          <div style="font-size:2.5rem;margin-bottom:6px;opacity:.35">▶</div>
+          <p>Cole o iframe do YouTube aqui</p>
+          <code style="font-size:.7rem;opacity:.45;margin-top:4px">url: youtube.com/embed/VIDEO_ID</code>
         </div>
-        <!-- Controls overlay -->
-        <div class="video-controls" style="position:absolute;bottom:0;left:0;right:0;">
-          <button class="ctrl-btn">▶</button>
-          <button class="ctrl-btn">🔊</button>
-          <span class="time-label">0:08 / 14:12</span>
-          <div class="progress-bar-wrap" onclick="seekVideo(event,this)">
-            <div class="progress-bar-fill" id="vProgress"></div>
+        <!--
+          ╔══════════════════════════════════════════╗
+          ║  Para usar o vídeo real:                ║
+          ║  Substitua <div class="va-iframe-wrap"> ║
+          ║  por:                                   ║
+          ║  <iframe src="https://youtube.com/      ║
+          ║    embed/ID?autoplay=1"                 ║
+          ║    width="100%" height="100%"           ║
+          ║    allow="autoplay; fullscreen"         ║
+          ║    allowfullscreen frameborder="0">     ║
+          ║  </iframe>                              ║
+          ╚══════════════════════════════════════════╝
+        -->
+
+        <div class="va-controls">
+          <button class="ctrl-btn" id="playBtn" onclick="togglePlay(this)" title="Play/Pause">▶</button>
+          <button class="ctrl-btn" title="Volume">🔊</button>
+          <span class="va-time" id="vaTime">0:08 / 14:12</span>
+          <div class="va-progress" onclick="seekVid(event,this)" id="vaBar">
+            <div class="va-progress-fill" id="vaFill"></div>
           </div>
-          <button class="chapter-tag">Introdução ›</button>
+          <button class="va-chap">Introdução ›</button>
         </div>
       </div>
 
-      <!-- Channel info -->
-      <div class="video-channel">
-        <div class="channel-logo">DBA</div>
-        <div class="channel-info">
-          <strong>DBA PRO</strong>
-          <span>26,5 mil inscritos</span>
+      <div class="va-channel">
+        <div class="va-ch-logo" id="vaChLogo">DBA</div>
+        <div class="va-ch-info">
+          <strong id="vaChName">DBA PRO</strong>
+          <span id="vaChSubs">26,5 mil inscritos</span>
         </div>
-        <button class="btn-subscribe">Inscrever-se</button>
+        <button class="va-sub-btn">Inscrever-se</button>
       </div>
     </div>
 
-    <!-- SIDEBAR: notes -->
-    <div class="video-sidebar" id="videoSidebar">
-      <div class="video-sidebar-title">Anotações :</div>
-      <textarea class="note-area" placeholder="Digite aqui..." style="flex:1;min-height:0;"></textarea>
+    <div class="va-sidebar" id="vaSidebar">
+      <p class="notes-label" id="vaNoteLabel">Anotações :</p>
+      <textarea class="note-area" id="vaNoteArea" style="flex:1;min-height:0" placeholder="Suas anotações..."></textarea>
+      <button class="note-save-btn" onclick="saveVaNote()" style="margin-top:6px">💾 Salvar</button>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     SCREEN 8 — EXERCÍCIOS
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SCREEN 8 · EXERCÍCIOS
+══════════════════════════════════════════ -->
 <div class="screen" id="exercicios">
   <nav class="navbar">
-    <img class="navbar-logo" src="logo_1.png" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <img class="navbar-logo" src="logo_1.png" alt="" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-fb\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
     <div class="navbar-links">
-      <a href="#" onclick="goTo('home');return false;">Início</a>
-      <a href="#" onclick="goTo('conteudos');return false;">Conteúdos</a>
-      <a href="#">Docentes</a>
+      <a href="#" onclick="nav('home');return false;">Início</a>
+      <a href="#" onclick="nav('conteudos');return false;">Conteúdos</a>
+      <a href="#" class="active">Exercícios</a>
+      <a href="#" onclick="showToast('Em breve: Docentes');return false;">Docentes</a>
     </div>
     <div class="navbar-right">
-      <button class="navbar-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+      <button class="icon-btn hide-sm"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
     </div>
+    <button class="hamburger" onclick="toggleDrawer()" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
 
   <div class="hero-banner">
-    <div class="hero-sparks">
+    <div class="spark-group" style="margin-right:8px">
       <div class="spark-row"><div class="spark"></div></div>
       <div class="spark-row" style="margin-left:10px"><div class="spark sm"></div><div class="spark"></div></div>
     </div>
     <h1 class="hero-title">Exercícios <span>do Curso</span></h1>
-    <!--
-      ╔══════════════════════════════════════╗
-      ║ Hero books: books_illustration.png   ║
-      ╚══════════════════════════════════════╝
-    -->
-    <img class="hero-img" src="./imgs/books_illustration.png" alt="" onerror="this.style.display='none'"/>
+    <img class="hero-img" src="books_illustration.png" alt="" onerror="this.style.display='none'"/>
   </div>
 
-  <!-- LIST VIEW -->
-  <div id="exListView" class="ex-content">
-    <div class="ex-section-title">Lógica de Programação</div>
+  <!-- list -->
+  <div id="exList" class="ex-wrap">
+    <div class="ex-sect">Lógica de Programação</div>
     <div class="ex-grid">
-      <div class="ex-card" onclick="openExercise('Intermediário','15-02 | Projeto: Solução para a Escola [Sprint 3]','Crie um programa que:<br><ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul>','Entregue','20 de Fevereiro 13:20')">
-        <div class="ex-card-header">
-          <div class="ex-level">→ Intermediário</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
+      <div class="ex-card" onclick="openEx({level:'Intermediário',title:'15-02 | Projeto: Solução para a Escola [Sprint 3]',body:'Crie um programa que:<ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul>',badge:'ok',badgeLabel:'Entregue',date:'20 de Fevereiro 13:20'})">
+        <div class="ex-card-top">
+          <span class="ex-level-badge">→ Intermediário</span>
+          <div class="ex-actions">
+            <button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button>
+            <button class="ex-btn" onclick="event.stopPropagation();openEx({level:'Intermediário',title:'15-02 | Projeto: Solução para a Escola [Sprint 3]',body:'Crie um programa que:<ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul>',badge:'ok',badgeLabel:'Entregue',date:'20 de Fevereiro 13:20'})">➤</button>
           </div>
         </div>
-        <div class="ex-card-body">
-          Crie um programa que:
-          <ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul>
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-entregue">Entregue</span>
-          <span class="ex-date">20 de Fevereiro 13:20</span>
+        <div class="ex-body">Crie um programa que:<ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul></div>
+        <div class="ex-foot">
+          <span class="badge ok">Entregue</span>
+          <span class="ex-date-lbl">20 de Fevereiro 13:20</span>
         </div>
       </div>
-
-      <div class="ex-card" onclick="openExercise('Avançado','Bubble Sort','Faça um algoritmo que:<br><ul><li>Receba uma lista de números</li><li>Ordene sem usar funções prontas (ex: Bubble Sort)</li></ul>','Em atraso','20 de Fevereiro')">
-        <div class="ex-card-header">
-          <div class="ex-level" style="color:var(--gold)">→ Avançado</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
+      <div class="ex-card" onclick="openEx({level:'Avançado',title:'Bubble Sort — Implementação Manual',body:'Faça um algoritmo que:<ul><li>Receba uma lista de números</li><li>Ordene sem usar funções prontas (ex: Bubble Sort)</li></ul>',badge:'late',badgeLabel:'Em atraso',date:'20 de Fevereiro'})">
+        <div class="ex-card-top">
+          <span class="ex-level-badge adv">→ Avançado</span>
+          <div class="ex-actions">
+            <button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button>
+            <button class="ex-btn" onclick="event.stopPropagation()">➤</button>
           </div>
         </div>
-        <div class="ex-card-body">
-          Faça um algoritmo que:
-          <ul><li>Receba uma lista de números</li><li>Ordene sem usar funções prontas (ex: Bubble Sort)</li></ul>
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-atraso">Em atraso</span>
-          <span class="ex-date">20 de Fevereiro</span>
+        <div class="ex-body">Faça um algoritmo que:<ul><li>Receba uma lista de números</li><li>Ordene sem usar funções prontas (ex: Bubble Sort)</li></ul></div>
+        <div class="ex-foot">
+          <span class="badge late">Em atraso</span>
+          <span class="ex-date-lbl">20 de Fevereiro</span>
         </div>
       </div>
     </div>
 
-    <div class="ex-section-title">Desenvolvimento Web</div>
+    <div class="ex-sect">Desenvolvimento Web</div>
     <div class="ex-grid">
-      <div class="ex-card">
-        <div class="ex-card-header">
-          <div class="ex-level">→ HTML + CSS</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
-          </div>
+      <div class="ex-card" onclick="openEx({level:'HTML + CSS',title:'Página com Formulário',body:'Crie uma página com:<ul><li>Um título</li><li>Um formulário com nome, e-mail e senha</li><li>Botão de envio estilizado</li></ul>',badge:'pend',badgeLabel:'Pendente',date:'03 de Abril'})">
+        <div class="ex-card-top">
+          <span class="ex-level-badge">→ HTML + CSS</span>
+          <div class="ex-actions"><button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button><button class="ex-btn" onclick="event.stopPropagation()">➤</button></div>
         </div>
-        <div class="ex-card-body">
-          Crie uma página com:
-          <ul><li>Um título</li><li>Um formulário com nome, email e senha...</li></ul>
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-pendente">Pendente</span>
-          <span class="ex-date">03 de Abril</span>
-        </div>
+        <div class="ex-body">Crie uma página com:<ul><li>Um título</li><li>Um formulário com nome, e-mail e senha...</li></ul></div>
+        <div class="ex-foot"><span class="badge pend">Pendente</span><span class="ex-date-lbl">03 de Abril</span></div>
       </div>
-
-      <div class="ex-card">
-        <div class="ex-card-header">
-          <div class="ex-level" style="color:var(--gold)">→ JavaScript</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
-          </div>
+      <div class="ex-card" onclick="openEx({level:'JavaScript',title:'Script com Input + Alerta',body:'Faça um script que:<ul><li>Capture o valor de um input</li><li>Ao clicar no botão, mostre um alerta com o valor</li><li>Valide se o campo está vazio</li></ul>',badge:'pend',badgeLabel:'Pendente',date:'15 de Abril'})">
+        <div class="ex-card-top">
+          <span class="ex-level-badge adv">→ JavaScript</span>
+          <div class="ex-actions"><button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button><button class="ex-btn" onclick="event.stopPropagation()">➤</button></div>
         </div>
-        <div class="ex-card-body">
-          Faça um script que:
-          <ul><li>Capture o valor de um input</li><li>Ao clicar no botão, mostre um alerta com o val...</li></ul>
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-pendente">Pendente</span>
-          <span class="ex-date">15 de Abril</span>
-        </div>
+        <div class="ex-body">Faça um script que:<ul><li>Capture o valor de um input</li><li>Ao clicar no botão, mostre um alerta com o val...</li></ul></div>
+        <div class="ex-foot"><span class="badge pend">Pendente</span><span class="ex-date-lbl">15 de Abril</span></div>
       </div>
     </div>
 
-    <div class="ex-section-title">Banco de Dados</div>
+    <div class="ex-sect">Banco de Dados</div>
     <div class="ex-grid">
-      <div class="ex-card">
-        <div class="ex-card-header">
-          <div class="ex-level">→ Intermediário</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
-          </div>
-        </div>
-        <div class="ex-card-body">
-          Com uma tabela pedidos:<br><strong>(id, cliente_id, valor)</strong><br>
-          Faça uma query que:<ul><li>Mostre o total de pedidos por cliente</li></ul>
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-pendente">Pendente</span>
-          <span class="ex-date">02 de Abril</span>
-        </div>
+      <div class="ex-card" onclick="openEx({level:'Intermediário',title:'Query de Agrupamento',body:'Com uma tabela pedidos <strong>(id, cliente_id, valor)</strong><br>Faça uma query que:<ul><li>Mostre o total de pedidos por cliente</li><li>Ordene do maior para o menor</li></ul>',badge:'pend',badgeLabel:'Pendente',date:'02 de Abril'})">
+        <div class="ex-card-top"><span class="ex-level-badge">→ Intermediário</span><div class="ex-actions"><button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button><button class="ex-btn" onclick="event.stopPropagation()">➤</button></div></div>
+        <div class="ex-body">Com uma tabela <strong>pedidos (id, cliente_id, valor)</strong> — Faça uma query que:<ul><li>Mostre o total de pedidos por cliente</li></ul></div>
+        <div class="ex-foot"><span class="badge pend">Pendente</span><span class="ex-date-lbl">02 de Abril</span></div>
       </div>
-
-      <div class="ex-card">
-        <div class="ex-card-header">
-          <div class="ex-level" style="color:var(--gold)">→ Avançado</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
-          </div>
-        </div>
-        <div class="ex-card-body">
-          Explique e escreva um exemplo de:
-          <ul><li>INNER JOIN</li><li>LEFT JOIN</li></ul>
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-entregue">Entregue</span>
-          <span class="ex-date">10 de Março 15:54</span>
-        </div>
+      <div class="ex-card" onclick="openEx({level:'Avançado',title:'INNER JOIN × LEFT JOIN',body:'Explique e escreva um exemplo de:<ul><li>INNER JOIN</li><li>LEFT JOIN</li><li>Quando usar cada um</li></ul>',badge:'ok',badgeLabel:'Entregue',date:'10 de Março 15:54'})">
+        <div class="ex-card-top"><span class="ex-level-badge adv">→ Avançado</span><div class="ex-actions"><button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button><button class="ex-btn" onclick="event.stopPropagation()">➤</button></div></div>
+        <div class="ex-body">Explique e escreva um exemplo de:<ul><li>INNER JOIN</li><li>LEFT JOIN</li></ul></div>
+        <div class="ex-foot"><span class="badge ok">Entregue</span><span class="ex-date-lbl">10 de Março 15:54</span></div>
       </div>
     </div>
 
-    <div class="ex-section-title">Sistemas Operacionais</div>
+    <div class="ex-sect">Sistemas Operacionais</div>
     <div class="ex-grid">
-      <div class="ex-card">
-        <div class="ex-card-header">
-          <div class="ex-level">→ Intermediário</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
-          </div>
-        </div>
-        <div class="ex-card-body">
-          Qual a diferença entre: processos e threads?
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-pendente">Pendente</span>
-          <span class="ex-date">10 de Abril</span>
-        </div>
+      <div class="ex-card" onclick="openEx({level:'Intermediário',title:'Processos × Threads',body:'Qual a diferença entre:<ul><li>Processos</li><li>Threads</li></ul>Dê um exemplo prático de cada.',badge:'pend',badgeLabel:'Pendente',date:'10 de Abril'})">
+        <div class="ex-card-top"><span class="ex-level-badge">→ Intermediário</span><div class="ex-actions"><button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button><button class="ex-btn" onclick="event.stopPropagation()">➤</button></div></div>
+        <div class="ex-body">Qual a diferença entre processos e threads? Dê um exemplo prático de cada.</div>
+        <div class="ex-foot"><span class="badge pend">Pendente</span><span class="ex-date-lbl">10 de Abril</span></div>
       </div>
-
-      <div class="ex-card">
-        <div class="ex-card-header">
-          <div class="ex-level" style="color:var(--gold)">→ Avançado</div>
-          <div class="ex-card-actions">
-            <button class="ex-action-btn">📎</button>
-            <button class="ex-action-btn">➤</button>
-          </div>
-        </div>
-        <div class="ex-card-body">
-          Explique o conceito de escalonamento de processos.
-        </div>
-        <div class="ex-card-foot">
-          <span class="badge-pendente">Pendente</span>
-          <span class="ex-date">12 de Abril</span>
-        </div>
+      <div class="ex-card" onclick="openEx({level:'Avançado',title:'Escalonamento de Processos',body:'Explique o conceito de escalonamento de processos:<ul><li>FIFO</li><li>Round Robin</li><li>Prioridade</li></ul>',badge:'pend',badgeLabel:'Pendente',date:'12 de Abril'})">
+        <div class="ex-card-top"><span class="ex-level-badge adv">→ Avançado</span><div class="ex-actions"><button class="ex-btn" onclick="event.stopPropagation();showToast('Anexo adicionado')">📎</button><button class="ex-btn" onclick="event.stopPropagation()">➤</button></div></div>
+        <div class="ex-body">Explique o conceito de escalonamento de processos (FIFO, Round Robin, Prioridade).</div>
+        <div class="ex-foot"><span class="badge pend">Pendente</span><span class="ex-date-lbl">12 de Abril</span></div>
       </div>
     </div>
   </div>
 
-  <!-- SINGLE EXERCISE VIEW -->
-  <div id="exSingleView" style="display:none;" class="ex-content">
-    <div class="ex-single-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
-        <button onclick="closeExercise()" style="background:none;border:none;color:var(--text-light);font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:4px;">‹ Voltar</button>
-        <div style="display:flex;gap:8px;">
-          <button class="ex-action-btn" style="width:36px;height:36px;">📎</button>
-          <button class="ex-action-btn" style="width:36px;height:36px;">✈️</button>
+  <!-- single exercise view -->
+  <div id="exSingle" style="display:none" class="ex-wrap">
+    <div class="ex-single">
+      <div class="ex-single-header">
+        <button class="ex-back-btn" onclick="closeEx()">‹ Voltar</button>
+        <div class="ex-actions">
+          <button class="ex-btn" style="width:32px;height:32px" onclick="showToast('Arquivo anexado')">📎</button>
+          <button class="ex-btn" style="width:32px;height:32px" onclick="submitAnswer()">✈️</button>
         </div>
       </div>
-      <h2 class="ex-single-title" id="exSingleTitle"></h2>
-      <div class="ex-card-body" id="exSingleBody" style="margin-bottom:20px;"></div>
-      <div style="text-align:right;">
-        <div id="exSingleBadge" class="badge-entregue" style="margin-bottom:4px;"></div>
-        <div id="exSingleDate" class="ex-date"></div>
+      <div class="ex-level-badge" id="exSLvl" style="display:inline-flex;margin-bottom:10px"></div>
+      <h2 class="ex-single-title" id="exSTitle"></h2>
+      <div class="ex-body" id="exSBody"></div>
+      <div class="ex-single-foot">
+        <span class="badge" id="exSBadge"></span>
+        <p class="ex-date-lbl" id="exSDate" style="margin-top:4px"></p>
+      </div>
+      <div class="answer-area">
+        <label>Sua Resposta</label>
+        <textarea id="exAnswer" placeholder="Digite ou cole sua resposta aqui..."></textarea>
+        <div class="answer-actions">
+          <button class="btn-attach" onclick="showToast('Escolha o arquivo no seu dispositivo')">📎 Anexar arquivo</button>
+          <button class="btn-submit" onclick="submitAnswer()">Entregar ✈️</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     MOBILE DRAWER
+══════════════════════════════════════════ -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span class="drawer-head-title">Ds Academy</span>
+    <button class="drawer-x" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-nav" id="drawerNav">
+    <a href="#" onclick="nav('home');closeDrawer();return false;" data-page="home"><em>🏠</em>Início</a>
+    <a href="#" onclick="nav('cronograma');closeDrawer();return false;" data-page="cronograma"><em>📅</em>Cronograma</a>
+    <a href="#" onclick="nav('conteudos');closeDrawer();return false;" data-page="conteudos"><em>🎬</em>Conteúdos</a>
+    <a href="#" onclick="nav('exercicios');closeDrawer();return false;" data-page="exercicios"><em>📝</em>Exercícios</a>
+    <a href="#" onclick="showToast('Em breve: Docentes');closeDrawer();return false;"><em>👨‍🏫</em>Docentes</a>
+    <a href="#" onclick="showToast('Em breve: Redação Semanal');closeDrawer();return false;"><em>✍️</em>Redação Semanal</a>
+  </div>
+  <div class="drawer-foot">
+    <button class="icon-btn" onclick="showToast('Configurações em breve')">
+      <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
+    <button class="icon-btn">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+    </button>
+    <button onclick="logout()" style="margin-left:auto;background:none;border:1px solid rgba(192,57,43,.2);border-radius:var(--r);padding:7px 14px;font-size:.78rem;color:var(--red);cursor:pointer;font-weight:600;transition:background .15s;" onmouseenter="this.style.background='rgba(192,57,43,.06)'" onmouseleave="this.style.background='none'">Sair</button>
+  </div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"></div>
+
 <script>
-/* ── Navigation ── */
-function goTo(id){
-  document.querySelectorAll('.screen').forEach(s=>{
-    s.classList.remove('active');
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+const state = {
+  currentPage: 'splash',
+  user: { name: 'Estudante', email: '' },
+  notes: {},       // subject -> text
+  vaNotes: {},     // video title -> text
+  metas: [],       // filled meta goals
+  isPlaying: false,
+  vidProgress: 1,
+};
+
+/* ═══════════════════════════════
+   NAVIGATION
+═══════════════════════════════ */
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById(id);
+  if (!t) return;
+  t.classList.add('active');
+  t.scrollTop = 0;
+  state.currentPage = id;
+  updateDrawerActive(id);
+  if (id === 'cronograma') setTimeout(calRender, 40);
+}
+
+// nav() — same as goTo but also closes drawer
+function nav(id) {
+  goTo(id);
+  closeDrawer();
+}
+
+function updateDrawerActive(id) {
+  document.querySelectorAll('#drawerNav a[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === id);
   });
-  const t=document.getElementById(id);
-  if(t){
-    t.classList.add('active');
-    t.scrollTop=0;
-  }
 }
 
-/* ── Password toggle ── */
-function togglePwd(){
-  const i=document.getElementById('criarSenha');
-  i.type=i.type==='password'?'text':'password';
+/* ═══════════════════════════════
+   DRAWER
+═══════════════════════════════ */
+function toggleDrawer() {
+  const open = document.getElementById('drawer').classList.contains('open');
+  open ? closeDrawer() : openDrawer();
+}
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  document.querySelectorAll('.hamburger').forEach(h => h.classList.add('open'));
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.querySelectorAll('.hamburger').forEach(h => h.classList.remove('open'));
+  document.body.style.overflow = '';
 }
 
-/* ── Password validation ── */
-document.addEventListener('DOMContentLoaded',()=>{
-  const pwd=document.getElementById('criarSenha');
-  if(pwd){
-    pwd.addEventListener('input',()=>{
-      const v=pwd.value;
-      setHint('hint1',v.length>=8);
-      setHint('hint2',/[a-zA-Z]/.test(v));
-      setHint('hint3',/[0-9]/.test(v));
-    });
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ═══════════════════════════════
+   AUTH — LOGIN
+═══════════════════════════════ */
+function validateLoginEmail() {
+  const v = document.getElementById('loginEmail').value;
+  const err = document.getElementById('loginEmailErr');
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || v.length === 0;
+  err.style.display = valid ? 'none' : 'block';
+  return valid || v.length === 0;
+}
+function tryLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email) { showToast('Digite seu e-mail ou número'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !/^\d{10,11}$/.test(email.replace(/\D/g,''))) {
+    document.getElementById('loginEmailErr').style.display = 'block';
+    return;
   }
+  state.user.email = email;
+  // extract name from email
+  const name = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+  state.user.name = name;
+  document.getElementById('userName').textContent = name;
+  goTo('home');
+}
+
+/* ═══════════════════════════════
+   AUTH — CADASTRO
+═══════════════════════════════ */
+function validateCcEmail() {
+  const v = document.getElementById('ccEmail').value;
+  const err = document.getElementById('ccEmailErr');
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || v.length === 0;
+  err.style.display = valid ? 'none' : 'block';
+}
+function validatePwd() {
+  const v = document.getElementById('ccPwd').value;
+  setHint('h1', v.length >= 8);
+  setHint('h2', /[a-zA-Z]/.test(v));
+  setHint('h3', /[0-9]/.test(v));
+}
+function setHint(id, ok) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('pass', ok);
+}
+function togglePwd(fieldId, btn) {
+  const f = document.getElementById(fieldId);
+  f.type = f.type === 'password' ? 'text' : 'password';
+  btn.textContent = f.type === 'password' ? '👁' : '🙈';
+}
+function tryRegister() {
+  const email = document.getElementById('ccEmail').value.trim();
+  const pwd = document.getElementById('ccPwd').value;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('Insira um e-mail válido'); return;
+  }
+  if (pwd.length < 8) { showToast('Senha muito curta'); return; }
+  if (!/[a-zA-Z]/.test(pwd)) { showToast('Senha precisa ter letras'); return; }
+  if (!/[0-9]/.test(pwd)) { showToast('Senha precisa ter números'); return; }
+  state.user.email = email;
+  const name = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+  state.user.name = name;
+  document.getElementById('userName').textContent = name;
+  showToast('Conta criada com sucesso!');
+  goTo('home');
+}
+function clearField(id) {
+  document.getElementById(id).value = '';
+  document.getElementById(id).focus();
+}
+function logout() {
+  closeDrawer();
+  goTo('splash');
+  showToast('Até breve!');
+}
+
+/* ═══════════════════════════════
+   HOME — METAS
+═══════════════════════════════ */
+function addMeta(el) {
+  const text = prompt('Qual é sua meta para esta semana?');
+  if (!text || !text.trim()) return;
+  el.outerHTML = `<div class="meta-filled" onclick="editMeta(this)">
+    <p>${text.trim()}</p>
+    <small>Clique para editar</small>
+  </div>`;
+}
+function editMeta(el) {
+  const current = el.querySelector('p').textContent;
+  const text = prompt('Editar meta:', current);
+  if (text === null) return;
+  if (!text.trim()) { el.outerHTML = `<div class="meta-add" onclick="addMeta(this)"><div class="meta-add-ic">+</div></div>`; return; }
+  el.querySelector('p').textContent = text.trim();
+}
+
+/* ═══════════════════════════════
+   GOOGLE CALENDAR ENGINE
+═══════════════════════════════ */
+
+// ── data ──
+const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+// Subject meta
+const SUBJECTS = {
+  logica: { label:'Lógica de Programação', cls:'ev-logica', color:'#C0392B' },
+  web:    { label:'Desenvolvimento Web',   cls:'ev-web',    color:'#2980B9' },
+  banco:  { label:'Banco de Dados',        cls:'ev-banco',  color:'#27AE60' },
+  so:     { label:'Sist. Operacionais',    cls:'ev-so',     color:'#E74C3C' },
+  revisao:{ label:'Revisão',               cls:'ev-revisao',color:'#D4A843' },
+};
+
+// Base events (weekday 1=Mon..5=Fri, hour, duration in slots of 56px=1h)
+const BASE_EVENTS = [
+  // Segunda
+  { day:1, h:8,  dur:1.5, subj:'logica', title:'Videoaula: Variáveis e Operadores',     desc:'Tipos de dados, operadores aritméticos e lógicos em JavaScript.' },
+  { day:1, h:14, dur:1,   subj:'web',    title:'Videoaula: HTML Básico',                desc:'Estrutura de uma página HTML, tags essenciais e semântica.' },
+  { day:1, h:16, dur:1,   subj:'banco',  title:'Videoaula: Introdução a Banco de Dados',desc:'Conceitos de SGBD, tabelas, chaves primárias e estrangeiras.' },
+  { day:1, h:18, dur:1,   subj:'so',     title:'Videoaula: Conceitos de S.O.',           desc:'O que é um sistema operacional, tipos e funções.' },
+  // Terça
+  { day:2, h:8,  dur:2,   subj:'logica', title:'Exercícios de Lógica — JavaScript',     desc:'Lista de exercícios práticos com variáveis, loops e condicionais.' },
+  { day:2, h:14, dur:1.5, subj:'web',    title:'Prática: Criar Página Simples',          desc:'Construir uma página HTML básica com cabeçalho, nav e rodapé.' },
+  { day:2, h:16, dur:1,   subj:'banco',  title:'Modelagem de Banco',                    desc:'Criar diagrama ER simples de um sistema de biblioteca.' },
+  { day:2, h:18, dur:1,   subj:'so',     title:'Estudo: Gerenciamento de Processos',    desc:'Ciclo de vida de processos, estados e transições.' },
+  // Quarta
+  { day:3, h:8,  dur:1.5, subj:'logica', title:'Videoaula: Estruturas Condicionais',    desc:'if / else, switch-case e operador ternário.' },
+  { day:3, h:14, dur:1.5, subj:'web',    title:'Videoaula: CSS Básico',                 desc:'Seletores, box model, flexbox e unidades.' },
+  { day:3, h:16, dur:1,   subj:'banco',  title:'Videoaula: SQL Básico',                 desc:'SELECT, WHERE, ORDER BY, GROUP BY.' },
+  { day:3, h:18, dur:1,   subj:'so',     title:'Videoaula: Sistemas de Arquivos',       desc:'FAT32, NTFS, ext4 — estrutura e organização.' },
+  // Quinta
+  { day:4, h:8,  dur:2,   subj:'logica', title:'Lista de Exercícios de Lógica',         desc:'Problemas de algoritmo: ordenação, busca e recursão.' },
+  { day:4, h:14, dur:1.5, subj:'web',    title:'Prática: Estilizar Página',             desc:'Aplicar CSS na página criada na terça: cores, fontes, layout.' },
+  { day:4, h:16, dur:1,   subj:'banco',  title:'Exercícios de Consultas SQL',           desc:'Joins, subqueries e funções de agregação.' },
+  { day:4, h:18, dur:1,   subj:'so',     title:'Prática: Comandos do Terminal',         desc:'ls, cd, mkdir, chmod, grep, ps, kill.' },
+  // Sexta
+  { day:5, h:8,  dur:1,   subj:'revisao',title:'Revisão: Lógica de Programação',       desc:'Revisão geral dos conceitos da semana com resolução de dúvidas.' },
+  { day:5, h:10, dur:1,   subj:'revisao',title:'Revisão: Desenvolvimento Web',          desc:'Consolidar HTML + CSS com mini projeto.' },
+  { day:5, h:14, dur:1,   subj:'revisao',title:'Revisão: Banco de Dados',               desc:'Prática no banco de dados com exercícios de fixação.' },
+  { day:5, h:16, dur:1,   subj:'revisao',title:'Revisão: Sistemas Operacionais',        desc:'Resumo + mapa mental da semana.' },
+];
+
+// Calendar state
+const calState = {
+  weekOffset: 0,    // weeks from current week
+  events: JSON.parse(JSON.stringify(BASE_EVENTS)), // mutable copy
+  done: new Set(),  // set of event indices marked done
+  activeEventIdx: null,
+};
+
+// Hours to show
+const CAL_START_H = 7;
+const CAL_END_H   = 21;
+const HOURS = Array.from({length: CAL_END_H - CAL_START_H}, (_,i) => CAL_START_H + i);
+
+// Get Monday of current display week
+function calGetMonday() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun
+  const diff = (day === 0 ? -6 : 1 - day);
+  const mon = new Date(now);
+  mon.setDate(now.getDate() + diff + calState.weekOffset * 7);
+  mon.setHours(0,0,0,0);
+  return mon;
+}
+
+function calGetWeekDays() {
+  const mon = calGetMonday();
+  return Array.from({length:5}, (_,i) => {
+    const d = new Date(mon);
+    d.setDate(mon.getDate() + i);
+    return d;
+  });
+}
+
+function calRender() {
+  const days = calGetWeekDays();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const grid = document.getElementById('calGrid');
+  if (!grid) return;
+
+  // week label
+  const first = days[0], last = days[4];
+  const sameMonth = first.getMonth() === last.getMonth();
+  const label = sameMonth
+    ? `${first.getDate()} – ${last.getDate()} de ${MONTHS_PT[first.getMonth()]} ${first.getFullYear()}`
+    : `${first.getDate()} ${MONTHS_PT[first.getMonth()]} – ${last.getDate()} ${MONTHS_PT[last.getMonth()]} ${last.getFullYear()}`;
+  document.getElementById('calWeekLabel').textContent = label;
+
+  // build HTML
+  let html = '';
+
+  // ── header row ──
+  html += `<div class="cal-day-header" style="grid-column:1"></div>`;
+  days.forEach((d, i) => {
+    const isToday = d.getTime() === today.getTime();
+    html += `<div class="cal-day-header" style="grid-column:${i+2}">
+      <div class="cal-day-name">${DAYS_PT[d.getDay()]}</div>
+      <div class="cal-day-num${isToday?' today':''}">${d.getDate()}</div>
+    </div>`;
+  });
+
+  // ── time + slot rows ──
+  HOURS.forEach(h => {
+    // time label cell
+    html += `<div class="cal-time-cell" style="height:56px;grid-column:1">
+      <span class="cal-time-label">${h}:00</span>
+    </div>`;
+    // 5 day columns (empty slots — events overlaid by position)
+    for (let col = 0; col < 5; col++) {
+      html += `<div class="cal-slot" data-col="${col}" data-h="${h}" style="grid-column:${col+2}"></div>`;
+    }
+  });
+
+  grid.innerHTML = html;
+
+  // ── place events ──
+  calState.events.forEach((ev, idx) => {
+    // find the column element for this day/col (col = day-1, 0-indexed Mon=0)
+    const colIndex = ev.day - 1; // 0..4
+    const slots = grid.querySelectorAll(`.cal-slot[data-col="${colIndex}"]`);
+    if (!slots.length) return;
+
+    // find slot matching hour
+    let targetSlot = null;
+    slots.forEach(s => { if (parseInt(s.dataset.h) === Math.floor(ev.h)) targetSlot = s; });
+    if (!targetSlot) return;
+
+    const slotH = 56; // px per hour
+    const top = (ev.h - CAL_START_H) * slotH;
+    const height = Math.max(ev.dur * slotH - 4, 22);
+    const subj = SUBJECTS[ev.subj] || SUBJECTS.logica;
+    const done = calState.done.has(idx);
+    const hStart = Math.floor(ev.h);
+    const mStart = Math.round((ev.h % 1) * 60);
+    const hEnd = Math.floor(ev.h + ev.dur);
+    const mEnd = Math.round(((ev.h + ev.dur) % 1) * 60);
+    const timeStr = `${hStart}:${mStart.toString().padStart(2,'0')} – ${hEnd}:${mEnd.toString().padStart(2,'0')}`;
+
+    const evEl = document.createElement('div');
+    evEl.className = `cal-event ${subj.cls}${done ? ' ev-done' : ''}`;
+    evEl.style.cssText = `top:${top}px;height:${height}px;position:absolute;left:3px;right:3px;`;
+    if (done) {
+      evEl.style.opacity = '.45';
+      evEl.style.textDecoration = 'line-through';
+    }
+    evEl.innerHTML = `<div class="cal-event-title">${ev.title}</div>
+      <div class="cal-event-time">${timeStr}</div>`;
+    evEl.addEventListener('click', () => openEvModal(idx, timeStr, days[colIndex]));
+
+    // append to the column (use absolute positioning relative to grid)
+    // find the container column div — we'll use a wrapper approach
+    const colSlot = slots[0]; // first slot of this column
+    colSlot.parentElement; // the grid itself
+
+    // We need relative container per column — inject a wrapper per col
+    let colWrapper = grid.querySelector(`.cal-col-wrapper[data-col="${colIndex}"]`);
+    if (!colWrapper) {
+      colWrapper = document.createElement('div');
+      colWrapper.className = 'cal-col-wrapper';
+      colWrapper.dataset.col = colIndex;
+      const totalH = HOURS.length * slotH;
+      colWrapper.style.cssText = `position:relative;height:${totalH}px;pointer-events:none;grid-column:${colIndex+2};grid-row:2/${HOURS.length+2};`;
+      colWrapper.style.pointerEvents = 'none';
+      grid.appendChild(colWrapper);
+    }
+    evEl.style.pointerEvents = 'all';
+    colWrapper.appendChild(evEl);
+  });
+
+  // ── current time indicator ──
+  const now = new Date();
+  const todayColIdx = days.findIndex(d => d.getTime() === today.getTime());
+  if (todayColIdx >= 0) {
+    const nowH = now.getHours() + now.getMinutes() / 60;
+    if (nowH >= CAL_START_H && nowH < CAL_END_H) {
+      const topNow = (nowH - CAL_START_H) * 56;
+      let cw = grid.querySelector(`.cal-col-wrapper[data-col="${todayColIdx}"]`);
+      if (!cw) {
+        cw = document.createElement('div');
+        cw.className = 'cal-col-wrapper';
+        cw.dataset.col = todayColIdx;
+        cw.style.cssText = `position:relative;height:${HOURS.length*56}px;pointer-events:none;grid-column:${todayColIdx+2};grid-row:2/${HOURS.length+2};`;
+        grid.appendChild(cw);
+      }
+      const line = document.createElement('div');
+      line.className = 'cal-now-line';
+      line.style.top = topNow + 'px';
+      cw.appendChild(line);
+    }
+  }
+
+  // ── scroll to 7am ──
+  const wrap = document.querySelector('.cal-grid-wrap');
+  if (wrap) wrap.scrollTop = 0;
+}
+
+function calToday() {
+  calState.weekOffset = 0;
+  calRender();
+}
+function calPrev() { calState.weekOffset--; calRender(); }
+function calNext() { calState.weekOffset++; calRender(); }
+
+// ── add event ──
+function calAddEvent() {
+  const title = document.getElementById('calAddTitle').value.trim();
+  if (!title) { showToast('Digite um título para o evento'); return; }
+  const subj = document.getElementById('calAddSubject').value;
+  // default: next available slot on Monday at 8am
+  calState.events.push({ day:1, h:8, dur:1, subj, title, desc:'Evento adicionado manualmente.' });
+  document.getElementById('calAddTitle').value = '';
+  calRender();
+  showToast('Evento adicionado ✓');
+}
+
+// ── event modal ──
+function openEvModal(idx, timeStr, dayDate) {
+  calState.activeEventIdx = idx;
+  const ev = calState.events[idx];
+  const subj = SUBJECTS[ev.subj] || SUBJECTS.logica;
+  document.getElementById('evModalColor').style.background = subj.color;
+  document.getElementById('evModalTitle').textContent = ev.title;
+  document.getElementById('evModalSubject').textContent = subj.label;
+  document.getElementById('evModalTime').textContent = timeStr;
+  const dayName = DAYS_PT[dayDate.getDay()];
+  document.getElementById('evModalDay').textContent = `${dayName}, ${dayDate.getDate()} de ${MONTHS_PT[dayDate.getMonth()]}`;
+  document.getElementById('evModalDesc').textContent = ev.desc;
+  // update done button
+  const doneBtn = document.querySelector('#evModalOverlay .ev-modal-btn.primary');
+  const done = calState.done.has(idx);
+  doneBtn.textContent = done ? '↩ Reabrir' : '✓ Concluído';
+  document.getElementById('evModalOverlay').classList.add('open');
+}
+function closeEvModal(e) {
+  if (e && e.target !== document.getElementById('evModalOverlay')) return;
+  document.getElementById('evModalOverlay').classList.remove('open');
+}
+function markEventDone() {
+  const idx = calState.activeEventIdx;
+  if (idx === null) return;
+  if (calState.done.has(idx)) {
+    calState.done.delete(idx);
+    showToast('Evento reaberto');
+  } else {
+    calState.done.add(idx);
+    showToast('Atividade concluída ✓');
+  }
+  document.getElementById('evModalOverlay').classList.remove('open');
+  calRender();
+}
+
+// calendar initialized via goTo('cronograma')
+
+/* ═══════════════════════════════
+   CONTEÚDOS — VIDEO SELECT
+═══════════════════════════════ */
+function selVid(el, subject, channel, title, meta) {
+  document.querySelectorAll('.vid-item').forEach(v => v.classList.remove('sel'));
+  el.classList.add('sel');
+  // update notes panel label
+  document.getElementById('notesLabel').textContent = `Anotações — ${subject} :`;
+  // restore saved note
+  document.getElementById('noteArea').value = state.notes[subject] || '';
+  document.getElementById('noteArea').dataset.subject = subject;
+  // wire "open video" on dblclick
+  el.ondblclick = () => openVideo(channel, title, meta, subject);
+  showToast(`Selecionado: ${subject}`);
+}
+function saveNote() {
+  const area = document.getElementById('noteArea');
+  const subject = area.dataset.subject || 'Geral';
+  state.notes[subject] = area.value;
+  showToast('Anotação salva ✓');
+}
+function openVideo(channel, title, meta, subject) {
+  document.getElementById('vaTitle').textContent = subject || 'Videoaula';
+  document.getElementById('vaChName').textContent = channel;
+  document.getElementById('vaChLogo').textContent = channel.substring(0,3).toUpperCase();
+  document.getElementById('vaNoteLabel').textContent = `Anotações — ${subject} :`;
+  document.getElementById('vaNoteArea').value = state.vaNotes[subject] || '';
+  document.getElementById('vaNoteArea').dataset.subject = subject;
+  goTo('videoaula');
+}
+
+/* ═══════════════════════════════
+   VÍDEO AULA
+═══════════════════════════════ */
+let playInterval;
+function togglePlay(btn) {
+  state.isPlaying = !state.isPlaying;
+  btn.textContent = state.isPlaying ? '⏸' : '▶';
+  if (state.isPlaying) {
+    playInterval = setInterval(() => {
+      state.vidProgress = Math.min(state.vidProgress + 0.15, 100);
+      document.getElementById('vaFill').style.width = state.vidProgress + '%';
+      const total = 14*60+12;
+      const cur = Math.floor(total * state.vidProgress / 100);
+      const m = Math.floor(cur/60), s = cur%60;
+      document.getElementById('vaTime').textContent = `${m}:${s.toString().padStart(2,'0')} / 14:12`;
+      if (state.vidProgress >= 100) { clearInterval(playInterval); btn.textContent = '▶'; state.isPlaying = false; }
+    }, 300);
+  } else {
+    clearInterval(playInterval);
+  }
+}
+function seekVid(e, bar) {
+  const rect = bar.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+  state.vidProgress = pct;
+  document.getElementById('vaFill').style.width = pct + '%';
+  const total = 14*60+12;
+  const cur = Math.floor(total * pct / 100);
+  const m = Math.floor(cur/60), s = cur%60;
+  document.getElementById('vaTime').textContent = `${m}:${s.toString().padStart(2,'0')} / 14:12`;
+}
+function toggleVaSidebar() {
+  const s = document.getElementById('vaSidebar');
+  s.style.display = s.style.display === 'none' ? '' : 'none';
+}
+function saveVaNote() {
+  const area = document.getElementById('vaNoteArea');
+  const subject = area.dataset.subject || 'Videoaula';
+  state.vaNotes[subject] = area.value;
+  // sync back to conteúdos notes
+  state.notes[subject] = area.value;
+  showToast('Anotação salva ✓');
+}
+
+/* ═══════════════════════════════
+   EXERCÍCIOS
+═══════════════════════════════ */
+function openEx(data) {
+  document.getElementById('exList').style.display = 'none';
+  document.getElementById('exSingle').style.display = 'block';
+
+  const lvlBadge = document.getElementById('exSLvl');
+  lvlBadge.textContent = '→ ' + data.level;
+  lvlBadge.className = 'ex-level-badge' + (data.badge === 'ok' || data.badge === 'pend' && data.level !== 'Intermediário' ? ' adv' : '');
+
+  document.getElementById('exSTitle').textContent = data.title;
+  document.getElementById('exSBody').innerHTML = data.body;
+
+  const badge = document.getElementById('exSBadge');
+  badge.textContent = data.badgeLabel;
+  badge.className = 'badge ' + data.badge;
+
+  document.getElementById('exSDate').textContent = data.date;
+  document.getElementById('exAnswer').value = '';
+
+  // scroll to top
+  document.getElementById('exercicios').scrollTop = 0;
+}
+function closeEx() {
+  document.getElementById('exSingle').style.display = 'none';
+  document.getElementById('exList').style.display = 'block';
+}
+function submitAnswer() {
+  const ans = document.getElementById('exAnswer').value.trim();
+  if (!ans) { showToast('Escreva sua resposta antes de entregar'); return; }
+  // update badge to entregue
+  const badge = document.getElementById('exSBadge');
+  badge.textContent = 'Entregue';
+  badge.className = 'badge ok';
+  document.getElementById('exAnswer').value = '';
+  showToast('Exercício entregue com sucesso! ✓');
+  setTimeout(() => closeEx(), 800);
+}
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // init notes area subject
+  document.getElementById('noteArea').dataset.subject = 'Lógica de Programação';
+
+  // keyboard shortcut: Escape closes drawer
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDrawer();
+  });
 });
-function setHint(id,ok){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.toggle('ok',ok);
-}
-
-/* ── Video selection ── */
-function selectVideo(el,subject){
-  document.querySelectorAll('.video-item').forEach(v=>v.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('notesTitle').textContent='Anotações — '+subject+' :';
-}
-
-/* ── Exercise open/close ── */
-function openExercise(level,title,body,badge,date){
-  document.getElementById('exListView').style.display='none';
-  document.getElementById('exSingleView').style.display='block';
-  document.getElementById('exSingleTitle').textContent=title;
-  document.getElementById('exSingleBody').innerHTML=body;
-  const b=document.getElementById('exSingleBadge');
-  b.textContent=badge;
-  b.className=badge==='Entregue'?'badge-entregue':badge==='Em atraso'?'badge-atraso':'badge-pendente';
-  document.getElementById('exSingleDate').textContent=date;
-}
-function closeExercise(){
-  document.getElementById('exSingleView').style.display='none';
-  document.getElementById('exListView').style.display='block';
-}
-
-/* ── Video seek ── */
-function seekVideo(e,bar){
-  const rect=bar.getBoundingClientRect();
-  const pct=((e.clientX-rect.left)/rect.width)*100;
-  document.getElementById('vProgress').style.width=pct+'%';
-}
-
-/* ── Video sidebar toggle ── */
-function toggleVideoLayout(){
-  const s=document.getElementById('videoSidebar');
-  s.style.display=s.style.display==='none'?'':'none';
-}
 </script>
 </body>
 </html>
