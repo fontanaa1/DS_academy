@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ds Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;
+  --red-dark:#9B2D23;
+  --red-light:#D4503F;
+  --cream:#F5EFE0;
+  --cream-dark:#EDE5CE;
+  --orange:#E8845A;
+  --gold:#D4A843;
+  --gold-light:#F0C060;
+  --text-dark:#2C1810;
+  --text-mid:#6B4C3B;
+  --text-light:#9A7B6A;
+  --white:#FFFFFF;
+  --green:#2ECC71;
+  --green-dark:#27AE60;
+  --yellow:#F39C12;
+  --shadow:0 4px 20px rgba(44,24,16,.12);
+  --shadow-lg:0 8px 40px rgba(44,24,16,.18);
+}
+html,body{height:100%;width:100%;font-family:'Lora',serif;background:var(--cream);color:var(--text-dark);}
+button{cursor:pointer;font-family:'Lora',serif;}
+input,textarea{font-family:'Lora',serif;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+
+/* ═══════════════════════════════════════
+   SCREEN SYSTEM
+═══════════════════════════════════════ */
+.screen{
+  display:none;
+  position:fixed;inset:0;
+  width:100%;height:100%;
+  overflow-y:auto;
+  animation:screenIn .45s ease both;
+}
+.screen.active{display:block;}
+.screen.no-scroll{overflow:hidden;}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:#fff;
+  display:flex;align-items:center;
+  padding:0 24px;
+  height:58px;
+  border-bottom:1px solid rgba(192,57,43,.08);
+  box-shadow:0 2px 12px rgba(44,24,16,.06);
+}
+.navbar-logo{
+  width:38px;height:38px;
+  object-fit:contain;
+  cursor:pointer;
+  flex-shrink:0;
+}
+/* ↑ coloque logo_1.png na mesma pasta */
+.navbar-logo-placeholder{
+  width:38px;height:38px;flex-shrink:0;cursor:pointer;
+  background:var(--red);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:.7rem;letter-spacing:-.5px;
+}
+.navbar-links{
+  display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);
+  margin:0 auto;
+}
+.navbar-links a{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(.8rem,1.3vw,1rem);
+  color:var(--red);
+  font-weight:700;
+  transition:opacity .2s;
+  white-space:nowrap;
+}
+.navbar-links a:hover{opacity:.65;}
+.navbar-links a.active-link{border-bottom:2px solid var(--red);}
+.navbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
+.navbar-icon{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--red);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s;
+}
+.navbar-icon:hover{background:var(--red-dark);}
+.navbar-icon svg{width:18px;height:18px;fill:#fff;}
+
+/* ═══════════════════════════════════════
+   HERO BANNER (shared)
+═══════════════════════════════════════ */
+.hero-banner{
+  background:var(--red);
+  display:flex;align-items:center;
+  padding:clamp(24px,4vw,40px) clamp(24px,5vw,60px);
+  gap:20px;
+  position:relative;
+  overflow:hidden;
+  min-height:clamp(140px,22vw,200px);
+}
+.hero-banner::before{
+  content:'';position:absolute;
+  top:-60px;right:-40px;
+  width:200px;height:200px;
+  background:rgba(255,255,255,.04);
+  border-radius:50%;
+}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(2rem,5vw,3.8rem);
+  color:var(--orange);
+  line-height:1;
+}
+.hero-title span{
+  font-family:'Caveat',cursive;
+  color:#fff;
+  font-size:clamp(1.6rem,4vw,3rem);
+  font-style:normal;
+}
+.hero-sparks{
+  display:flex;flex-direction:column;gap:4px;
+  margin-right:4px;
+}
+.spark{
+  width:clamp(10px,1.4vw,15px);height:clamp(10px,1.4vw,15px);
+  background:var(--gold);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+}
+.spark.sm{width:clamp(7px,1vw,10px);height:clamp(7px,1vw,10px);}
+.spark-row{display:flex;gap:5px;}
+.hero-img{
+  /* ↑ Troque src para a imagem de livros desejada */
+  width:clamp(80px,14vw,160px);
+  height:auto;object-fit:contain;
+  margin-left:auto;flex-shrink:0;
+}
+.back-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(0,0,0,.55);border:none;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.1rem;cursor:pointer;
+  flex-shrink:0;
+  transition:background .2s;
+}
+.back-btn:hover{background:rgba(0,0,0,.75);}
+
+/* ═══════════════════════════════════════
+   BLOBS
+═══════════════════════════════════════ */
+.blob-tl{
+  position:fixed;top:-80px;left:-80px;
+  width:clamp(200px,30vw,340px);
+  aspect-ratio:1.3;
+  background:var(--cream);
+  border-radius:0 0 60% 0/0 0 55% 0;
+  z-index:0;pointer-events:none;
+}
+.blob-br{
+  position:fixed;bottom:-80px;right:-80px;
+  width:clamp(200px,30vw,340px);
+  aspect-ratio:1.3;
+  background:var(--cream);
+  border-radius:60% 0 0 0/55% 0 0 0;
+  z-index:0;pointer-events:none;
+}
+
+/* ═══════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════ */
+.content-wrap{
+  background:var(--cream-dark);
+  border-radius:16px 16px 0 0;
+  margin-top:8px;
+  padding:clamp(16px,3vw,28px) clamp(16px,4vw,40px);
+  min-height:calc(100vh - 260px);
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(1rem,2vw,1.3rem);
+  color:var(--red);
+  margin-bottom:14px;
+}
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:clamp(14px,2vw,20px);
+  box-shadow:var(--shadow);
+  border:1px solid rgba(192,57,43,.08);
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 1 — SPLASH
+═══════════════════════════════════════ */
+#splash{
+  background:var(--red);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 8%;
+  overflow:hidden;
+}
+.splash-blob-tl{
+  position:absolute;top:-80px;left:-80px;
+  width:clamp(220px,34vw,380px);aspect-ratio:1.3;
+  background:var(--cream);
+  border-radius:0 0 60% 0/0 0 55% 0;
+}
+.splash-blob-br{
+  position:absolute;bottom:-80px;right:-80px;
+  width:clamp(220px,34vw,380px);aspect-ratio:1.3;
+  background:var(--cream);
+  border-radius:60% 0 0 0/55% 0 0 0;
+}
+.splash-sparks{
+  position:absolute;
+  top:clamp(16%,22%,28%);right:clamp(28%,33%,38%);
+  z-index:1;
+}
+.splash-left{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  gap:clamp(10px,2vw,20px);
+  max-width:55%;
+}
+.splash-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(2.4rem,7.5vw,5.5rem);
+  color:var(--cream);
+  line-height:1;
+  animation:fadeUp .8s ease both;
+}
+.splash-sub{
+  font-size:clamp(.78rem,1.5vw,1.05rem);
+  color:var(--orange);font-weight:500;
+  animation:fadeUp .8s .15s ease both;
+}
+.splash-sub strong{color:var(--cream);font-weight:700;}
+.btn-entrar{
+  display:inline-block;
+  padding:clamp(10px,1.4vw,14px) clamp(24px,3vw,42px);
+  background:rgba(232,132,90,.18);
+  border:2px solid var(--orange);
+  border-radius:10px;
+  color:var(--orange);
+  font-weight:600;font-size:clamp(.82rem,1.2vw,1rem);
+  transition:background .25s,color .25s,transform .18s;
+  animation:fadeUp .8s .28s ease both;
+  width:fit-content;white-space:nowrap;
+}
+.btn-entrar:hover{background:var(--orange);color:var(--red);transform:scale(1.04);}
+.splash-right{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  animation:fadeUp .9s .18s ease both;
+}
+.splash-books{
+  width:clamp(160px,30vw,360px);height:auto;
+  object-fit:contain;
+  filter:drop-shadow(4px 8px 16px rgba(0,0,0,.28));
+}
+/*
+  ╔═══════════════════════════════════╗
+  ║ SPLASH: imagem dos livros        ║
+  ║ → src="splash_books.png"         ║
+  ║ (ou books.png, como preferir)    ║
+  ╚═══════════════════════════════════╝
+*/
+@media(max-width:600px){
+  #splash{flex-direction:column;justify-content:center;align-items:center;gap:28px;padding:60px 7% 80px;}
+  .splash-left{max-width:100%;align-items:center;text-align:center;}
+  .splash-sparks{top:10%;right:6%;}
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 2 — LOGIN
+═══════════════════════════════════════ */
+#login{
+  background:var(--cream);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  min-height:100vh;
+}
+.login-topbar{
+  position:absolute;top:0;left:0;right:0;
+  height:22px;background:var(--red);
+}
+.login-blob-bl{
+  position:fixed;bottom:-40px;left:-40px;
+  width:clamp(100px,14vw,170px);aspect-ratio:1;
+  background:var(--red);border-radius:0 70% 0 0;
+}
+.login-blob-br{
+  position:fixed;bottom:-40px;right:-40px;
+  width:clamp(100px,14vw,170px);aspect-ratio:1;
+  background:var(--red);border-radius:70% 0 0 0;
+}
+.login-watermark{
+  position:absolute;inset:0;
+  /*
+    ╔══════════════════════════════════════╗
+    ║ LOGIN BG: imagem de fundo (marca)   ║
+    ║ → background-image: url('logo.png') ║
+    ╚══════════════════════════════════════╝
+  */
+  background-image:url('logo.png');
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  opacity:.06;pointer-events:none;z-index:0;
+}
+.login-logo-corner{
+  position:absolute;top:34px;right:24px;z-index:2;
+  width:44px;height:44px;object-fit:contain;
+  /*
+    ╔══════════════════════════════════════╗
+    ║ Logo canto superior: logo_1.png     ║
+    ╚══════════════════════════════════════╝
+  */
+}
+.login-card{
+  position:relative;z-index:2;
+  width:min(430px,90vw);
+  display:flex;flex-direction:column;align-items:center;
+  gap:clamp(10px,1.8vw,15px);
+  padding:0 4px;
+  animation:fadeUp .6s ease both;
+}
+.login-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.5rem,3.5vw,2rem);
+  color:var(--text-dark);text-align:center;
+}
+.login-sub{font-size:.88rem;color:var(--text-light);text-align:center;margin-top:-4px;}
+.input-wrap{width:100%;position:relative;}
+.input-wrap input{
+  width:100%;
+  padding:13px 44px 13px 16px;
+  border:1.5px solid #D4C8B8;border-radius:7px;
+  font-size:.88rem;background:#fff;
+  color:var(--text-dark);outline:none;
+  transition:border .2s,box-shadow .2s;
+}
+.input-wrap input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
+.input-clear{
+  position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:#aaa;font-size:.95rem;line-height:1;
+  transition:color .2s;
+}
+.input-clear:hover{color:var(--red);}
+.btn-continuar{
+  width:100%;padding:14px;
+  background:var(--red);color:#fff;border:none;border-radius:7px;
+  font-weight:700;font-size:.9rem;letter-spacing:1px;
+  transition:background .2s,transform .15s;
+}
+.btn-continuar:hover{background:var(--red-dark);transform:scale(1.02);}
+.login-create{font-size:.82rem;color:var(--text-light);text-align:center;}
+.login-create a{color:var(--red);font-weight:700;}
+.divider{
+  width:100%;display:flex;align-items:center;gap:10px;
+  color:#C8B8A8;font-size:.78rem;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#DDD5C5;}
+.btn-social{
+  width:100%;padding:12px 16px;
+  background:#fff;border:1.5px solid #DDD;border-radius:7px;
+  font-size:.88rem;color:var(--text-dark);
+  display:flex;align-items:center;gap:12px;
+  transition:border .2s,transform .15s,box-shadow .2s;
+}
+.btn-social:hover{border-color:var(--red);transform:scale(1.01);box-shadow:var(--shadow);}
+.social-icon{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.85rem;color:#fff;flex-shrink:0;
+}
+.social-icon.g{background:#fff;border:1px solid #ddd;}
+.social-icon.fb{background:#1877F2;}
+.country-sel{
+  display:flex;align-items:center;gap:6px;
+  font-size:.78rem;color:var(--text-light);cursor:pointer;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 3 — CRIAR CONTA
+═══════════════════════════════════════ */
+#criar-conta{
+  background:var(--cream);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  min-height:100vh;
+}
+.criar-topbar{position:absolute;top:0;left:0;right:0;height:22px;background:var(--red);}
+.criar-sparks{
+  position:absolute;
+  top:clamp(14%,20%,26%);left:clamp(12%,18%,24%);
+  display:flex;flex-direction:column;gap:3px;
+  z-index:1;
+}
+.criar-card{
+  position:relative;z-index:2;
+  width:min(400px,88vw);
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:14px;
+  animation:fadeUp .6s ease both;
+}
+.criar-title{
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:clamp(1.4rem,3vw,1.9rem);
+  color:var(--text-dark);
+}
+.criar-sub{font-size:.85rem;color:var(--text-light);margin-top:-6px;}
+.input-label{font-size:.72rem;font-weight:700;letter-spacing:1px;color:var(--text-mid);text-transform:uppercase;}
+.input-group{width:100%;display:flex;flex-direction:column;gap:5px;}
+.input-hint{font-size:.74rem;color:var(--text-light);}
+.input-hint.ok{color:var(--green);}
+.criar-watermark{
+  position:absolute;inset:0;
+  background-image:url('logo.png');
+  background-size:contain;background-repeat:no-repeat;background-position:center;
+  opacity:.05;pointer-events:none;z-index:0;
+}
+.btn-cadastrar{
+  width:100%;padding:14px;
+  background:var(--text-dark);color:#fff;border:none;border-radius:7px;
+  font-weight:700;font-size:.9rem;letter-spacing:1.5px;
+  transition:background .2s,transform .15s;
+}
+.btn-cadastrar:hover{background:#1a0c06;transform:scale(1.02);}
+
+/* ═══════════════════════════════════════
+   SCREEN 4 — PÁGINA INICIAL (DASHBOARD)
+═══════════════════════════════════════ */
+#home{background:var(--cream);}
+.home-hero{
+  background:var(--red);
+  padding:clamp(20px,3.5vw,36px) clamp(20px,4vw,48px);
+  position:relative;overflow:hidden;
+}
+.home-hero-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(2rem,5vw,3.5rem);
+  color:var(--orange);line-height:1.05;
+}
+.home-hero-sub{
+  font-size:clamp(.9rem,1.5vw,1.2rem);
+  font-style:italic;font-weight:700;
+  color:var(--cream);margin-top:6px;
+}
+.home-hero-books{
+  position:absolute;right:clamp(60px,8vw,120px);
+  top:50%;transform:translateY(-50%);
+  width:clamp(60px,10vw,120px);height:auto;
+  opacity:.9;
+}
+/*
+  ╔══════════════════════════════════════╗
+  ║ Home hero: books_illustration.png   ║
+  ╚══════════════════════════════════════╝
+*/
+.home-body{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  min-height:calc(100vh - 220px);
+}
+@media(max-width:700px){.home-body{grid-template-columns:1fr;}}
+.home-left{
+  background:var(--cream);
+  padding:clamp(16px,3vw,28px);
+  position:relative;
+}
+.home-watermark{
+  position:absolute;inset:0;
+  background-image:url('logo.png');
+  background-size:55%;background-repeat:no-repeat;background-position:center;
+  opacity:.04;pointer-events:none;
+}
+.ctx-card{
+  background:rgba(192,57,43,.15);
+  border-radius:12px;padding:16px 18px;
+  margin-bottom:20px;
+}
+.ctx-card-title{
+  font-family:'Caveat',cursive;
+  font-size:1.1rem;color:var(--cream-dark);margin-bottom:10px;
+}
+.ctx-row{
+  background:#fff;border-radius:8px;
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ctx-row-info{font-size:.82rem;}
+.ctx-row-info strong{display:block;font-weight:600;color:var(--text-dark);}
+.ctx-row-info span{color:var(--text-light);}
+.ctx-swap{background:none;border:none;color:var(--text-mid);font-size:1rem;cursor:pointer;}
+.shortcut-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;margin-bottom:20px;
+}
+.shortcut-item{
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;padding:4px;
+  transition:opacity .2s;
+}
+.shortcut-item:hover{opacity:.7;}
+.shortcut-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:#fff;border:2px solid var(--text-dark);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.shortcut-icon svg{width:16px;height:16px;}
+.shortcut-label{font-size:.82rem;font-weight:600;color:var(--text-dark);}
+.progress-card{
+  background:rgba(192,57,43,.85);
+  border-radius:14px;padding:18px 20px;
+}
+.progress-title{
+  font-family:'Caveat',cursive;
+  font-size:1.3rem;color:#fff;margin-bottom:14px;
+}
+.progress-item{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.progress-circle{
+  width:38px;height:38px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.progress-fill{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.5);
+}
+.progress-info{flex:1;}
+.progress-info strong{display:block;font-size:.82rem;color:#fff;font-weight:600;}
+.progress-info span{font-size:.76rem;color:rgba(255,255,255,.7);}
+.home-right{
+  background:var(--orange);
+  padding:clamp(16px,3vw,28px);
+}
+.metas-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  color:var(--text-dark);margin-bottom:16px;text-align:center;
+}
+.meta-card{
+  background:rgba(192,57,43,.6);
+  border-radius:12px;
+  aspect-ratio:16/5;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;cursor:pointer;
+  transition:background .2s,transform .15s;
+}
+.meta-card:nth-child(2){background:rgba(212,168,67,.6);}
+.meta-card:hover{transform:scale(1.02);}
+.meta-plus{
+  width:44px;height:44px;border-radius:50%;
+  border:2.5px solid rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.6);font-size:1.5rem;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 5 — CRONOGRAMA
+═══════════════════════════════════════ */
+#cronograma{background:var(--cream);}
+.crono-content{padding:clamp(16px,3vw,30px) clamp(12px,3vw,30px);}
+.crono-table-wrap{overflow-x:auto;border-radius:12px;box-shadow:var(--shadow);}
+.crono-table{
+  width:100%;border-collapse:collapse;
+  background:#fff;
+  min-width:600px;
+}
+.crono-table th{
+  background:var(--red);color:#fff;
+  padding:13px 10px;
+  font-family:'Lora',serif;font-weight:700;
+  font-size:clamp(.7rem,1.1vw,.85rem);
+  letter-spacing:.5px;text-transform:uppercase;
+  text-align:center;
+}
+.crono-table th:first-child{
+  background:var(--red-dark);
+  width:110px;
+}
+.crono-table td{
+  padding:12px 10px;
+  border:1px solid rgba(192,57,43,.1);
+  font-size:clamp(.72rem,1vw,.85rem);
+  text-align:center;vertical-align:top;
+  line-height:1.4;
+}
+.crono-table tr td:first-child{
+  background:var(--red);
+  color:var(--gold);
+  font-family:'Playfair Display',serif;
+  font-style:italic;font-weight:700;
+  font-size:clamp(.78rem,1.1vw,.9rem);
+}
+.crono-table tr:nth-child(even) td{background:rgba(245,239,224,.4);}
+.crono-table td:not(:first-child):hover{
+  background:rgba(192,57,43,.06);cursor:pointer;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 6 — CONTEÚDOS VIDEOAULA
+═══════════════════════════════════════ */
+#conteudos{background:var(--cream);}
+.conteudos-body{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:calc(100vh - 200px);
+}
+@media(max-width:800px){.conteudos-body{grid-template-columns:1fr;}}
+.conteudos-left{
+  background:var(--cream);
+  padding:clamp(14px,2.5vw,24px);
+  border-right:1px solid rgba(192,57,43,.1);
+  overflow-y:auto;max-height:calc(100vh - 200px);
+}
+.conteudos-right{
+  padding:clamp(14px,2.5vw,24px);
+  overflow-y:auto;max-height:calc(100vh - 200px);
+}
+.video-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px;border-radius:10px;
+  cursor:pointer;
+  transition:background .2s;
+  border:1px solid transparent;
+  margin-bottom:8px;
+}
+.video-item:hover,.video-item.selected{
+  background:#fff;border-color:rgba(192,57,43,.15);
+  box-shadow:var(--shadow);
+}
+.video-thumb{
+  width:clamp(70px,12vw,100px);
+  aspect-ratio:16/9;object-fit:cover;
+  border-radius:6px;flex-shrink:0;
+  background:var(--red-dark);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.65rem;text-align:center;
+}
+.video-info{flex:1;min-width:0;}
+.video-info strong{
+  display:block;font-size:clamp(.78rem,1.1vw,.88rem);
+  font-weight:600;color:var(--text-dark);
+  line-height:1.3;margin-bottom:3px;
+}
+.video-info span{font-size:.72rem;color:var(--text-light);}
+.video-menu{background:none;border:none;color:var(--text-light);font-size:1.1rem;cursor:pointer;}
+.note-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(1.3rem,2.5vw,2rem);
+  color:var(--cream);margin-bottom:12px;
+}
+.note-area{
+  width:100%;flex:1;
+  border:1px solid #E0D8C8;border-radius:10px;
+  padding:14px;background:#fff;
+  font-family:'Lora',serif;font-size:.88rem;
+  color:var(--text-dark);resize:vertical;
+  min-height:200px;outline:none;
+  transition:border .2s,box-shadow .2s;
+}
+.note-area:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
+.conteudos-right-inner{
+  background:var(--orange);
+  border-radius:12px;padding:18px;
+  height:100%;display:flex;flex-direction:column;
+}
+/* Notes panel text */
+.notes-panel{display:flex;flex-direction:column;gap:12px;height:100%;}
+
+/* ═══════════════════════════════════════
+   SCREEN 7 — VÍDEO AULA
+═══════════════════════════════════════ */
+#videoaula{background:var(--cream);}
+.video-page-wrap{
+  display:grid;
+  grid-template-columns:1fr 320px;
+  min-height:calc(100vh - 58px);
+}
+@media(max-width:900px){.video-page-wrap{grid-template-columns:1fr;}}
+.video-main{
+  background:var(--red);
+  padding:clamp(12px,2vw,20px);
+  display:flex;flex-direction:column;
+  gap:14px;
+}
+.video-player{
+  background:#fff;border-radius:10px;
+  overflow:hidden;position:relative;
+  aspect-ratio:16/9;width:100%;
+}
+.video-frame-placeholder{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:#F0E8D8;
+  font-size:.85rem;color:var(--text-light);text-align:center;
+  padding:20px;
+}
+.video-controls{
+  background:rgba(0,0,0,.85);
+  padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.ctrl-btn{
+  background:none;border:none;color:#ccc;
+  cursor:pointer;font-size:.9rem;
+  transition:color .15s;
+}
+.ctrl-btn:hover{color:#fff;}
+.progress-bar-wrap{
+  flex:1;height:4px;background:rgba(255,255,255,.2);
+  border-radius:2px;cursor:pointer;
+}
+.progress-bar-fill{height:100%;background:var(--red);width:1%;border-radius:2px;}
+.time-label{font-size:.72rem;color:#ccc;white-space:nowrap;}
+.chapter-tag{
+  background:rgba(255,255,255,.15);border:none;
+  padding:4px 10px;border-radius:20px;
+  font-size:.72rem;color:#fff;cursor:pointer;
+  display:flex;align-items:center;gap:4px;
+}
+.video-channel{
+  display:flex;align-items:center;gap:12px;
+  padding:0 4px;
+}
+.channel-logo{
+  width:44px;height:44px;border-radius:50%;
+  object-fit:cover;flex-shrink:0;
+  background:var(--text-dark);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.65rem;font-weight:700;
+}
+.channel-info strong{display:block;font-size:.88rem;color:#fff;}
+.channel-info span{font-size:.75rem;color:rgba(255,255,255,.65);}
+.btn-subscribe{
+  margin-left:auto;
+  background:var(--text-dark);color:#fff;border:none;
+  padding:8px 18px;border-radius:20px;
+  font-size:.8rem;font-weight:600;
+  cursor:pointer;transition:background .2s;
+}
+.btn-subscribe:hover{background:#1a0c06;}
+.video-back-btn{
+  position:absolute;top:12px;left:12px;z-index:5;
+}
+.video-notes-toggle{
+  position:absolute;top:12px;right:12px;z-index:5;
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(180,180,180,.7);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:.9rem;
+}
+.video-sidebar{
+  background:var(--orange);
+  padding:clamp(14px,2vw,22px);
+  display:flex;flex-direction:column;
+}
+.video-sidebar-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(1.3rem,2vw,1.8rem);
+  color:var(--cream);margin-bottom:12px;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 8 — EXERCÍCIOS
+═══════════════════════════════════════ */
+#exercicios{background:var(--cream);}
+.ex-content{padding:clamp(14px,3vw,28px) clamp(12px,3vw,28px);}
+.ex-section-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(.95rem,1.8vw,1.25rem);
+  color:var(--red);margin-bottom:12px;margin-top:8px;
+}
+.ex-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;margin-bottom:6px;
+}
+@media(max-width:640px){.ex-grid{grid-template-columns:1fr;}}
+.ex-card{
+  background:#fff;border-radius:12px;
+  border:1px solid rgba(192,57,43,.1);
+  padding:16px;box-shadow:var(--shadow);
+  position:relative;
+}
+.ex-card-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:8px;
+}
+.ex-level{
+  font-size:.78rem;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:4px;
+}
+.ex-card-actions{display:flex;gap:6px;}
+.ex-action-btn{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--text-dark);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:.75rem;
+  transition:background .2s;
+}
+.ex-action-btn:hover{background:var(--red);}
+.ex-card-body{font-size:.82rem;color:var(--text-mid);line-height:1.5;}
+.ex-card-body ul{margin-left:16px;margin-top:4px;}
+.ex-card-body li{margin-bottom:2px;}
+.ex-card-foot{
+  display:flex;align-items:center;justify-content:flex-end;
+  margin-top:12px;gap:4px;flex-direction:column;align-items:flex-end;
+}
+.badge-entregue{
+  font-size:.75rem;font-weight:700;color:var(--green);
+}
+.badge-pendente{font-size:.75rem;font-weight:700;color:var(--text-light);}
+.badge-atraso{font-size:.75rem;font-weight:700;color:var(--yellow);}
+.ex-date{font-size:.72rem;color:var(--text-light);}
+/* Single exercise view */
+.ex-single-card{
+  background:#fff;border-radius:14px;
+  border:1px solid rgba(192,57,43,.1);
+  padding:clamp(20px,3vw,32px);
+  box-shadow:var(--shadow);
+  min-height:400px;position:relative;
+}
+.ex-single-title{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  color:var(--red);font-size:1rem;
+  margin-bottom:6px;
+}
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ═══════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════ */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(192,57,43,.3);border-radius:3px;}
+
+/* ═══════════════════════════════════════
+   MOBILE NAV OVERFLOW
+═══════════════════════════════════════ */
+@media(max-width:700px){
+  .navbar-links{gap:10px;}
+  .navbar-links a{font-size:.72rem;}
+}
+@media(max-width:500px){
+  .navbar-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     SCREEN 1 — SPLASH
+════════════════════════════════════════ -->
+<div class="screen active no-scroll" id="splash">
+  <div class="splash-blob-tl"></div>
+  <div class="splash-blob-br"></div>
+
+  <div class="splash-sparks">
+    <div class="spark-row"><div class="spark"></div></div>
+    <div class="spark-row" style="margin-left:12px"><div class="spark sm"></div><div class="spark"></div></div>
+  </div>
+
+  <div class="splash-left">
+    <h1 class="splash-title">Ds Academy</h1>
+    <p class="splash-sub">Os estudos em <strong>PRIMEIRO</strong> lugar!</p>
+    <button class="btn-entrar" onclick="goTo('login')">Entrar</button>
+  </div>
+
+  <div class="splash-right">
+    <!--
+      ╔═══════════════════════════════════╗
+      ║ Imagem dos livros (capa)         ║
+      ║ → coloque: splash_books.png      ║
+      ╚═══════════════════════════════════╝
+    -->
+    <img class="splash-books" src="./imgs/splash_books.png" alt="Livros" onerror="this.style.display='none'"/>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 2 — LOGIN
+════════════════════════════════════════ -->
+<div class="screen" id="login">
+  <div class="login-topbar"></div>
+  <div class="login-blob-bl"></div>
+  <div class="login-blob-br"></div>
+  <div class="login-watermark"></div>
+
+  <!--
+    ╔═══════════════════════════════════╗
+    ║ Logo canto: logo_1.png           ║
+    ╚═══════════════════════════════════╝
+  -->
+  <img class="login-logo-corner" src="./imgs/logo_1.webp" alt="Logo" onerror="this.style.display='none'"/>
+
+  <div class="login-card">
+    <h2 class="login-title">Entre na sua conta</h2>
+    <p class="login-sub">Número de celular ou E-mail</p>
+
+    <div class="input-wrap">
+      <input type="email" id="loginEmail" placeholder="nomecompleto@gmail.com"/>
+      <button class="input-clear" onclick="document.getElementById('loginEmail').value=''">✕</button>
+    </div>
+
+    <button class="btn-continuar" onclick="goTo('home')">CONTINUAR</button>
+
+    <p class="login-create">Não tem uma conta? <a href="#" onclick="goTo('criar-conta');return false;">Crie Agora!</a></p>
+
+    <div class="divider">Ou junte-se a</div>
+
+    <button class="btn-social">
+      <span class="social-icon g">
+        <svg width="18" height="18" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+      </span>
+      Prosseguir com Google
+    </button>
+
+    <button class="btn-social">
+      <span class="social-icon fb">f</span>
+      Prosseguir com Facebook
+    </button>
+
+    <div class="country-sel">🇧🇷 Brazil ▾</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 3 — CRIAR CONTA
+════════════════════════════════════════ -->
+<div class="screen" id="criar-conta">
+  <div class="criar-topbar"></div>
+  <div class="criar-watermark"></div>
+
+  <div class="criar-sparks">
+    <div class="spark-row"><div class="spark" style="background:var(--orange)"></div></div>
+    <div class="spark-row" style="margin-left:10px"><div class="spark sm" style="background:var(--orange)"></div><div class="spark sm" style="background:var(--orange)"></div></div>
+  </div>
+
+  <!--
+    ╔═══════════════════════════════════╗
+    ║ Logo canto: logo_1.png           ║
+    ╚═══════════════════════════════════╝
+  -->
+  <img class="login-logo-corner" src="./imgs/logo_1.png" alt="Logo" onerror="this.style.display:'none'"/>
+
+  <div class="criar-card">
+    <h2 class="criar-title">Criar sua conta Academy</h2>
+    <p class="criar-sub">É rápido e fácil</p>
+
+    <div class="input-group">
+      <label class="input-label">E-mail</label>
+      <div class="input-wrap">
+        <input type="email" id="criarEmail" placeholder="nomecompleto@gmail.com"/>
+        <button class="input-clear" style="font-size:.8rem">✏️</button>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Senha</label>
+      <div class="input-wrap">
+        <input type="password" id="criarSenha" placeholder=""/>
+        <button class="input-clear" onclick="togglePwd()" style="font-size:.8rem">👁</button>
+      </div>
+      <span class="input-hint" id="hint1">Mínimo de 8 caracteres</span>
+      <span class="input-hint" id="hint2">Pelo menos uma letra</span>
+      <span class="input-hint" id="hint3">Pelo menos um número</span>
+    </div>
+
+    <button class="btn-cadastrar" onclick="goTo('home')">CADASTRE-SE</button>
+
+    <p style="font-size:.78rem;color:var(--text-light);text-align:center;">
+      Já tem conta? <a href="#" onclick="goTo('login');return false;" style="color:var(--red);font-weight:700;">Entrar</a>
+    </p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 4 — HOME / DASHBOARD
+════════════════════════════════════════ -->
+<div class="screen" id="home">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <!--
+      ╔═══════════════════════════════════╗
+      ║ Navbar logo: logo_1.png          ║
+      ╚═══════════════════════════════════╝
+    -->
+    <img class="navbar-logo" src="./imgs/logo_1.png" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <div class="navbar-links">
+      <a href="#" onclick="goTo('home');return false;" class="active-link">Início</a>
+      <a href="#" onclick="goTo('cronograma');return false;">Cronograma</a>
+      <a href="#" onclick="goTo('conteudos');return false;">Conteúdos</a>
+      <a href="#" onclick="goTo('exercicios');return false;">Exercícios</a>
+      <a href="#">Docentes</a>
+      <a href="#">Redação Semanal</a>
+    </div>
+    <div class="navbar-right">
+      <button class="navbar-icon" title="Configurações">
+        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-width="0"/></svg>
+      </button>
+      <button class="navbar-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="home-hero">
+    <div>
+      <h1 class="home-hero-title">Ds Academy</h1>
+      <p class="home-hero-sub">Olá, Seu Nome!</p>
+    </div>
+    <!--
+      ╔══════════════════════════════════════╗
+      ║ Hero books: books_illustration.png  ║
+      ╚══════════════════════════════════════╝
+    -->
+    <img class="home-hero-books" src="./imgs/logo_1.webp" alt="" onerror="this.style.display='none'"/>
+  </div>
+
+  <!-- BODY -->
+  <div class="home-body">
+    <!-- LEFT -->
+    <div class="home-left">
+      <div class="home-watermark"></div>
+
+      <div class="ctx-card">
+        <div class="ctx-card-title">Contexto Educacional</div>
+        <div class="ctx-row">
+          <div class="ctx-row-info">
+            <strong>2026 | Curso Técnico de Desenvolvimento de Sistemas</strong>
+            <span>Situação: Em andamento</span>
+          </div>
+          <button class="ctx-swap">⇅</button>
+        </div>
+      </div>
+
+      <div class="shortcut-grid">
+        <div class="shortcut-item" onclick="goTo('conteudos')">
+          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <span class="shortcut-label">Lógica de Programação</span>
+        </div>
+        <div class="shortcut-item" onclick="goTo('conteudos')">
+          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <span class="shortcut-label">Desenvolvimento Web</span>
+        </div>
+        <div class="shortcut-item" onclick="goTo('conteudos')">
+          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M9 9h6M9 13h6"/></svg></div>
+          <span class="shortcut-label">Banco de Dados</span>
+        </div>
+        <div class="shortcut-item" onclick="goTo('conteudos')">
+          <div class="shortcut-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+          <span class="shortcut-label">Banco de Dados</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="currentColor"/></svg></div>
+          <span class="shortcut-label">Laboratório de Código</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon" style="border-radius:6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" fill="currentColor"/></svg>
+          </div>
+          <span class="shortcut-label">Repositório Git</span>
+        </div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-title">Progresso do Curso</div>
+        <div class="progress-item">
+          <div class="progress-circle">
+            <div class="progress-fill" style="height:80%"></div>
+            <span style="position:relative;font-size:.6rem;color:#fff;font-weight:700">80%</span>
+          </div>
+          <div class="progress-info">
+            <strong>Lógica de Programação</strong>
+            <span>80%</span>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-circle">
+            <div class="progress-fill" style="height:65%"></div>
+            <span style="position:relative;font-size:.6rem;color:#fff;font-weight:700">65%</span>
+          </div>
+          <div class="progress-info">
+            <strong>Desenvolvimento Web</strong>
+            <span>65%</span>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-circle">
+            <div class="progress-fill" style="height:40%"></div>
+            <span style="position:relative;font-size:.6rem;color:#fff;font-weight:700">40%</span>
+          </div>
+          <div class="progress-info">
+            <strong>Banco de Dados</strong>
+            <span>40%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — METAS -->
+    <div class="home-right">
+      <h2 class="metas-title">Metas da Semana</h2>
+      <div class="meta-card"><div class="meta-plus">+</div></div>
+      <div class="meta-card"><div class="meta-plus">+</div></div>
+      <div class="meta-card"><div class="meta-plus">+</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 5 — CRONOGRAMA
+════════════════════════════════════════ -->
+<div class="screen" id="cronograma">
+  <nav class="navbar">
+    <img class="navbar-logo" src="/imgs/logo_1.webp" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <div class="navbar-links">
+      <a href="#" onclick="goTo('home');return false;">Início</a>
+      <a href="#" onclick="goTo('conteudos');return false;">Conteúdos</a>
+      <a href="#" onclick="goTo('exercicios');return false;">Exercícios</a>
+      <a href="#">Docentes</a>
+      <a href="#">Redação Semanal</a>
+    </div>
+    <div class="navbar-right">
+      <button class="navbar-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+    </div>
+  </nav>
+
+  <div class="hero-banner">
+    <button class="back-btn" onclick="goTo('home')" style="margin-right:12px">‹</button>
+    <div class="hero-sparks">
+      <div class="spark-row"><div class="spark"></div></div>
+    </div>
+    <h1 class="hero-title">Cronograma <span>de Estudos da Semana</span></h1>
+    <!--
+      ╔══════════════════════════════════════╗
+      ║ Banner books: books_illustration.png ║
+      ╚══════════════════════════════════════╝
+    -->
+    <img class="hero-img" src="./imgs/logo_1.webp" alt="" onerror="this.style.display='none'"/>
+  </div>
+
+  <div class="crono-content">
+    <div class="crono-table-wrap">
+      <table class="crono-table">
+        <thead>
+          <tr>
+            <th>Matérias</th>
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lógica de Programação</td>
+            <td>Videoaula: Variáveis, tipos de dados e operadores</td>
+            <td>Exercícios práticos de lógica - JavaScript</td>
+            <td>Videoaula: Estruturas condicionais (if / else)</td>
+            <td>Lista de exercícios de lógica</td>
+            <td>Aula de revisão</td>
+          </tr>
+          <tr>
+            <td>Desenvolvimento Web</td>
+            <td>Videoaula: HTML básico</td>
+            <td>Prática: Criar uma página simples</td>
+            <td>Videoaula: CSS básico</td>
+            <td>Prática: estilizar a página criada</td>
+            <td>Revisão + mini projeto</td>
+          </tr>
+          <tr>
+            <td>Banco de Dados</td>
+            <td>Videoaula: Introdução a banco de dados</td>
+            <td>Modelagem simples de banco</td>
+            <td>Videoaula: SQL básico</td>
+            <td>Exercícios de consultas SQL</td>
+            <td>Revisão + prática no banco</td>
+          </tr>
+          <tr>
+            <td>Sistemas Operacionais</td>
+            <td>Videoaula: Conceitos de sistemas operacionais</td>
+            <td>Estudo: gerenciamento de processos</td>
+            <td>Videoaula: Sistemas de arquivos</td>
+            <td>Prática: comandos básicos do terminal</td>
+            <td>Revisão + resumo da semana</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 6 — CONTEÚDOS VIDEOAULA
+════════════════════════════════════════ -->
+<div class="screen" id="conteudos">
+  <nav class="navbar">
+    <img class="navbar-logo" src="./imgs/logo_dridrix.png" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <div class="navbar-links">
+      <a href="#" onclick="goTo('home');return false;">Início</a>
+      <a href="#" onclick="goTo('exercicios');return false;">Exercícios</a>
+      <a href="#">Docentes</a>
+    </div>
+    <div class="navbar-right">
+      <button class="navbar-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+    </div>
+  </nav>
+
+  <div class="conteudos-body">
+    <!-- LEFT: video list -->
+    <div class="conteudos-left">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+        <button class="back-btn" onclick="goTo('home')" style="background:rgba(0,0,0,.15);color:var(--text-dark)">‹</button>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.4rem,3vw,2.2rem);color:var(--orange);">Conteúdos</div>
+          <div style="font-family:'Caveat',cursive;font-size:clamp(1rem,2vw,1.5rem);color:var(--red);font-weight:700;">Videoaula</div>
+        </div>
+        <!--
+          ╔══════════════════════════════════════╗
+          ║ Icon books: books_illustration.png   ║
+          ╚══════════════════════════════════════╝
+        -->
+        <img src="books_illustration.png" style="width:50px;margin-left:auto;" onerror="this.style.display='none'" alt=""/>
+      </div>
+
+      <div class="section-title">Lógica de Programação</div>
+
+      <div class="video-item selected" onclick="selectVideo(this,'Lógica de Programação')">
+        <div class="video-thumb" style="background:#111;font-size:.6rem;padding:4px;color:#fff;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;">
+          <!--
+            ╔══════════════════════════════════╗
+            ║ Thumb: imagem do vídeo 1         ║
+            ║ <img src="thumb1.jpg">           ║
+            ╚══════════════════════════════════╝
+          -->
+          LÓGICA DE PROGRAMAÇÃO
+        </div>
+        <div class="video-info">
+          <strong>Entenda LÓGICA DE PROGRAMAÇÃO e ALGORITMOS</strong>
+          <span>Sharpax · 1 mi de visualizações · há 6 anos</span>
+        </div>
+        <button class="video-menu">⋮</button>
+      </div>
+
+      <div class="video-item" onclick="selectVideo(this,'Desenvolvimento Web')">
+        <div class="video-thumb" style="background:#0a2540;">
+          DEV WEB 03
+        </div>
+        <div class="video-info">
+          <strong>Comece sua carreira em Desenvolvimento Web</strong>
+          <span>Curso em Vídeo · 70 mil visualizações · há 2 anos</span>
+        </div>
+        <button class="video-menu">⋮</button>
+      </div>
+
+      <div class="video-item" onclick="selectVideo(this,'Banco de Dados')">
+        <div class="video-thumb" style="background:#1a1a2e;">
+          BANCO DE DADOS
+        </div>
+        <div class="video-info">
+          <strong>O que é BANCO DE DADOS e porque INTERESSA APRENDER isso?</strong>
+          <span>DBA PRO · 347 mil visualizações · há 8 anos</span>
+        </div>
+        <button class="video-menu">⋮</button>
+      </div>
+
+      <div class="section-title" style="margin-top:16px">Sistemas Operacionais</div>
+
+      <div class="video-item" onclick="selectVideo(this,'Sistemas Operacionais')">
+        <div class="video-thumb" style="background:#0d3b1e;">
+          SISTEMAS OPERACIONAIS
+        </div>
+        <div class="video-info">
+          <strong>Aula 1 - Introdução aos Sistemas Operacionais</strong>
+          <span>Prof. Marcel Rios · 71 mil visualizações · há 2 anos</span>
+        </div>
+        <button class="video-menu">⋮</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: notes + content -->
+    <div class="conteudos-right">
+      <div class="conteudos-right-inner">
+        <div class="notes-panel">
+          <div class="note-title" id="notesTitle">Anotações :</div>
+          <textarea class="note-area" id="notesArea" placeholder="Digite aqui..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 7 — VÍDEO AULA
+════════════════════════════════════════ -->
+<div class="screen" id="videoaula">
+  <nav class="navbar" style="position:relative;z-index:10;">
+    <img class="navbar-logo" src="logo_1.png" alt="Logo" onclick="goTo('home')" onerror="this.style.display='none'"/>
+  </nav>
+
+  <div class="video-page-wrap">
+    <!-- VIDEO MAIN -->
+    <div class="video-main">
+      <div class="video-player">
+        <button class="video-back-btn back-btn" onclick="goTo('conteudos')">‹</button>
+        <button class="video-notes-toggle" onclick="toggleVideoLayout()" title="Anotações">✏️</button>
+        <div class="video-frame-placeholder">
+          <!--
+            ╔══════════════════════════════════════════╗
+            ║ Aqui vai o iframe do vídeo ou thumbnail  ║
+            ║ Exemplo:                                 ║
+            ║ <iframe src="https://youtube.com/embed/X"║
+            ║   allow="autoplay" allowfullscreen>      ║
+            ║ </iframe>                                ║
+            ╚══════════════════════════════════════════╝
+          -->
+          <div>
+            <div style="font-size:2rem;margin-bottom:8px;">▶</div>
+            <p>Coloque o iframe do vídeo aqui<br><small>url: youtube.com/embed/ID</small></p>
+          </div>
+        </div>
+        <!-- Controls overlay -->
+        <div class="video-controls" style="position:absolute;bottom:0;left:0;right:0;">
+          <button class="ctrl-btn">▶</button>
+          <button class="ctrl-btn">🔊</button>
+          <span class="time-label">0:08 / 14:12</span>
+          <div class="progress-bar-wrap" onclick="seekVideo(event,this)">
+            <div class="progress-bar-fill" id="vProgress"></div>
+          </div>
+          <button class="chapter-tag">Introdução ›</button>
+        </div>
+      </div>
+
+      <!-- Channel info -->
+      <div class="video-channel">
+        <div class="channel-logo">DBA</div>
+        <div class="channel-info">
+          <strong>DBA PRO</strong>
+          <span>26,5 mil inscritos</span>
+        </div>
+        <button class="btn-subscribe">Inscrever-se</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR: notes -->
+    <div class="video-sidebar" id="videoSidebar">
+      <div class="video-sidebar-title">Anotações :</div>
+      <textarea class="note-area" placeholder="Digite aqui..." style="flex:1;min-height:0;"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 8 — EXERCÍCIOS
+════════════════════════════════════════ -->
+<div class="screen" id="exercicios">
+  <nav class="navbar">
+    <img class="navbar-logo" src="logo_1.png" alt="Logo" onclick="goTo('home')" onerror="this.outerHTML='<div class=\'navbar-logo-placeholder\' onclick=\'goTo(\\\'home\\\')\'>DS</div>'"/>
+    <div class="navbar-links">
+      <a href="#" onclick="goTo('home');return false;">Início</a>
+      <a href="#" onclick="goTo('conteudos');return false;">Conteúdos</a>
+      <a href="#">Docentes</a>
+    </div>
+    <div class="navbar-right">
+      <button class="navbar-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+    </div>
+  </nav>
+
+  <div class="hero-banner">
+    <div class="hero-sparks">
+      <div class="spark-row"><div class="spark"></div></div>
+      <div class="spark-row" style="margin-left:10px"><div class="spark sm"></div><div class="spark"></div></div>
+    </div>
+    <h1 class="hero-title">Exercícios <span>do Curso</span></h1>
+    <!--
+      ╔══════════════════════════════════════╗
+      ║ Hero books: books_illustration.png   ║
+      ╚══════════════════════════════════════╝
+    -->
+    <img class="hero-img" src="./imgs/books_illustration.png" alt="" onerror="this.style.display='none'"/>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="exListView" class="ex-content">
+    <div class="ex-section-title">Lógica de Programação</div>
+    <div class="ex-grid">
+      <div class="ex-card" onclick="openExercise('Intermediário','15-02 | Projeto: Solução para a Escola [Sprint 3]','Crie um programa que:<br><ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul>','Entregue','20 de Fevereiro 13:20')">
+        <div class="ex-card-header">
+          <div class="ex-level">→ Intermediário</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Crie um programa que:
+          <ul><li>Leia um número inteiro</li><li>Verifique se ele é primo</li></ul>
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-entregue">Entregue</span>
+          <span class="ex-date">20 de Fevereiro 13:20</span>
+        </div>
+      </div>
+
+      <div class="ex-card" onclick="openExercise('Avançado','Bubble Sort','Faça um algoritmo que:<br><ul><li>Receba uma lista de números</li><li>Ordene sem usar funções prontas (ex: Bubble Sort)</li></ul>','Em atraso','20 de Fevereiro')">
+        <div class="ex-card-header">
+          <div class="ex-level" style="color:var(--gold)">→ Avançado</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Faça um algoritmo que:
+          <ul><li>Receba uma lista de números</li><li>Ordene sem usar funções prontas (ex: Bubble Sort)</li></ul>
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-atraso">Em atraso</span>
+          <span class="ex-date">20 de Fevereiro</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-section-title">Desenvolvimento Web</div>
+    <div class="ex-grid">
+      <div class="ex-card">
+        <div class="ex-card-header">
+          <div class="ex-level">→ HTML + CSS</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Crie uma página com:
+          <ul><li>Um título</li><li>Um formulário com nome, email e senha...</li></ul>
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-pendente">Pendente</span>
+          <span class="ex-date">03 de Abril</span>
+        </div>
+      </div>
+
+      <div class="ex-card">
+        <div class="ex-card-header">
+          <div class="ex-level" style="color:var(--gold)">→ JavaScript</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Faça um script que:
+          <ul><li>Capture o valor de um input</li><li>Ao clicar no botão, mostre um alerta com o val...</li></ul>
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-pendente">Pendente</span>
+          <span class="ex-date">15 de Abril</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-section-title">Banco de Dados</div>
+    <div class="ex-grid">
+      <div class="ex-card">
+        <div class="ex-card-header">
+          <div class="ex-level">→ Intermediário</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Com uma tabela pedidos:<br><strong>(id, cliente_id, valor)</strong><br>
+          Faça uma query que:<ul><li>Mostre o total de pedidos por cliente</li></ul>
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-pendente">Pendente</span>
+          <span class="ex-date">02 de Abril</span>
+        </div>
+      </div>
+
+      <div class="ex-card">
+        <div class="ex-card-header">
+          <div class="ex-level" style="color:var(--gold)">→ Avançado</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Explique e escreva um exemplo de:
+          <ul><li>INNER JOIN</li><li>LEFT JOIN</li></ul>
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-entregue">Entregue</span>
+          <span class="ex-date">10 de Março 15:54</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-section-title">Sistemas Operacionais</div>
+    <div class="ex-grid">
+      <div class="ex-card">
+        <div class="ex-card-header">
+          <div class="ex-level">→ Intermediário</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Qual a diferença entre: processos e threads?
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-pendente">Pendente</span>
+          <span class="ex-date">10 de Abril</span>
+        </div>
+      </div>
+
+      <div class="ex-card">
+        <div class="ex-card-header">
+          <div class="ex-level" style="color:var(--gold)">→ Avançado</div>
+          <div class="ex-card-actions">
+            <button class="ex-action-btn">📎</button>
+            <button class="ex-action-btn">➤</button>
+          </div>
+        </div>
+        <div class="ex-card-body">
+          Explique o conceito de escalonamento de processos.
+        </div>
+        <div class="ex-card-foot">
+          <span class="badge-pendente">Pendente</span>
+          <span class="ex-date">12 de Abril</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SINGLE EXERCISE VIEW -->
+  <div id="exSingleView" style="display:none;" class="ex-content">
+    <div class="ex-single-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+        <button onclick="closeExercise()" style="background:none;border:none;color:var(--text-light);font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:4px;">‹ Voltar</button>
+        <div style="display:flex;gap:8px;">
+          <button class="ex-action-btn" style="width:36px;height:36px;">📎</button>
+          <button class="ex-action-btn" style="width:36px;height:36px;">✈️</button>
+        </div>
+      </div>
+      <h2 class="ex-single-title" id="exSingleTitle"></h2>
+      <div class="ex-card-body" id="exSingleBody" style="margin-bottom:20px;"></div>
+      <div style="text-align:right;">
+        <div id="exSingleBadge" class="badge-entregue" style="margin-bottom:4px;"></div>
+        <div id="exSingleDate" class="ex-date"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+/* ── Navigation ── */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+  });
+  const t=document.getElementById(id);
+  if(t){
+    t.classList.add('active');
+    t.scrollTop=0;
+  }
+}
+
+/* ── Password toggle ── */
+function togglePwd(){
+  const i=document.getElementById('criarSenha');
+  i.type=i.type==='password'?'text':'password';
+}
+
+/* ── Password validation ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  const pwd=document.getElementById('criarSenha');
+  if(pwd){
+    pwd.addEventListener('input',()=>{
+      const v=pwd.value;
+      setHint('hint1',v.length>=8);
+      setHint('hint2',/[a-zA-Z]/.test(v));
+      setHint('hint3',/[0-9]/.test(v));
+    });
+  }
+});
+function setHint(id,ok){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle('ok',ok);
+}
+
+/* ── Video selection ── */
+function selectVideo(el,subject){
+  document.querySelectorAll('.video-item').forEach(v=>v.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('notesTitle').textContent='Anotações — '+subject+' :';
+}
+
+/* ── Exercise open/close ── */
+function openExercise(level,title,body,badge,date){
+  document.getElementById('exListView').style.display='none';
+  document.getElementById('exSingleView').style.display='block';
+  document.getElementById('exSingleTitle').textContent=title;
+  document.getElementById('exSingleBody').innerHTML=body;
+  const b=document.getElementById('exSingleBadge');
+  b.textContent=badge;
+  b.className=badge==='Entregue'?'badge-entregue':badge==='Em atraso'?'badge-atraso':'badge-pendente';
+  document.getElementById('exSingleDate').textContent=date;
+}
+function closeExercise(){
+  document.getElementById('exSingleView').style.display='none';
+  document.getElementById('exListView').style.display='block';
+}
+
+/* ── Video seek ── */
+function seekVideo(e,bar){
+  const rect=bar.getBoundingClientRect();
+  const pct=((e.clientX-rect.left)/rect.width)*100;
+  document.getElementById('vProgress').style.width=pct+'%';
+}
+
+/* ── Video sidebar toggle ── */
+function toggleVideoLayout(){
+  const s=document.getElementById('videoSidebar');
+  s.style.display=s.style.display==='none'?'':'none';
+}
+</script>
+</body>
+</html>
