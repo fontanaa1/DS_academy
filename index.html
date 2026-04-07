@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ds Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#f5efe6;--fg:#2d1f14;--card:#f8f3ec;--primary:#b5451b;--primary-fg:#f5efe6;
+--secondary:#cc8a2e;--secondary-fg:#f5efe6;--muted:#e8dfd4;--muted-fg:#6b5c4f;
+--accent:#d4a843;--accent-fg:#2d1f14;--border:#d4c9bb;--destructive:#e53e3e;
+--green:#38a169;--hero-gradient:linear-gradient(135deg,#b5451b,#c46a3f);
+--radius:0.75rem;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh}
+h1,h2,h3,.font-display{font-family:'Playfair Display',serif}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+input,textarea{font-family:inherit;outline:none}
+.page{display:none}.page.active{display:block}
+
+/* Navbar */
+.navbar{background:var(--hero-gradient);position:sticky;top:0;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{width:40px;height:40px;border-radius:50%;background:var(--primary-fg);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--primary);font-size:14px}
+.nav-links{display:flex;gap:4px}
+.nav-link{padding:8px 12px;border-radius:8px;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:rgba(245,239,230,.8);transition:.2s}
+.nav-link:hover,.nav-link.active{background:rgba(245,239,230,.2);color:var(--primary-fg)}
+.nav-right{display:flex;gap:8px}
+.nav-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--primary-fg);transition:.2s}
+.nav-icon:hover{background:rgba(245,239,230,.2)}
+.nav-icon.active{background:rgba(245,239,230,.3)}
+.nav-mobile{display:none;overflow-x:auto;padding:0 16px 8px;gap:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-mobile{display:flex}}
+
+/* Buttons */
+.btn{padding:10px 20px;border-radius:var(--radius);font-weight:600;font-size:14px;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--primary);color:var(--primary-fg)}.btn-primary:hover{opacity:.9}
+.btn-outline{border:1px solid var(--border);background:var(--card);color:var(--fg)}.btn-outline:hover{background:var(--muted)}
+.btn-destructive{background:var(--destructive);color:#fff}.btn-destructive:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--fg)}.btn-ghost:hover{background:var(--muted)}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-full{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Input */
+.input{width:100%;height:44px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);font-size:14px;color:var(--fg)}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(181,69,27,.15)}
+.textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);font-size:14px;color:var(--fg);resize:none;min-height:120px}
+.textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(181,69,27,.15)}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;transition:.2s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;border-radius:var(--radius);color:#fff;font-size:14px;font-weight:500;animation:slideIn .3s;max-width:360px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.toast-success{background:var(--green)}.toast-error{background:var(--destructive)}.toast-info{background:var(--primary)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.animate-in{animation:fadeIn .4s ease}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeIn .2s}
+.modal h2{font-size:20px;color:var(--primary);margin-bottom:16px}
+.modal-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted-fg)}
+.modal-close:hover{background:var(--muted)}
+
+/* Switch */
+.switch{width:44px;height:24px;border-radius:12px;background:var(--muted);position:relative;transition:.2s;cursor:pointer}
+.switch.on{background:var(--primary)}
+.switch::after{content:'';width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:.2s}
+.switch.on::after{left:22px}
+
+/* Hero bar */
+.hero-bar{background:var(--hero-gradient);padding:24px 16px;position:relative;overflow:hidden}
+.hero-bar h1{font-style:italic;font-weight:900;color:var(--primary-fg);font-size:2rem}
+
+/* Blob */
+.blob{border-radius:60% 40% 30% 70% / 60% 30% 70% 40%;position:absolute}
+
+/* Progress */
+.progress-bar{height:6px;border-radius:3px;background:rgba(245,239,230,.2);overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--primary-fg);transition:width .5s}
+
+/* Splash */
+.splash{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--hero-gradient);position:relative;overflow:hidden}
+.splash h1{font-style:italic;font-weight:900;color:var(--primary-fg);font-size:4rem;letter-spacing:-2px}
+.splash .subtitle{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--secondary);font-weight:700;font-style:italic;margin-top:12px}
+
+/* Schedule table */
+.schedule-table{width:100%;border-collapse:separate;border-spacing:4px;min-width:700px}
+.schedule-table th{background:var(--primary);color:var(--primary-fg);padding:10px;border-radius:8px;font-family:'Playfair Display',serif;font-size:13px}
+.schedule-table th:first-child{background:rgba(181,69,27,.2);color:var(--primary)}
+.schedule-table td{background:var(--card);border:1px solid var(--border);padding:10px;border-radius:8px;font-size:13px;color:var(--primary);vertical-align:top}
+.schedule-table td:first-child{background:var(--primary);color:var(--primary-fg);font-family:'Playfair Display',serif;font-weight:700}
+
+/* Messages */
+.msg-bubble{max-width:75%;padding:10px 16px;border-radius:16px;font-size:14px}
+.msg-user{background:var(--primary);color:var(--primary-fg);border-bottom-right-radius:4px;margin-left:auto}
+.msg-teacher{background:var(--muted);color:var(--fg);border-bottom-left-radius:4px}
+.msg-time{font-size:10px;margin-top:4px;opacity:.6}
+
+/* Calendar */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{height:80px;border-radius:8px;padding:4px;text-align:left;border:1px solid transparent;transition:.2s;background:var(--card);cursor:pointer;font-size:12px}
+.cal-day:hover{border-color:var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.cal-day.today{border-color:var(--secondary);background:rgba(204,138,46,.1)}
+.cal-day.selected{border-color:var(--primary);background:rgba(181,69,27,.1);box-shadow:0 2px 8px rgba(181,69,27,.15)}
+.cal-day-num{font-weight:700;font-size:11px}
+.cal-event{font-size:8px;padding:1px 4px;border-radius:3px;color:#fff;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Misc */
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.flex{display:flex}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
+.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}
+.flex-col{flex-direction:column}.flex-1{flex:1}.text-center{text-align:center}
+.mt-2{margin-top:8px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}
+.text-sm{font-size:14px}.text-xs{font-size:12px}.text-lg{font-size:18px}
+.font-bold{font-weight:700}.font-semibold{font-weight:600}
+.text-primary{color:var(--primary)}.text-secondary{color:var(--secondary)}.text-muted{color:var(--muted-fg)}
+.text-green{color:var(--green)}.text-red{color:var(--destructive)}.text-white{color:#fff}
+.rounded-full{border-radius:9999px}.rounded-xl{border-radius:12px}.rounded-2xl{border-radius:16px}
+.w-full{width:100%}.overflow-x-auto{overflow-x:auto}
+.hidden{display:none}
+.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style>
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ========== SPLASH ========== -->
+<div id="page-splash" class="page active">
+<div class="splash">
+  <div class="blob" style="top:0;left:0;width:250px;height:250px;background:rgba(245,239,230,.1)"></div>
+  <div class="blob" style="bottom:0;right:0;width:300px;height:300px;background:rgba(245,239,230,.1)"></div>
+  <div style="position:relative;z-index:2;text-align:center;padding:24px">
+    <h1>Ds Academy</h1>
+    <p class="subtitle">Os estudos em <span style="text-transform:uppercase">PRIMEIRO</span> lugar!</p>
+    <button onclick="navigate('login')" class="btn" style="margin-top:32px;padding:12px 40px;background:rgba(204,138,46,.8);color:var(--primary-fg);font-family:'Playfair Display',serif;font-size:18px;border-radius:9999px;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Entrar</button>
+  </div>
+  <div style="position:absolute;top:33%;right:33%;color:var(--secondary);font-size:24px;animation:pulse 2s infinite">✦</div>
+</div>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div id="page-login" class="page">
+<div style="min-height:100vh;background:var(--bg);position:relative;overflow:hidden">
+  <div style="height:56px;background:var(--hero-gradient)"></div>
+  <div class="blob" style="bottom:0;left:0;width:250px;height:250px;background:rgba(181,69,27,.1)"></div>
+  <div class="blob" style="bottom:0;right:0;width:280px;height:280px;background:rgba(181,69,27,.1)"></div>
+  <div style="position:absolute;top:80px;right:32px">
+    <div class="nav-logo" style="width:56px;height:56px;font-size:18px">DS</div>
+  </div>
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:.05">
+    <h1 style="font-size:12rem;font-weight:900;color:var(--primary)">DS</h1>
+  </div>
+  <div style="position:relative;z-index:10;max-width:400px;margin:0 auto;padding:80px 24px 24px">
+    <h1 class="font-display text-center" style="font-size:28px;font-weight:900">Entre na sua conta</h1>
+    <p class="text-muted text-center mt-2">Número de celular ou E-mail</p>
+    <form onsubmit="handleLogin(event)" class="mt-6" style="display:flex;flex-direction:column;gap:16px">
+      <input id="login-email" type="email" placeholder="nomecompleto@gmail.com" class="input" required>
+      <button type="submit" class="btn btn-primary btn-full" style="height:48px;text-transform:uppercase;letter-spacing:2px;font-weight:700">Continuar</button>
+    </form>
+    <p class="text-center mt-4 text-sm text-muted">Não tem uma conta? <a href="#" onclick="navigate('signup');return false" class="text-primary font-semibold" style="text-decoration:underline">Crie Agora!</a></p>
+  </div>
+</div>
+</div>
+
+<!-- ========== SIGNUP ========== -->
+<div id="page-signup" class="page">
+<div style="min-height:100vh;background:var(--bg);position:relative;overflow:hidden">
+  <div style="height:56px;background:var(--hero-gradient)"></div>
+  <div class="blob" style="bottom:0;left:0;width:250px;height:250px;background:rgba(181,69,27,.1)"></div>
+  <div style="position:absolute;top:80px;right:32px"><div class="nav-logo" style="width:56px;height:56px;font-size:18px">DS</div></div>
+  <div style="position:relative;z-index:10;max-width:400px;margin:0 auto;padding:64px 24px 24px">
+    <div class="flex items-center justify-center gap-2">
+      <span style="color:var(--secondary);font-size:24px">✦</span>
+      <h1 class="font-display" style="font-size:28px;font-weight:900">Criar sua conta Academy</h1>
+    </div>
+    <p class="text-muted text-center mt-2">É rápido e fácil</p>
+    <form onsubmit="handleSignup(event)" class="mt-6" style="display:flex;flex-direction:column;gap:16px">
+      <div><label class="text-sm text-muted" style="display:block;margin-bottom:4px">E-mail</label><input id="signup-email" type="email" placeholder="nomecompleto@gmail.com" class="input" required></div>
+      <div><label class="text-sm font-bold" style="display:block;margin-bottom:4px;text-transform:uppercase">Senha</label><input id="signup-pass" type="password" class="input" required oninput="checkPassword()"></div>
+      <div id="pass-rules" style="display:flex;flex-direction:column;gap:4px">
+        <div id="rule-len" class="text-sm text-muted">✗ Mínimo de 8 caracteres</div>
+        <div id="rule-letter" class="text-sm text-muted">✗ Pelo menos uma letra</div>
+        <div id="rule-num" class="text-sm text-muted">✗ Pelo menos um número</div>
+      </div>
+      <button id="signup-btn" type="submit" class="btn btn-full" style="height:48px;text-transform:uppercase;letter-spacing:2px;font-weight:700;background:var(--fg);color:var(--bg)" disabled>Cadastre-se</button>
+    </form>
+    <p class="text-center mt-4 text-sm text-muted">Já tem uma conta? <a href="#" onclick="navigate('login');return false" class="text-primary font-semibold" style="text-decoration:underline">Entrar</a></p>
+  </div>
+</div>
+</div>
+
+<!-- ========== HOME ========== -->
+<div id="page-home" class="page">
+<div id="navbar-home"></div>
+<div class="container" style="display:grid;grid-template-columns:2fr 1fr;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:24px">
+    <!-- Hero -->
+    <div style="background:var(--hero-gradient);border-radius:16px;padding:32px;position:relative;overflow:hidden">
+      <div class="blob" style="top:0;right:0;width:128px;height:128px;background:rgba(245,239,230,.05)"></div>
+      <h1 class="font-display" style="font-size:2rem;font-weight:900;color:var(--primary-fg);font-style:italic">Ds Academy</h1>
+      <p class="font-display" style="font-size:18px;color:var(--secondary);font-style:italic;margin-top:4px">Olá, <span id="home-user-name">Estudante</span>!</p>
+    </div>
+    <!-- Context -->
+    <div class="animate-in">
+      <div style="background:var(--primary);border-radius:12px 12px 0 0;padding:8px 16px"><h2 class="font-display" style="color:var(--primary-fg);font-style:italic;font-size:16px;font-weight:700">Contexto Educacional</h2></div>
+      <div class="card" style="border-radius:0 0 12px 12px;border-top:0">
+        <p class="font-semibold">2026 | Curso Técnico de Desenvolvimento de Sistemas</p>
+        <p class="text-sm text-muted">Situação: <span class="text-green font-semibold">Em andamento</span></p>
+      </div>
+    </div>
+    <!-- Subjects -->
+    <div class="grid-3">
+      <button class="card flex items-center gap-3" onclick="navigate('conteudos')"><div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">✏️</div><span class="text-sm font-semibold text-primary">Lógica de Programação</span></button>
+      <button class="card flex items-center gap-3" onclick="navigate('conteudos')"><div style="width:40px;height:40px;border-radius:50%;background:rgba(204,138,46,.1);display:flex;align-items:center;justify-content:center">💻</div><span class="text-sm font-semibold text-primary">Laboratório de Código</span></button>
+      <button class="card flex items-center gap-3" onclick="navigate('conteudos')"><div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🖥️</div><span class="text-sm font-semibold text-primary">Desenvolvimento Web</span></button>
+      <button class="card flex items-center gap-3" onclick="navigate('conteudos')"><div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🗄️</div><span class="text-sm font-semibold text-primary">Banco de Dados</span></button>
+      <button class="card flex items-center gap-3" onclick="navigate('conteudos')"><div style="width:40px;height:40px;border-radius:50%;background:rgba(204,138,46,.1);display:flex;align-items:center;justify-content:center">💾</div><span class="text-sm font-semibold text-primary">Sistemas Operacionais</span></button>
+      <button class="card flex items-center gap-3" onclick="navigate('conteudos')"><div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🔀</div><span class="text-sm font-semibold text-primary">Repositório Git</span></button>
+    </div>
+    <!-- Progress -->
+    <div style="background:var(--primary);border-radius:16px;padding:20px">
+      <h2 class="font-display" style="color:var(--primary-fg);font-style:italic;font-size:20px;font-weight:700;margin-bottom:16px">Progresso do Curso</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><p class="text-sm" style="color:var(--primary-fg)">Lógica de Programação — 80%</p><div class="progress-bar mt-2"><div class="progress-fill" style="width:80%"></div></div></div>
+        <div><p class="text-sm" style="color:var(--primary-fg)">Desenvolvimento Web — 65%</p><div class="progress-bar mt-2"><div class="progress-fill" style="width:65%"></div></div></div>
+        <div><p class="text-sm" style="color:var(--primary-fg)">Banco de Dados — 40%</p><div class="progress-bar mt-2"><div class="progress-fill" style="width:40%"></div></div></div>
+      </div>
+    </div>
+  </div>
+  <!-- Right column -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <h2 class="font-display text-center" style="font-size:28px;font-weight:900;color:var(--primary);font-style:italic">Metas da Semana</h2>
+    <div id="notices-container"></div>
+  </div>
+</div>
+</div>
+
+<!-- ========== CONTEÚDOS ========== -->
+<div id="page-conteudos" class="page">
+<div id="navbar-conteudos"></div>
+<div class="hero-bar"><div class="container flex items-center"><h1>Conteúdos</h1><span class="font-display" style="font-size:20px;color:var(--secondary);font-style:italic;margin-left:8px">Videoaula</span></div></div>
+<div class="container">
+  <div id="contents-list" class="grid-2"></div>
+  <div id="contents-detail" class="hidden"></div>
+</div>
+</div>
+
+<!-- ========== EXERCÍCIOS ========== -->
+<div id="page-exercicios" class="page">
+<div id="navbar-exercicios"></div>
+<div class="hero-bar"><div class="container flex items-center gap-2"><span style="color:var(--secondary);font-size:24px">✦</span><h1>Exercícios</h1><span class="font-display" style="font-size:1.5rem;color:var(--secondary);font-style:italic;margin-left:8px">do Curso</span></div></div>
+<div class="container" id="exercises-container"></div>
+</div>
+
+<!-- ========== DOCENTES ========== -->
+<div id="page-docentes" class="page">
+<div id="navbar-docentes"></div>
+<div class="hero-bar"><div class="container"><h1>Docentes</h1></div></div>
+<div class="container" style="max-width:900px">
+  <div style="border:2px solid var(--accent);border-radius:16px;padding:32px">
+    <h2 class="font-display text-primary text-center mb-6" style="font-size:24px;font-weight:700">Professores Especializados no Curso</h2>
+    <div class="grid-2">
+      <div class="card text-center animate-in" style="display:flex;flex-direction:column;align-items:center;padding:24px">
+        <div style="width:128px;height:128px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-size:28px;font-weight:700;color:var(--primary)">AM</span></div>
+        <h3 class="text-primary font-semibold">Professor Adriano Rosa Mazeto</h3>
+        <p class="text-sm font-semibold mt-2">Especializado em Front-End</p>
+        <p class="text-sm text-muted mt-2">Professor Adriano é um profissional versátil na área de tecnologia, atuando como Programador Full Stack, Analista de Sistemas e Técnico de Informática.</p>
+        <p class="text-primary text-sm font-semibold mt-4">Contatos:</p>
+        <p class="text-sm mt-2">📧 adriano.mazetto@docente.senai.br</p>
+      </div>
+      <div class="card text-center animate-in" style="display:flex;flex-direction:column;align-items:center;padding:24px">
+        <div style="width:128px;height:128px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-size:28px;font-weight:700;color:var(--primary)">LG</span></div>
+        <h3 class="text-primary font-semibold">Professor Leandro Gaudio</h3>
+        <p class="text-sm font-semibold mt-2">Especializado em Front-End</p>
+        <p class="text-sm text-muted mt-2">Professor Leandro possui ampla experiência, com mais de 20 anos na área tecnológica. Desenvolvedor Full Stack com forte base em fundamentos da web.</p>
+        <p class="text-primary text-sm font-semibold mt-4">Contatos:</p>
+        <p class="text-sm mt-2">📧 leandro.rosa@docente.senai.br</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== CRONOGRAMA ========== -->
+<div id="page-cronograma" class="page">
+<div id="navbar-cronograma"></div>
+<div class="hero-bar"><div class="container"><h1>Cronograma de Estudos da Semana</h1></div></div>
+<div class="container overflow-x-auto">
+<table class="schedule-table">
+<thead><tr><th>MATÉRIAS</th><th>SEGUNDA</th><th>TERÇA</th><th>QUARTA</th><th>QUINTA</th><th>SEXTA</th></tr></thead>
+<tbody>
+<tr><td>Lógica de Programação</td><td>Videoaula: Variáveis, tipos de dados e operadores</td><td>Exercícios práticos de lógica - JavaScript</td><td>Videoaula: Estruturas condicionais (if / else)</td><td>Lista de exercícios de lógica</td><td>Aula de revisão</td></tr>
+<tr><td>Desenvolvimento Web</td><td>Videoaula: HTML básico</td><td>Prática: Criar uma página simples</td><td>Videoaula: CSS básico</td><td>Prática: estilizar a página criada</td><td>Revisão + mini projeto</td></tr>
+<tr><td>Banco de Dados</td><td>Videoaula: Introdução a banco de dados</td><td>Modelagem simples de banco</td><td>Videoaula: SQL básico</td><td>Exercícios de consultas SQL</td><td>Revisão + prática no banco</td></tr>
+<tr><td>Sistemas Operacionais</td><td>Videoaula: Conceitos de sistemas operacionais</td><td>Estudo: gerenciamento de processos</td><td>Videoaula: Sistemas de arquivos</td><td>Prática: comandos básicos do terminal</td><td>Revisão + resumo da semana</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ========== CALENDÁRIO ========== -->
+<div id="page-calendario" class="page">
+<div id="navbar-calendario"></div>
+<div class="container">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="font-display text-primary" style="font-size:28px;font-weight:900;font-style:italic">Calendário</h1>
+    <div class="flex items-center gap-2">
+      <button onclick="calPrev()" class="btn btn-ghost btn-sm">◀</button>
+      <span id="cal-month-label" class="font-display font-bold text-lg" style="min-width:180px;text-align:center"></span>
+      <button onclick="calNext()" class="btn btn-ghost btn-sm">▶</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px">
+    <div>
+      <div class="cal-grid mb-2" style="margin-bottom:4px">
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Dom</div>
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Seg</div>
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Ter</div>
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Qua</div>
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Qui</div>
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Sex</div>
+        <div class="text-xs font-bold text-muted text-center" style="padding:8px">Sáb</div>
+      </div>
+      <div id="cal-grid" class="cal-grid"></div>
+    </div>
+    <div class="card" style="padding:20px">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="cal-day-title" class="font-display text-primary" style="font-size:18px;font-weight:700">Selecione um dia</h2>
+        <button id="cal-new-btn" onclick="openNewEvent()" class="btn btn-primary btn-sm hidden">+ Novo</button>
+      </div>
+      <div id="cal-events"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== MENSAGENS ========== -->
+<div id="page-mensagens" class="page">
+<div id="navbar-mensagens"></div>
+<div style="display:flex;max-width:1100px;margin:0 auto;height:calc(100vh - 56px)">
+  <div id="msg-list" style="width:300px;border-right:1px solid var(--border);background:var(--card);flex-shrink:0;overflow-y:auto">
+    <div style="padding:16px;border-bottom:1px solid var(--border)"><h2 class="font-display text-primary" style="font-size:20px;font-weight:700">Mensagens</h2></div>
+    <button onclick="selectTeacher('adriano')" class="msg-teacher-btn w-full flex items-center gap-3" style="padding:16px;text-align:left;transition:.2s" onmouseover="this.style.background='var(--muted)'" onmouseout="this.style.background=''">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="font-bold text-primary">AM</span></div>
+      <div><p class="font-semibold text-sm">Prof. Adriano Rosa Mazeto</p><p class="text-xs text-muted">Front-End</p></div>
+    </button>
+    <button onclick="selectTeacher('leandro')" class="msg-teacher-btn w-full flex items-center gap-3" style="padding:16px;text-align:left;transition:.2s" onmouseover="this.style.background='var(--muted)'" onmouseout="this.style.background=''">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="font-bold text-primary">LG</span></div>
+      <div><p class="font-semibold text-sm">Prof. Leandro Gaudio</p><p class="text-xs text-muted">Front-End</p></div>
+    </button>
+  </div>
+  <div id="msg-chat" style="flex:1;display:flex;flex-direction:column">
+    <div id="msg-chat-placeholder" class="flex items-center justify-center flex-1"><p class="font-display text-lg text-muted" style="font-style:italic">Selecione um docente para conversar</p></div>
+    <div id="msg-chat-active" class="hidden" style="display:none;flex-direction:column;height:100%">
+      <div id="msg-chat-header" style="padding:16px;border-bottom:1px solid var(--border);background:var(--card)" class="flex items-center gap-3"></div>
+      <div id="msg-chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px"></div>
+      <form onsubmit="sendMessage(event)" style="padding:16px;border-top:1px solid var(--border);background:var(--card)" class="flex gap-2">
+        <input id="msg-input" class="input" placeholder="Digite sua mensagem..." style="flex:1">
+        <button type="submit" class="btn btn-primary" style="padding:10px">📤</button>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== PERFIL ========== -->
+<div id="page-perfil" class="page">
+<div id="navbar-perfil"></div>
+<div class="container" style="max-width:600px">
+  <h1 class="font-display text-primary mb-6" style="font-size:28px;font-weight:900;font-style:italic">Meu Perfil</h1>
+  <div class="text-center mb-6">
+    <div style="width:96px;height:96px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:40px">👤</div>
+    <p class="text-sm text-muted mt-2">Clique para alterar a foto</p>
+  </div>
+  <div class="card" style="padding:24px;display:flex;flex-direction:column;gap:16px">
+    <div><label class="text-sm font-semibold flex items-center gap-2">👤 Nome completo</label><input id="profile-name" class="input mt-2"></div>
+    <div><label class="text-sm font-semibold flex items-center gap-2">📧 E-mail</label><input id="profile-email" type="email" class="input mt-2"></div>
+    <div><label class="text-sm font-semibold flex items-center gap-2">📱 Telefone</label><input id="profile-phone" class="input mt-2" placeholder="(00) 00000-0000"></div>
+    <div><label class="text-sm font-semibold flex items-center gap-2">📚 Curso</label><input class="input mt-2" value="Curso Técnico de Desenvolvimento de Sistemas" disabled style="background:var(--muted);color:var(--muted-fg)"></div>
+    <button onclick="saveProfile()" class="btn btn-primary btn-full">💾 Salvar alterações</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== CONFIGURAÇÕES ========== -->
+<div id="page-configuracoes" class="page">
+<div id="navbar-configuracoes"></div>
+<div class="container" style="max-width:600px">
+  <h1 class="font-display text-primary mb-6" style="font-size:28px;font-weight:900;font-style:italic">Configurações</h1>
+  <h2 class="font-display font-bold mb-4">Notificações</h2>
+  <div class="card mb-6" style="padding:0;overflow:hidden">
+    <div class="flex items-center gap-4" style="padding:16px;border-bottom:1px solid var(--border)">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🔔</div>
+      <div class="flex-1"><p class="text-sm font-semibold">Notificações push</p><p class="text-xs text-muted">Receber alertas de exercícios e avisos</p></div>
+      <div class="switch on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="flex items-center gap-4" style="padding:16px">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">📧</div>
+      <div class="flex-1"><p class="text-sm font-semibold">Notificações por e-mail</p><p class="text-xs text-muted">Receber resumos semanais por e-mail</p></div>
+      <div class="switch on" onclick="this.classList.toggle('on')"></div>
+    </div>
+  </div>
+  <h2 class="font-display font-bold mb-4">Aparência</h2>
+  <div class="card mb-6" style="padding:0;overflow:hidden">
+    <div class="flex items-center gap-4" style="padding:16px">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🌙</div>
+      <div class="flex-1"><p class="text-sm font-semibold">Modo escuro</p><p class="text-xs text-muted">Em breve...</p></div>
+      <div class="switch" style="opacity:.5"></div>
+    </div>
+  </div>
+  <h2 class="font-display font-bold mb-4">Conta</h2>
+  <div class="card mb-6" style="padding:0;overflow:hidden">
+    <button class="w-full flex items-center gap-4" style="padding:16px;border-bottom:1px solid var(--border);text-align:left" onclick="showToast('Funcionalidade em breve!','info')">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🔒</div>
+      <div class="flex-1"><p class="text-sm font-semibold">Alterar senha</p><p class="text-xs text-muted">Atualizar sua senha de acesso</p></div>
+      <span class="text-muted">▶</span>
+    </button>
+    <div class="flex items-center gap-4" style="padding:16px">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.1);display:flex;align-items:center;justify-content:center">🌐</div>
+      <div class="flex-1"><p class="text-sm font-semibold">Idioma</p><p class="text-xs text-muted">Português (Brasil)</p></div>
+      <span class="text-muted">▶</span>
+    </div>
+  </div>
+  <button onclick="handleLogout()" class="btn btn-full" style="border:1px solid rgba(229,62,62,.3);color:var(--destructive);margin-bottom:12px">🚪 Sair da conta</button>
+  <button class="btn btn-full" style="color:rgba(229,62,62,.6)">🗑️ Excluir conta</button>
+</div>
+</div>
+
+<!-- ========== VIDEO PLAYER ========== -->
+<div id="page-video" class="page">
+<div style="background:var(--hero-gradient);height:48px;display:flex;align-items:center;padding:0 16px">
+  <div class="nav-logo" style="width:32px;height:32px;font-size:12px">DS</div>
+</div>
+<div style="display:grid;grid-template-columns:2fr 1fr;min-height:calc(100vh - 48px)">
+  <div style="background:var(--primary);position:relative">
+    <button onclick="navigate('conteudos')" style="position:absolute;top:16px;left:16px;z-index:10;width:40px;height:40px;border-radius:50%;background:rgba(45,31,20,.8);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:20px">◀</button>
+    <div style="aspect-ratio:16/9;background:rgba(45,31,20,.9);display:flex;align-items:center;justify-content:center;color:rgba(245,239,230,.5)">
+      <div class="text-center"><div style="font-size:48px">▶</div><p class="text-sm mt-2">Player de vídeo</p></div>
+    </div>
+    <div style="padding:16px">
+      <div style="width:100%;height:4px;background:rgba(245,239,230,.2);border-radius:2px"><div style="width:8%;height:100%;background:var(--destructive);border-radius:2px"></div></div>
+      <div class="flex items-center gap-3 mt-4" style="color:var(--primary-fg)">
+        <span>▶</span><span>🔊</span><span class="text-xs" style="opacity:.6">0:08 / 14:12</span>
+        <span style="margin-left:auto;font-size:12px;background:rgba(245,239,230,.1);padding:4px 12px;border-radius:9999px">Introdução</span>
+      </div>
+    </div>
+    <div style="padding:0 16px 16px" class="flex items-center gap-3">
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">DBA</div>
+      <div><p style="color:var(--primary-fg);font-weight:600;font-size:14px">DBA PRO</p><p style="color:rgba(245,239,230,.5);font-size:12px">26,5 mil inscritos</p></div>
+      <button style="margin-left:auto;background:var(--fg);color:var(--bg);font-size:12px;font-weight:700;padding:8px 16px;border-radius:9999px">Inscrever-se</button>
+    </div>
+  </div>
+  <div style="background:var(--secondary);padding:24px;display:flex;flex-direction:column">
+    <h2 class="font-display" style="font-size:28px;font-weight:900;color:var(--primary-fg);font-style:italic;margin-bottom:16px">Anotações :</h2>
+    <textarea id="video-notes" class="textarea" placeholder="Digite aqui..." style="flex:1;min-height:300px"></textarea>
+  </div>
+</div>
+</div>
+
+<!-- ========== MODAL CONTAINER ========== -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this)closeModal()">
+  <div class="modal" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let currentPage = 'splash';
+const notices = [null, null, null];
+const exercises = {
+  "Lógica de Programação": [
+    {level:"Intermediário",description:"Crie um programa que:",items:["Leia um número inteiro","Verifique se ele é primo"],status:"Entregue",date:"20 de Fevereiro 13:20"},
+    {level:"Avançado",description:"Faça um algoritmo que:",items:["Receba uma lista de números","Ordene sem usar funções prontas (ex: Bubble Sort)"],status:"Em atraso",date:"20 de Fevereiro"},
+  ],
+  "Desenvolvimento Web": [
+    {level:"HTML + CSS",description:"Crie uma página com:",items:["Um título","Um formulário com nome, email e senha..."],status:"Pendente",date:"03 de Abril"},
+    {level:"JavaScript",description:"Faça um script que:",items:["Capture o valor de um input","Ao clicar no botão, mostre um alerta com o val..."],status:"Pendente",date:"15 de Abril"},
+  ],
+  "Banco de Dados": [
+    {level:"Intermediário",description:"Com uma tabela pedidos:\n(id, cliente_id, valor)\nFaça uma query que:",items:["Mostre o total de pedidos por cliente"],status:"Pendente",date:"02 de Abril"},
+    {level:"Avançado",description:"Explique e escreva um exemplo de:",items:["INNER JOIN","LEFT JOIN"],status:"Entregue",date:"10 de Março 15:54"},
+  ],
+  "Sistemas Operacionais": [
+    {level:"Intermediário",description:"Qual a diferença entre:",items:["Processo e thread","Memória RAM e ROM"],status:"Pendente",date:"10 de Abril"},
+    {level:"Avançado",description:"Explique o conceito de:",items:["Escalonamento de processos","Deadlock"],status:"Pendente",date:"18 de Abril"},
+  ],
+};
+
+const videoData = {
+  "Lógica de Programação": [
+    {title:"Entenda LÓGICA DE PROGRAMAÇÃO e ALGORITMOS",channel:"Sharpax",views:"1 mi de visualizações",time:"há 6 anos"},
+    {title:"Lógica de Programação - Curso Completo",channel:"Curso em Vídeo",views:"500 mil visualizações",time:"há 3 anos"},
+  ],
+  "Desenvolvimento Web": [
+    {title:"Comece sua carreira em Desenvolvimento Web",channel:"Curso em Vídeo",views:"70 mil visualizações",time:"há 2 anos"},
+    {title:"HTML, CSS e JavaScript para iniciantes",channel:"DevMedia",views:"120 mil visualizações",time:"há 1 ano"},
+  ],
+  "Banco de Dados": [{title:"O que é BANCO DE DADOS e porque INTERESSA APRENDER isso?",channel:"DBA PRO",views:"347 mil visualizações",time:"há 8 anos"}],
+  "Sistemas Operacionais": [{title:"Aula 1 - Introdução aos Sistemas Operacionais",channel:"Prof. Marcel Rios",views:"71 mil visualizações",time:"há 2 anos"}],
+};
+
+const msgData = {
+  adriano:{name:"Prof. Adriano Rosa Mazeto",initials:"AM",specialty:"Front-End",messages:[{from:"teacher",text:"Olá! Bem-vindo ao curso. Se tiver dúvidas sobre as aulas de Front-End, pode perguntar aqui!",time:"09:00"}]},
+  leandro:{name:"Prof. Leandro Gaudio",initials:"LG",specialty:"Front-End",messages:[{from:"teacher",text:"Oi! Estou disponível para ajudar com exercícios e projetos. 😊",time:"10:30"}]},
+};
+let selectedTeacherId = null;
+
+// Calendar
+const monthNames=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const today = new Date();
+let calMonth = today.getMonth(), calYear = today.getFullYear(), calSelectedDay = today.getDate();
+const calCustomEvents = [];
+const routineByDay = {
+  1:[{title:"Lógica: Variáveis e operadores",time:"08:00",color:"#b5451b"},{title:"Web: HTML básico",time:"10:00",color:"#cc8a2e"},{title:"BD: Intro a banco de dados",time:"14:00",color:"#d4a843"},{title:"SO: Conceitos de SO",time:"16:00",color:"#c46a3f"}],
+  2:[{title:"Lógica: Exercícios práticos",time:"08:00",color:"#b5451b"},{title:"Web: Criar página simples",time:"10:00",color:"#cc8a2e"},{title:"BD: Modelagem simples",time:"14:00",color:"#d4a843"},{title:"SO: Gerenciamento processos",time:"16:00",color:"#c46a3f"}],
+  3:[{title:"Lógica: Condicionais (if/else)",time:"08:00",color:"#b5451b"},{title:"Web: CSS básico",time:"10:00",color:"#cc8a2e"},{title:"BD: SQL básico",time:"14:00",color:"#d4a843"},{title:"SO: Sistemas de arquivos",time:"16:00",color:"#c46a3f"}],
+  4:[{title:"Lógica: Lista de exercícios",time:"08:00",color:"#b5451b"},{title:"Web: Estilizar a página",time:"10:00",color:"#cc8a2e"},{title:"BD: Consultas SQL",time:"14:00",color:"#d4a843"},{title:"SO: Comandos do terminal",time:"16:00",color:"#c46a3f"}],
+  5:[{title:"Lógica: Revisão",time:"08:00",color:"#b5451b"},{title:"Web: Mini projeto",time:"10:00",color:"#cc8a2e"},{title:"BD: Revisão + prática",time:"14:00",color:"#d4a843"},{title:"SO: Resumo da semana",time:"16:00",color:"#c46a3f"}],
+};
+
+// ===== NAVIGATION =====
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) { el.classList.add('active'); currentPage = page; }
+  // Build navbars
+  const pagesWithNav = ['home','conteudos','exercicios','docentes','cronograma','calendario','mensagens','perfil','configuracoes'];
+  if (pagesWithNav.includes(page)) buildNavbar(page);
+  // Page-specific init
+  if (page === 'home') initHome();
+  if (page === 'conteudos') initContents();
+  if (page === 'exercicios') renderExercises();
+  if (page === 'calendario') renderCalendar();
+  if (page === 'perfil') initProfile();
+  if (page === 'mensagens') { selectedTeacherId = null; initMessages(); }
+}
+
+function buildNavbar(page) {
+  const items = [
+    {label:"Início",path:"home"},{label:"Cronograma",path:"cronograma"},{label:"Conteúdos",path:"conteudos"},
+    {label:"Exercícios",path:"exercicios"},{label:"Docentes",path:"docentes"},{label:"Calendário",path:"calendario"},{label:"Mensagens",path:"mensagens"}
+  ];
+  const container = document.getElementById('navbar-' + page);
+  if (!container) return;
+  container.innerHTML = `<nav class="navbar"><div class="nav-inner">
+    <a href="#" onclick="navigate('home');return false" class="nav-logo">DS</a>
+    <div class="nav-links">${items.map(i=>`<a href="#" onclick="navigate('${i.path}');return false" class="nav-link ${page===i.path?'active':''}">${i.label}</a>`).join('')}</div>
+    <div class="nav-right">
+      <a href="#" onclick="navigate('configuracoes');return false" class="nav-icon ${page==='configuracoes'?'active':''}">⚙️</a>
+      <a href="#" onclick="navigate('perfil');return false" class="nav-icon ${page==='perfil'?'active':''}" style="background:rgba(245,239,230,.2)">👤</a>
+    </div>
+  </div>
+  <div class="nav-mobile">${items.map(i=>`<a href="#" onclick="navigate('${i.path}');return false" class="nav-link ${page===i.path?'active':''}" style="white-space:nowrap;font-size:12px">${i.label}</a>`).join('')}</div>
+  </nav>`;
+}
+
+// ===== TOAST =====
+function showToast(msg, type='success') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===== LOGIN =====
+function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  localStorage.setItem('ds_user', JSON.stringify({email, name:'Estudante'}));
+  navigate('home');
+}
+
+// ===== SIGNUP =====
+function checkPassword() {
+  const p = document.getElementById('signup-pass').value;
+  const len = p.length >= 8, let_ = /[a-zA-Z]/.test(p), num = /\d/.test(p);
+  document.getElementById('rule-len').innerHTML = (len?'✓':'✗') + ' Mínimo de 8 caracteres';
+  document.getElementById('rule-len').style.color = len ? 'var(--green)' : 'var(--muted-fg)';
+  document.getElementById('rule-letter').innerHTML = (let_?'✓':'✗') + ' Pelo menos uma letra';
+  document.getElementById('rule-letter').style.color = let_ ? 'var(--green)' : 'var(--muted-fg)';
+  document.getElementById('rule-num').innerHTML = (num?'✓':'✗') + ' Pelo menos um número';
+  document.getElementById('rule-num').style.color = num ? 'var(--green)' : 'var(--muted-fg)';
+  document.getElementById('signup-btn').disabled = !(len && let_ && num);
+}
+function handleSignup(e) {
+  e.preventDefault();
+  const email = document.getElementById('signup-email').value;
+  localStorage.setItem('ds_user', JSON.stringify({email, name:'Estudante'}));
+  navigate('home');
+}
+
+// ===== HOME =====
+function initHome() {
+  const user = JSON.parse(localStorage.getItem('ds_user') || '{"name":"Estudante"}');
+  document.getElementById('home-user-name').textContent = user.name;
+  renderNotices();
+}
+function renderNotices() {
+  const c = document.getElementById('notices-container');
+  c.innerHTML = notices.map((n, i) => {
+    if (n) return `<div class="card animate-in" style="min-height:140px;padding:16px">
+      <div class="flex items-center justify-between"><div class="flex items-center gap-2"><span>📌</span><h3 class="font-display text-sm font-bold">${n.title}</h3></div>
+      <button onclick="removeNotice(${i})" style="color:var(--muted-fg)">✕</button></div>
+      ${n.description?`<p class="text-xs text-muted mt-2">${n.description}</p>`:''}
+      <p style="font-size:10px;color:var(--muted-fg);margin-top:8px">${n.date}</p>
+      <button onclick="openNoticeDialog(${i})" class="btn btn-ghost btn-sm text-primary mt-2">Editar</button>
+    </div>`;
+    const bg = i % 2 === 0 ? 'rgba(181,69,27,.8)' : 'rgba(212,168,67,.8)';
+    return `<div style="min-height:140px;border-radius:16px;background:${bg};display:flex;align-items:center;justify-content:center">
+      <button onclick="openNoticeDialog(${i})" style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(181,69,27,.5);display:flex;align-items:center;justify-content:center;color:rgba(181,69,27,.5);font-size:28px;transition:.2s" onmouseover="this.style.background='rgba(181,69,27,.1)'" onmouseout="this.style.background=''">+</button>
+    </div>`;
+  }).join('');
+}
+function openNoticeDialog(i) {
+  const n = notices[i];
+  document.getElementById('modal-content').innerHTML = `
+    <h2>${n ? 'Editar Aviso' : 'Novo Aviso'}</h2>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label class="text-sm text-muted" style="display:block;margin-bottom:4px">Título</label><input id="notice-title" class="input" value="${n?n.title:''}" placeholder="Ex: Estudar para prova..."></div>
+      <div><label class="text-sm text-muted" style="display:block;margin-bottom:4px">Descrição (opcional)</label><textarea id="notice-desc" class="textarea" placeholder="Detalhes do aviso...">${n?n.description:''}</textarea></div>
+      <div class="flex gap-2" style="justify-content:flex-end"><button onclick="closeModal()" class="btn btn-outline">Cancelar</button><button onclick="saveNotice(${i})" class="btn btn-primary">Salvar</button></div>
+    </div>`;
+  openModal();
+}
+function saveNotice(i) {
+  const title = document.getElementById('notice-title').value.trim();
+  if (!title) { showToast('Adicione um título ao aviso.','error'); return; }
+  notices[i] = {title, description: document.getElementById('notice-desc').value, date: new Date().toLocaleDateString('pt-BR')};
+  showToast('Aviso adicionado! 📌');
+  closeModal(); renderNotices();
+}
+function removeNotice(i) { notices[i] = null; showToast('Aviso removido.','info'); renderNotices(); }
+
+// ===== CONTENTS =====
+let selectedSubject = null;
+function initContents() {
+  selectedSubject = null;
+  renderContentsList();
+}
+function renderContentsList() {
+  document.getElementById('contents-detail').classList.add('hidden');
+  const c = document.getElementById('contents-list');
+  c.classList.remove('hidden');
+  c.innerHTML = Object.keys(videoData).map(s => `
+    <button onclick="showSubject('${s}')" class="card animate-in" style="text-align:left;padding:24px">
+      <h2 class="font-display text-primary" style="font-size:20px;font-weight:700">${s}</h2>
+      <p class="text-sm text-muted mt-2">${videoData[s].length} videoaulas disponíveis</p>
+      <div class="flex items-center gap-2 mt-4" style="color:var(--secondary)"><span>▶</span><span class="text-sm font-semibold">Assistir</span></div>
+    </button>`).join('');
+}
+function showSubject(s) {
+  selectedSubject = s;
+  document.getElementById('contents-list').classList.add('hidden');
+  const d = document.getElementById('contents-detail');
+  d.classList.remove('hidden');
+  d.innerHTML = `<button onclick="renderContentsList()" class="btn btn-ghost mb-4">◀ Voltar</button>
+    <h2 class="font-display text-primary mb-4" style="font-size:24px;font-weight:700">${s}</h2>
+    <div style="display:flex;flex-direction:column;gap:12px">${videoData[s].map((v,i) => `
+      <button onclick="navigate('video')" class="card flex gap-4 animate-in" style="text-align:left;animation-delay:${i*0.1}s">
+        <div style="width:128px;height:80px;border-radius:8px;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-size:32px;color:var(--primary)">▶</span></div>
+        <div style="min-width:0"><h3 class="font-semibold text-sm line-clamp-2">${v.title}</h3><p class="text-xs text-muted mt-2">${v.channel}</p><p class="text-xs text-muted">${v.views} · ${v.time}</p></div>
+      </button>`).join('')}</div>`;
+}
+
+// ===== EXERCISES =====
+function renderExercises() {
+  const c = document.getElementById('exercises-container');
+  const statusColor = {Entregue:'var(--green)',Pendente:'var(--secondary)','Em atraso':'var(--destructive)'};
+  const statusBg = {Entregue:'border-color:rgba(56,161,105,.3);background:rgba(56,161,105,.05)',Pendente:'',
+    'Em atraso':'border-color:rgba(229,62,62,.3);background:rgba(229,62,62,.05)'};
+  c.innerHTML = Object.entries(exercises).map(([subject, exList]) => `
+    <div class="animate-in mb-6"><h2 class="font-display text-primary mb-4" style="font-size:20px;font-weight:700">${subject}</h2>
+    <div class="grid-2">${exList.map((ex,i) => `
+      <button onclick="openExerciseDialog('${subject}',${i})" class="card" style="text-align:left;${statusBg[ex.status]}">
+        <p class="text-secondary font-semibold text-sm">→ ${ex.level}</p>
+        <p class="text-sm mt-2" style="white-space:pre-line">${ex.description}</p>
+        <ul style="list-style:disc;padding-left:20px;margin-top:4px">${ex.items.map(it=>`<li class="text-sm">${it}</li>`).join('')}</ul>
+        <div style="text-align:right;margin-top:8px"><p class="text-xs font-semibold" style="color:${statusColor[ex.status]}">${ex.status}</p><p class="text-xs text-muted">${ex.date}</p></div>
+      </button>`).join('')}</div></div>`).join('');
+}
+function openExerciseDialog(subject, index) {
+  const ex = exercises[subject][index];
+  const isLate = ex.status === 'Em atraso';
+  const isDone = ex.status === 'Entregue';
+  let html = `<h2>${subject} — ${ex.level}</h2>
+    <div style="background:var(--muted);border-radius:12px;padding:16px;margin-bottom:16px">
+      <p class="text-sm" style="white-space:pre-line">${ex.description}</p>
+      <ul style="list-style:disc;padding-left:20px;margin-top:4px">${ex.items.map(it=>`<li class="text-sm">${it}</li>`).join('')}</ul>
+      <p class="text-xs text-muted mt-4">Prazo: ${ex.date}</p>
+    </div>`;
+  if (isLate) {
+    html += `<div style="background:rgba(229,62,62,.1);border:1px solid rgba(229,62,62,.3);border-radius:12px;padding:16px" class="flex items-center gap-3">
+      <span>⚠️</span><div><p class="text-sm font-semibold text-red">Prazo expirado</p><p class="text-xs" style="color:rgba(229,62,62,.8)">Este exercício está em atraso e não pode mais ser enviado.</p></div></div>`;
+  } else if (isDone) {
+    html += `<div style="background:rgba(56,161,105,.1);border:1px solid rgba(56,161,105,.3);border-radius:12px;padding:16px;margin-bottom:16px" class="flex items-center gap-3">
+      <span>✅</span><div><p class="text-sm font-semibold text-green">Exercício já entregue</p><p class="text-xs" style="color:var(--green)">Enviado em ${ex.date}</p></div></div>
+      <button onclick="cancelExercise('${subject}',${index})" class="btn btn-destructive btn-full">✕ Cancelar entrega</button>`;
+  } else {
+    html += `<textarea id="ex-text" class="textarea" placeholder="Digite sua resposta aqui..." style="margin-bottom:12px"></textarea>
+      <input type="file" id="ex-file" multiple style="margin-bottom:12px;font-size:14px" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.zip,.py,.js,.html,.css">
+      <div class="flex gap-2" style="justify-content:flex-end">
+        <button onclick="document.getElementById('ex-file').click()" class="btn btn-outline">📎 Anexar arquivo</button>
+        <button onclick="submitExercise('${subject}',${index})" class="btn btn-primary">📤 Enviar</button>
+      </div>`;
+  }
+  document.getElementById('modal-content').innerHTML = html;
+  openModal();
+}
+function submitExercise(subject, index) {
+  const text = document.getElementById('ex-text').value;
+  const files = document.getElementById('ex-file').files;
+  if (!text.trim() && files.length === 0) { showToast('Adicione um texto ou anexe um arquivo.','error'); return; }
+  exercises[subject][index].status = 'Entregue';
+  exercises[subject][index].date = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',hour:'2-digit',minute:'2-digit'});
+  showToast('Exercício enviado com sucesso! ✅');
+  closeModal(); renderExercises();
+}
+function cancelExercise(subject, index) {
+  exercises[subject][index].status = 'Pendente';
+  showToast('Entrega cancelada. O exercício voltou para pendente.','info');
+  closeModal(); renderExercises();
+}
+
+// ===== CALENDAR =====
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + calYear;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const grid = document.getElementById('cal-grid');
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += '<div style="height:80px"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
+    const isSel = d === calSelectedDay;
+    const events = getCalEvents(d);
+    html += `<button onclick="selectCalDay(${d})" class="cal-day ${isToday?'today':''} ${isSel?'selected':''}">
+      <span class="cal-day-num" ${isToday?'style="color:var(--primary)"':''}>${d}</span>
+      <div>${events.slice(0,2).map(e=>`<div class="cal-event" style="background:${e.color}">${e.time}</div>`).join('')}
+      ${events.length>2?`<span style="font-size:9px;color:var(--muted-fg)">+${events.length-2}</span>`:''}</div>
+    </button>`;
+  }
+  grid.innerHTML = html;
+  renderCalDayDetail();
+}
+function getCalEvents(day) {
+  const dow = new Date(calYear, calMonth, day).getDay();
+  const routine = (routineByDay[dow]||[]).map(e=>({...e,day,isCustom:false}));
+  const custom = calCustomEvents.filter(e=>e.day===day&&e.month===calMonth&&e.year===calYear);
+  return [...routine,...custom].sort((a,b)=>a.time.localeCompare(b.time));
+}
+function selectCalDay(d) { calSelectedDay = d; renderCalendar(); }
+function calPrev() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} calSelectedDay=null; renderCalendar(); }
+function calNext() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} calSelectedDay=null; renderCalendar(); }
+function renderCalDayDetail() {
+  const titleEl = document.getElementById('cal-day-title');
+  const eventsEl = document.getElementById('cal-events');
+  const newBtn = document.getElementById('cal-new-btn');
+  if (!calSelectedDay) {
+    titleEl.textContent = 'Selecione um dia';
+    eventsEl.innerHTML = '<p class="text-sm text-muted">Clique em um dia para ver a rotina.</p>';
+    newBtn.classList.add('hidden'); return;
+  }
+  titleEl.textContent = calSelectedDay + ' de ' + monthNames[calMonth];
+  newBtn.classList.remove('hidden');
+  const events = getCalEvents(calSelectedDay);
+  if (!events.length) { eventsEl.innerHTML = '<p class="text-sm text-muted">Sem atividades neste dia.</p>'; return; }
+  eventsEl.innerHTML = events.map((e,i) => `
+    <div class="flex items-center gap-3 animate-in" style="margin-bottom:12px;animation-delay:${i*0.05}s">
+      <div style="width:12px;height:12px;border-radius:50%;background:${e.color};flex-shrink:0"></div>
+      <div class="flex-1"><p class="font-semibold text-sm">${e.title}</p><p class="text-xs text-muted">${e.time}</p></div>
+      ${e.isCustom?`<button onclick="deleteCalEvent(${i})" style="color:var(--muted-fg);font-size:14px" onmouseover="this.style.color='var(--destructive)'" onmouseout="this.style.color='var(--muted-fg)'">✕</button>`:''}
+    </div>`).join('');
+}
+function openNewEvent() {
+  if (!calSelectedDay) return;
+  const colors = [{l:'Terracota',v:'#b5451b'},{l:'Dourado',v:'#cc8a2e'},{l:'Acento',v:'#d4a843'},{l:'Verde',v:'#38a169'},{l:'Azul',v:'#3b82f6'},{l:'Roxo',v:'#8b5cf6'}];
+  document.getElementById('modal-content').innerHTML = `
+    <h2>Novo Evento — ${calSelectedDay} de ${monthNames[calMonth]}</h2>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label class="text-sm text-muted" style="display:block;margin-bottom:4px">Título</label><input id="ev-title" class="input" placeholder="Ex: Reunião de grupo, Prova..."></div>
+      <div><label class="text-sm text-muted" style="display:block;margin-bottom:4px">Horário</label><input id="ev-time" type="time" class="input" value="09:00"></div>
+      <div><label class="text-sm text-muted" style="display:block;margin-bottom:4px">Cor</label>
+        <div class="flex gap-2">${colors.map(c=>`<button onclick="document.querySelectorAll('.color-pick').forEach(b=>b.style.outline='');this.style.outline='3px solid var(--fg)';this.style.outlineOffset='2px';document.getElementById('ev-color').value='${c.v}'" class="color-pick" style="width:32px;height:32px;border-radius:50%;background:${c.v}" title="${c.l}"></button>`).join('')}</div>
+        <input type="hidden" id="ev-color" value="#b5451b">
+      </div>
+      <div class="flex gap-2" style="justify-content:flex-end"><button onclick="closeModal()" class="btn btn-outline">Cancelar</button><button onclick="createCalEvent()" class="btn btn-primary">Criar evento</button></div>
+    </div>`;
+  openModal();
+}
+function createCalEvent() {
+  const title = document.getElementById('ev-title').value.trim();
+  if (!title) { showToast('Preencha o título do evento.','error'); return; }
+  calCustomEvents.push({day:calSelectedDay,month:calMonth,year:calYear,title,time:document.getElementById('ev-time').value,color:document.getElementById('ev-color').value,isCustom:true});
+  showToast('Evento criado com sucesso! 🗓️');
+  closeModal(); renderCalendar();
+}
+function deleteCalEvent(index) {
+  const events = getCalEvents(calSelectedDay);
+  const ev = events[index];
+  if (!ev.isCustom) { showToast('Eventos da rotina não podem ser removidos.','error'); return; }
+  const idx = calCustomEvents.findIndex(e=>e.day===ev.day&&e.month===calMonth&&e.year===calYear&&e.title===ev.title&&e.time===ev.time);
+  if (idx > -1) calCustomEvents.splice(idx, 1);
+  showToast('Evento removido.','info');
+  renderCalendar();
+}
+
+// ===== MESSAGES =====
+function initMessages() {
+  document.getElementById('msg-chat-placeholder').style.display = 'flex';
+  document.getElementById('msg-chat-active').style.display = 'none';
+}
+function selectTeacher(id) {
+  selectedTeacherId = id;
+  document.getElementById('msg-chat-placeholder').style.display = 'none';
+  const active = document.getElementById('msg-chat-active');
+  active.style.display = 'flex';
+  active.classList.remove('hidden');
+  const t = msgData[id];
+  document.getElementById('msg-chat-header').innerHTML = `
+    <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center"><span class="font-bold text-primary text-sm">${t.initials}</span></div>
+    <div><p class="font-semibold text-sm">${t.name}</p><p class="text-xs text-muted">${t.specialty}</p></div>`;
+  renderMessages();
+}
+function renderMessages() {
+  if (!selectedTeacherId) return;
+  const msgs = msgData[selectedTeacherId].messages;
+  document.getElementById('msg-chat-messages').innerHTML = msgs.map(m => `
+    <div style="display:flex;${m.from==='user'?'justify-content:flex-end':'justify-content:flex-start'}">
+      <div class="msg-bubble ${m.from==='user'?'msg-user':'msg-teacher'}">
+        <p>${m.text}</p><p class="msg-time">${m.time}</p>
+      </div>
+    </div>`).join('');
+  const container = document.getElementById('msg-chat-messages');
+  container.scrollTop = container.scrollHeight;
+}
+function sendMessage(e) {
+  e.preventDefault();
+  const input = document.getElementById('msg-input');
+  if (!input.value.trim() || !selectedTeacherId) return;
+  const now = new Date();
+  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  msgData[selectedTeacherId].messages.push({from:'user',text:input.value,time});
+  input.value = '';
+  renderMessages();
+}
+
+// ===== PROFILE =====
+function initProfile() {
+  const user = JSON.parse(localStorage.getItem('ds_user') || '{}');
+  document.getElementById('profile-name').value = user.name || 'Estudante';
+  document.getElementById('profile-email').value = user.email || '';
+  document.getElementById('profile-phone').value = user.phone || '';
+}
+function saveProfile() {
+  const user = {
+    name: document.getElementById('profile-name').value,
+    email: document.getElementById('profile-email').value,
+    phone: document.getElementById('profile-phone').value,
+  };
+  localStorage.setItem('ds_user', JSON.stringify(user));
+  showToast('Perfil atualizado com sucesso! ✅');
+}
+
+// ===== LOGOUT =====
+function handleLogout() {
+  localStorage.removeItem('ds_user');
+  showToast('Sessão encerrada.','info');
+  navigate('login');
+}
+
+// ===== MODAL =====
+function openModal() { document.getElementById('modal-overlay').classList.remove('hidden'); }
+function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
+
+// ===== RESPONSIVE HOME GRID =====
+const style = document.createElement('style');
+style.textContent = '@media(max-width:768px){#page-home .container{grid-template-columns:1fr !important}}';
+document.head.appendChild(style);
+
+// ===== PULSE ANIMATION =====
+const pulse = document.createElement('style');
+pulse.textContent = '@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}';
+document.head.appendChild(pulse);
+</script>
+</body>
+</html>
