@@ -29,7 +29,7 @@ input,textarea{font-family:inherit;outline:none}
 .nav-link{padding:8px 12px;border-radius:8px;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:rgba(245,239,230,.8);transition:.2s}
 .nav-link:hover,.nav-link.active{background:rgba(245,239,230,.2);color:var(--primary-fg)}
 .nav-right{display:flex;gap:8px}
-.nav-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--primary-fg);transition:.2s}
+.nav-icon{width:24px;height:24px;border-radius:20%;display:flex;align-items:center;justify-content:center;color:var(--primary-fg);transition:.2s}
 .nav-icon:hover{background:rgba(245,239,230,.2)}
 .nav-icon.active{background:rgba(245,239,230,.3)}
 .nav-mobile{display:none;overflow-x:auto;padding:0 16px 8px;gap:4px}
@@ -88,9 +88,11 @@ input,textarea{font-family:inherit;outline:none}
 .progress-fill{height:100%;border-radius:3px;background:var(--primary-fg);transition:width .5s}
 
 /* Splash */
-.splash{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--hero-gradient);position:relative;overflow:hidden}
-.splash h1{font-style:italic;font-weight:900;color:var(--primary-fg);font-size:4rem;letter-spacing:-2px}
-.splash .subtitle{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--secondary);font-weight:700;font-style:italic;margin-top:12px}
+.splash {display: flex;align-items: center;justify-content: space-between;min-height: 100vh;padding: 0 120px; /* 🔥 mais espaço lateral */background: var(--hero-gradient);position: relative;overflow: hidden;}
+.conteudo {max-width: 520px;z-index: 2;}
+.splash h1 {font-style: italic;font-weight: 900;color: var(--primary-fg);font-size: 5rem; /* 🔥 maior igual ao design */letter-spacing: -2px;}
+.subtitle {font-family: 'Playfair Display', serif;font-size: 1.3rem;color: var(--secondary);font-weight: 700;font-style: italic;margin-top: 16px;}
+.livros {max-width: 520px; height: auto; flex-shrink: 0;z-index: 2;transform: translateY(40px);}
 
 /* Schedule table */
 .schedule-table{width:100%;border-collapse:separate;border-spacing:4px;min-width:700px}
@@ -130,7 +132,158 @@ input,textarea{font-family:inherit;outline:none}
 .rounded-full{border-radius:9999px}.rounded-xl{border-radius:12px}.rounded-2xl{border-radius:16px}
 .w-full{width:100%}.overflow-x-auto{overflow-x:auto}
 .hidden{display:none}
-.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* logo */
+.logo {
+    position: fixed; /* ou absolute */
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* centraliza perfeitamente */
+
+    max-width: 60%; /* controla o tamanho */
+    height: auto;
+
+    z-index: -1; /* fica atrás das outras divs */
+    pointer-events: none; /* evita que ela bloqueie cliques */
+}
+
+/* dridrix */
+.marca {
+    position: fixed; /* fica sempre no canto da tela */
+    top: 60px;
+    right: 20px;
+}.marca img {
+    width: 80px; /* ajusta o tamanho da logo */
+    height: auto;
+}
+
+.hamburger {
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+  display: none;
+}
+
+/* Menu mobile */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: var(--hero-gradient);
+  padding: 10px;
+}
+
+.mobile-menu a {
+  padding: 10px;
+  color: white;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
+
+.msg-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.chat-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* animação suave ao abrir chat */
+@keyframes chatFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-animate {
+  animation: chatFade 0.3s ease;
+}
+
+@keyframes avatarPop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.chat-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  animation: avatarPop 0.3s ease;
+}
+
+@keyframes msgIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.msg-bubble {
+  animation: msgIn 0.25s ease;
+}
+
+.msg-teacher-btn:active {
+  transform: scale(0.97);
+}
+
+.chat-avatar:hover {
+  transform: scale(1.08);
+  transition: 0.2s;
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.profile-avatar {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 </style>
 </head>
 <body>
@@ -139,16 +292,16 @@ input,textarea{font-family:inherit;outline:none}
 
 <!-- ========== SPLASH ========== -->
 <div id="page-splash" class="page active">
-<div class="splash">
-  <div class="blob" style="top:0;left:0;width:250px;height:250px;background:rgba(245,239,230,.1)"></div>
-  <div class="blob" style="bottom:0;right:0;width:300px;height:300px;background:rgba(245,239,230,.1)"></div>
-  <div style="position:relative;z-index:2;text-align:center;padding:24px">
-    <h1>Ds Academy</h1>
-    <p class="subtitle">Os estudos em <span style="text-transform:uppercase">PRIMEIRO</span> lugar!</p>
-    <button onclick="navigate('login')" class="btn" style="margin-top:32px;padding:12px 40px;background:rgba(204,138,46,.8);color:var(--primary-fg);font-family:'Playfair Display',serif;font-size:18px;border-radius:9999px;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Entrar</button>
+  <div class="splash">
+    <div class="conteudo">
+      <h1>Ds Academy</h1>
+      <p class="subtitle">
+        Os estudos em <span>PRIMEIRO</span> lugar!
+      </p>
+      <button onclick="navigate('login')" class="btn" style="margin-top:32px;padding:12px 40px;background:rgba(204,138,46,.8);color:var(--primary-fg);font-family:'Playfair Display',serif;font-size:18px;border-radius:9999px;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Entrar</button>
+    </div>
+    <img class="livros" src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/livros.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbGl2cm9zLnBuZyIsImlhdCI6MTc3NzM3NjgxMSwiZXhwIjoxODA4OTEyODExfQ.QxajJQNvnIErZJMLFUAIly4MQimWkiJt3Wg4oufTrLQ" alt="Livros">
   </div>
-  <div style="position:absolute;top:33%;right:33%;color:var(--secondary);font-size:24px;animation:pulse 2s infinite">✦</div>
-</div>
 </div>
 
 <!-- ========== LOGIN ========== -->
@@ -158,13 +311,16 @@ input,textarea{font-family:inherit;outline:none}
   <div class="blob" style="bottom:0;left:0;width:250px;height:250px;background:rgba(181,69,27,.1)"></div>
   <div class="blob" style="bottom:0;right:0;width:280px;height:280px;background:rgba(181,69,27,.1)"></div>
   <div style="position:absolute;top:80px;right:32px">
-    <div class="nav-logo" style="width:56px;height:56px;font-size:18px">DS</div>
+    <div class="marca"> 
+    <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logo_dridrix.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb19kcmlkcml4LnBuZyIsImlhdCI6MTc3NzM3NTk4OCwiZXhwIjoxODA4OTExOTg4fQ.BA7G3zQhz40wYJgDT8rKJptn3e0O5uL_7Bz5BvPBlTg" alt="logo dridrix">
   </div>
-  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:.05">
-    <h1 style="font-size:12rem;font-weight:900;color:var(--primary)">DS</h1>
   </div>
   <div style="position:relative;z-index:10;max-width:400px;margin:0 auto;padding:80px 24px 24px">
-    <h1 class="font-display text-center" style="font-size:28px;font-weight:900">Entre na sua conta</h1>
+    <div class="flex items-center justify-center gap-2">
+      <span style="color:var(--secondary);font-size:24px">✦</span>
+      <img class="logo" src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logo%20(1).png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nbyAoMSkucG5nIiwiaWF0IjoxNzc3Mzc1NjUzLCJleHAiOjE4MDg5MTE2NTN9.A1BTsLPvNZjhpb0ZTntXKIARIE_m8lX6JrD5fTEn8OY" alt="Logo">
+      <h1 class="font-display text-center" style="font-size:28px;font-weight:900">Entre na sua conta</h1>
+    </div>
     <p class="text-muted text-center mt-2">Número de celular ou E-mail</p>
     <form onsubmit="handleLogin(event)" class="mt-6" style="display:flex;flex-direction:column;gap:16px">
       <input id="login-email" type="email" placeholder="nomecompleto@gmail.com" class="input" required>
@@ -180,10 +336,13 @@ input,textarea{font-family:inherit;outline:none}
 <div style="min-height:100vh;background:var(--bg);position:relative;overflow:hidden">
   <div style="height:56px;background:var(--hero-gradient)"></div>
   <div class="blob" style="bottom:0;left:0;width:250px;height:250px;background:rgba(181,69,27,.1)"></div>
-  <div style="position:absolute;top:80px;right:32px"><div class="nav-logo" style="width:56px;height:56px;font-size:18px">DS</div></div>
+  <div class="marca"> 
+    <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logo_dridrix.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb19kcmlkcml4LnBuZyIsImlhdCI6MTc3NzM3NTk4OCwiZXhwIjoxODA4OTExOTg4fQ.BA7G3zQhz40wYJgDT8rKJptn3e0O5uL_7Bz5BvPBlTg" alt="Logo dridrix">
+  </div>
   <div style="position:relative;z-index:10;max-width:400px;margin:0 auto;padding:64px 24px 24px">
     <div class="flex items-center justify-center gap-2">
       <span style="color:var(--secondary);font-size:24px">✦</span>
+      <img class="logo" src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logo%20(1).png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nbyAoMSkucG5nIiwiaWF0IjoxNzc3Mzc1NjUzLCJleHAiOjE4MDg5MTE2NTN9.A1BTsLPvNZjhpb0ZTntXKIARIE_m8lX6JrD5fTEn8OY" alt="Logo">
       <h1 class="font-display" style="font-size:28px;font-weight:900">Criar sua conta Academy</h1>
     </div>
     <p class="text-muted text-center mt-2">É rápido e fácil</p>
@@ -274,7 +433,8 @@ input,textarea{font-family:inherit;outline:none}
     <h2 class="font-display text-primary text-center mb-6" style="font-size:24px;font-weight:700">Professores Especializados no Curso</h2>
     <div class="grid-2">
       <div class="card text-center animate-in" style="display:flex;flex-direction:column;align-items:center;padding:24px">
-        <div style="width:128px;height:128px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-size:28px;font-weight:700;color:var(--primary)">AM</span></div>
+        <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/adriano.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvYWRyaWFuby53ZWJwIiwiaWF0IjoxNzc3Mzg0OTYzLCJleHAiOjE4MDg5MjA5NjN9.hHRYNJr5nPAo1T1hYJ2g2Uh0YkaJFZAnIlMALfPzbs4"
+     style="width:128px;height:128px;border-radius:50%;object-fit:cover;margin-bottom:16px">
         <h3 class="text-primary font-semibold">Professor Adriano Rosa Mazeto</h3>
         <p class="text-sm font-semibold mt-2">Especializado em Front-End</p>
         <p class="text-sm text-muted mt-2">Professor Adriano é um profissional versátil na área de tecnologia, atuando como Programador Full Stack, Analista de Sistemas e Técnico de Informática.</p>
@@ -282,7 +442,8 @@ input,textarea{font-family:inherit;outline:none}
         <p class="text-sm mt-2">📧 adriano.mazetto@docente.senai.br</p>
       </div>
       <div class="card text-center animate-in" style="display:flex;flex-direction:column;align-items:center;padding:24px">
-        <div style="width:128px;height:128px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-size:28px;font-weight:700;color:var(--primary)">LG</span></div>
+        <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/leandro.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbGVhbmRyby53ZWJwIiwiaWF0IjoxNzc3Mzg0OTQ4LCJleHAiOjE4MDg5MjA5NDh9.zaQWRNbusubqPwhR7Wc2QPQzPxNVUFRZhhqi-VKIdz4"
+     style="width:128px;height:128px;border-radius:50%;object-fit:cover;margin-bottom:16px">
         <h3 class="text-primary font-semibold">Professor Leandro Gaudio</h3>
         <p class="text-sm font-semibold mt-2">Especializado em Front-End</p>
         <p class="text-sm text-muted mt-2">Professor Leandro possui ampla experiência, com mais de 20 anos na área tecnológica. Desenvolvedor Full Stack com forte base em fundamentos da web.</p>
@@ -354,11 +515,13 @@ input,textarea{font-family:inherit;outline:none}
   <div id="msg-list" style="width:300px;border-right:1px solid var(--border);background:var(--card);flex-shrink:0;overflow-y:auto">
     <div style="padding:16px;border-bottom:1px solid var(--border)"><h2 class="font-display text-primary" style="font-size:20px;font-weight:700">Mensagens</h2></div>
     <button onclick="selectTeacher('adriano')" class="msg-teacher-btn w-full flex items-center gap-3" style="padding:16px;text-align:left;transition:.2s" onmouseover="this.style.background='var(--muted)'" onmouseout="this.style.background=''">
-      <div style="width:48px;height:48px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="font-bold text-primary">AM</span></div>
+      <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/adriano.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvYWRyaWFuby53ZWJwIiwiaWF0IjoxNzc3Mzg1Nzk0LCJleHAiOjE4MDg5MjE3OTR9._MU1_E1ksmV8FrijZC8B-G5sGVOkqMI1sdgf2mMipJI"
+     class="msg-avatar">
       <div><p class="font-semibold text-sm">Prof. Adriano Rosa Mazeto</p><p class="text-xs text-muted">Front-End</p></div>
     </button>
     <button onclick="selectTeacher('leandro')" class="msg-teacher-btn w-full flex items-center gap-3" style="padding:16px;text-align:left;transition:.2s" onmouseover="this.style.background='var(--muted)'" onmouseout="this.style.background=''">
-      <div style="width:48px;height:48px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="font-bold text-primary">LG</span></div>
+      <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/leandro.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbGVhbmRyby53ZWJwIiwiaWF0IjoxNzc3Mzg1Njk1LCJleHAiOjE4MDg5MjE2OTV9.2OZivuxeTun902wz09zsqeJCfsfQo3lyc12FXInI08U"
+     class="msg-avatar">
       <div><p class="font-semibold text-sm">Prof. Leandro Gaudio</p><p class="text-xs text-muted">Front-End</p></div>
     </button>
   </div>
@@ -382,7 +545,8 @@ input,textarea{font-family:inherit;outline:none}
 <div class="container" style="max-width:600px">
   <h1 class="font-display text-primary mb-6" style="font-size:28px;font-weight:900;font-style:italic">Meu Perfil</h1>
   <div class="text-center mb-6">
-    <div style="width:96px;height:96px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:40px">👤</div>
+    <img src="https://images.icon-icons.com/1161/PNG/512/1487716857-user_81635.png"
+     class="profile-avatar">
     <p class="text-sm text-muted mt-2">Clique para alterar a foto</p>
   </div>
   <div class="card" style="padding:24px;display:flex;flex-direction:column;gap:16px">
@@ -552,20 +716,60 @@ function navigate(page) {
 
 function buildNavbar(page) {
   const items = [
-    {label:"Início",path:"home"},{label:"Cronograma",path:"cronograma"},{label:"Conteúdos",path:"conteudos"},
-    {label:"Exercícios",path:"exercicios"},{label:"Docentes",path:"docentes"},{label:"Calendário",path:"calendario"},{label:"Mensagens",path:"mensagens"}
+    {label:"Início",path:"home"},
+    {label:"Cronograma",path:"cronograma"},
+    {label:"Conteúdos",path:"conteudos"},
+    {label:"Exercícios",path:"exercicios"},
+    {label:"Docentes",path:"docentes"},
+    {label:"Calendário",path:"calendario"},
+    {label:"Mensagens",path:"mensagens"}
   ];
+
   const container = document.getElementById('navbar-' + page);
   if (!container) return;
-  container.innerHTML = `<nav class="navbar"><div class="nav-inner">
-    <a href="#" onclick="navigate('home');return false" class="nav-logo">DS</a>
-    <div class="nav-links">${items.map(i=>`<a href="#" onclick="navigate('${i.path}');return false" class="nav-link ${page===i.path?'active':''}">${i.label}</a>`).join('')}</div>
-    <div class="nav-right">
-      <a href="#" onclick="navigate('configuracoes');return false" class="nav-icon ${page==='configuracoes'?'active':''}">⚙️</a>
-      <a href="#" onclick="navigate('perfil');return false" class="nav-icon ${page==='perfil'?'active':''}" style="background:rgba(245,239,230,.2)">👤</a>
+
+  container.innerHTML = `
+  <nav class="navbar">
+    <div class="nav-inner">
+
+      <!-- BOTÃO HAMBURGUER -->
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+      <!-- LOGO -->
+      <a href="#" onclick="navigate('home');return false">
+        <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nby5wbmciLCJpYXQiOjE3NzczODUyMzcsImV4cCI6MTgwODkyMTIzN30.4K-e7ab4i81KHttCoYKeH3bGwFs4xymASlPaYbm1Oj0" 
+             style="width:40px;height:40px;border-radius:50%">
+      </a>
+
+      <!-- LINKS DESKTOP -->
+      <div class="nav-links">
+        ${items.map(i=>`
+          <a href="#" onclick="navigate('${i.path}');return false"
+             class="nav-link ${page===i.path?'active':''}">
+             ${i.label}
+          </a>`).join('')}
+      </div>
+
+      <!-- ÍCONES DIREITA -->
+      <div class="nav-right">
+        <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/setting.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvc2V0dGluZy5wbmciLCJpYXQiOjE3NzczODUxMjQsImV4cCI6MTgwODkyMTEyNH0.MrXP8Rb0WxiCw9bWi4o3g2jtU8q3NvvwQ2KSF-iAFko"
+             onclick="navigate('configuracoes')"
+             class="nav-icon ${page==='configuracoes'?'active':''}">
+
+        <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/user.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvdXNlci5wbmciLCJpYXQiOjE3NzczODUxNDEsImV4cCI6MTgwODkyMTE0MX0.FIlXf-m9TQGEsZ6BLl7gqzfUqEEr7c2wrE9Hx7ZQEqE"
+             onclick="navigate('perfil')"
+             class="nav-icon ${page==='perfil'?'active':''}">
+      </div>
     </div>
-  </div>
-  <div class="nav-mobile">${items.map(i=>`<a href="#" onclick="navigate('${i.path}');return false" class="nav-link ${page===i.path?'active':''}" style="white-space:nowrap;font-size:12px">${i.label}</a>`).join('')}</div>
+
+    <!-- MENU MOBILE -->
+    <div id="mobileMenu" class="mobile-menu">
+      ${items.map(i=>`
+        <a href="#" onclick="navigate('${i.path}');toggleMenu();return false"
+           class="nav-link ${page===i.path?'active':''}">
+           ${i.label}
+        </a>`).join('')}
+    </div>
   </nav>`;
 }
 
@@ -825,17 +1029,38 @@ function deleteCalEvent(index) {
 function initMessages() {
   document.getElementById('msg-chat-placeholder').style.display = 'flex';
   document.getElementById('msg-chat-active').style.display = 'none';
-}
-function selectTeacher(id) {
+} 
+ function selectTeacher(id) {
   selectedTeacherId = id;
+  const teacher = msgData[id];
+
+  // imagens dos professores
+  const photos = {
+    adriano: "https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/adriano.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvYWRyaWFuby53ZWJwIiwiaWF0IjoxNzc3Mzg2MDQzLCJleHAiOjE4MDg5MjIwNDN9.lFFyRr8fBbDrEu-p-7tX_brqKvtGOyzsTmSMBwuNjOg",
+    leandro: "https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/leandro.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbGVhbmRyby53ZWJwIiwiaWF0IjoxNzc3Mzg2MDcwLCJleHAiOjE4MDg5MjIwNzB9.BjTqUnFnVCmONYXYE5lRUvTjcug2Xe7V9f3u7PreQmg"
+  };
+
+  // esconder tela inicial
   document.getElementById('msg-chat-placeholder').style.display = 'none';
+
+  // ativar chat com animação
   const active = document.getElementById('msg-chat-active');
   active.style.display = 'flex';
-  active.classList.remove('hidden');
-  const t = msgData[id];
+
+  // reinicia animação sempre que trocar de professor
+  active.classList.remove('chat-animate');
+  void active.offsetWidth; // força reflow (truque pra reiniciar animação)
+  active.classList.add('chat-animate');
+
+  // HEADER com animação
   document.getElementById('msg-chat-header').innerHTML = `
-    <div style="width:40px;height:40px;border-radius:50%;background:rgba(181,69,27,.2);display:flex;align-items:center;justify-content:center"><span class="font-bold text-primary text-sm">${t.initials}</span></div>
-    <div><p class="font-semibold text-sm">${t.name}</p><p class="text-xs text-muted">${t.specialty}</p></div>`;
+    <img src="${photos[id]}" class="chat-avatar">
+    <div class="chat-header-text">
+      <p class="font-semibold">${teacher.name}</p>
+      <p class="text-xs text-muted">${teacher.specialty}</p>
+    </div>
+  `;
+
   renderMessages();
 }
 function renderMessages() {
@@ -898,6 +1123,11 @@ document.head.appendChild(style);
 const pulse = document.createElement('style');
 pulse.textContent = '@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}';
 document.head.appendChild(pulse);
+
+function toggleMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+}
 </script>
 </body>
 </html>
